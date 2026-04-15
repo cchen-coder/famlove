@@ -422,12 +422,19 @@ function openModal(type,extra){
       <div class="fi"><label>Type</label><select id="m-ty"><option>General</option><option>appointment</option><option>sport</option><option>kids</option></select></div>
       <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="saveEvent()">Save Event</button></div>`,
     meal:`<h3>Add Meal Plan</h3>
-      <div class="fi"><label>Recipe name</label><input type="text" id="m-t"></div>
-      <div class="frow"><div class="fi"><label>Date</label><input type="date" id="m-d" value="2026-04-15"></div><div class="fi"><label>Type</label><select id="m-ty"><option>Dinner</option><option>Breakfast</option><option>Lunch</option></select></div></div>
+      <div class="fi"><label>Choose from your recipes (optional)</label>
+        <select id="m-recipe" onchange="prefillFromRecipe(this.value)" style="width:100%;padding:8px 10px;border:0.5px solid #d8c0b0;border-radius:9px;font-size:13px;background:#fff;color:#1a1a1a;outline:none">
+          <option value="">— or enter manually below —</option>
+          ${S.recipes.map(r=>`<option value="${r.id}">${r.name} (${r.category} · ${r.prepTime})</option>`).join('')}
+        </select>
+      </div>
+      <div style="height:0.5px;background:#f0d0c0;margin:4px 0 14px"></div>
+      <div class="fi"><label>Recipe name</label><input type="text" id="m-t" placeholder="e.g. Chicken Fried Rice"></div>
+      <div class="frow"><div class="fi"><label>Date</label><input type="date" id="m-d" value="${new Date().toISOString().split('T')[0]}"></div><div class="fi"><label>Meal type</label><select id="m-ty"><option>Dinner</option><option>Breakfast</option><option>Lunch</option></select></div></div>
       <div class="frow"><div class="fi"><label>Prep time</label><input type="text" id="m-pt" placeholder="30 mins"></div><div class="fi"><label>Serves</label><input type="number" id="m-sv" value="4" min="1"></div></div>
       <div class="fi"><label>Ingredients (comma separated)</label><textarea id="m-ing" rows="2" placeholder="Chicken, Rice, Broccoli"></textarea></div>
-      <div class="fi"><label>Steps (one per line)</label><textarea id="m-st" rows="4" placeholder="Step 1: ..."></textarea></div>
-      <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="saveMeal()">Save Meal</button></div>`,
+      <div class="fi"><label>Steps (one per line)</label><textarea id="m-st" rows="3" placeholder="Step 1: ..."></textarea></div>
+      <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="saveMeal()">Add to Planner</button></div>`,
     habit:`<h3>New Habit</h3>
       <div class="fi"><label>Habit name</label><input type="text" id="m-t" placeholder="e.g. Morning walk"></div>
       <div class="fi"><label>Assign to</label><select id="m-own">${USERS.map(u=>`<option>${u.name}</option>`).join('')}</select></div>
@@ -481,6 +488,20 @@ function openModal(type,extra){
   mb.innerHTML=modals[type]||'';
 }
 
+function prefillFromRecipe(id){
+  if(!id) return;
+  const r=S.recipes.find(r=>r.id===id);
+  if(!r) return;
+  document.getElementById('m-t').value=r.name;
+  document.getElementById('m-pt').value=r.prepTime||'';
+  document.getElementById('m-sv').value=r.serves||4;
+  document.getElementById('m-ing').value=r.ingredients.join(', ');
+  document.getElementById('m-st').value=r.steps.join('\n');
+  const tyMap={Breakfast:'Breakfast',Lunch:'Lunch',Dinner:'Dinner',Pasta:'Dinner',Asian:'Dinner',Salads:'Lunch',Soups:'Lunch',Snacks:'Lunch',Desserts:'Dinner',Other:'Dinner'};
+  const sel=document.getElementById('m-ty');
+  const mapped=tyMap[r.category]||'Dinner';
+  for(let i=0;i<sel.options.length;i++){if(sel.options[i].value===mapped){sel.selectedIndex=i;break;}}
+}
 function saveEvent(){const t=document.getElementById('m-t').value.trim();if(!t)return;S.events.push({id:'e'+Date.now(),title:t,date:document.getElementById('m-d').value,time:document.getElementById('m-ti').value,type:document.getElementById('m-ty').value,assignee:'Mom'});closeModal();renderPage();}
 function saveMeal(){const n=document.getElementById('m-t').value.trim();if(!n)return;S.meals.push({id:'m'+Date.now(),name:n,type:document.getElementById('m-ty').value,date:document.getElementById('m-d').value,ingredients:document.getElementById('m-ing').value.split(',').map(s=>s.trim()).filter(Boolean),steps:document.getElementById('m-st').value.split('\n').map(s=>s.trim()).filter(Boolean),prepTime:document.getElementById('m-pt').value||'?',serves:parseInt(document.getElementById('m-sv').value)||4});closeModal();renderPage();}
 function saveRecipe(){const n=document.getElementById('r-name').value.trim();if(!n)return;S.recipes.push({id:'r'+Date.now(),name:n,category:document.getElementById('r-cat').value,prepTime:document.getElementById('r-prep').value,serves:parseInt(document.getElementById('r-srv').value)||4,difficulty:document.getElementById('r-diff').value,ingredients:document.getElementById('r-ing').value.split(',').map(s=>s.trim()).filter(Boolean),steps:document.getElementById('r-steps').value.split('\n').map(s=>s.trim()).filter(Boolean),notes:document.getElementById('r-notes').value,rating:parseInt(document.getElementById('r-rating').value)||5});closeModal();renderPage();}
