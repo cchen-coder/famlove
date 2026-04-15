@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FamSync — Family Management App</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-size:14px;color:#1a1a1a;background:#fdf8f5}
+.app{display:flex;height:100vh;min-height:640px}
+.sidebar{width:196px;min-width:196px;display:flex;flex-direction:column;transition:background 0.3s}
+.logo{padding:16px;font-size:17px;font-weight:600;display:flex;align-items:center;gap:9px;border-bottom:0.5px solid rgba(0,0,0,0.08)}
+.logo-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+nav{flex:1;padding:8px 0;overflow-y:auto}
+.ni{display:flex;align-items:center;gap:9px;padding:8px 14px;cursor:pointer;font-size:13px;transition:background 0.12s;color:inherit;user-select:none}
+.ni:hover{background:rgba(0,0,0,0.06)}
+.ni.active{color:#fff}
+.ni-ic{width:15px;height:15px;flex-shrink:0;opacity:0.65}
+.ni.active .ni-ic{filter:brightness(10);opacity:1}
+.notif-badge{margin-left:auto;color:#fff;font-size:10px;font-weight:600;min-width:16px;height:16px;border-radius:99px;display:flex;align-items:center;justify-content:center;padding:0 4px;background:#E24B4A}
+.sidebar-bottom{padding:12px 14px;border-top:0.5px solid rgba(0,0,0,0.08)}
+.av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;cursor:pointer;border:2px solid transparent;transition:border-color 0.15s}
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.topbar{padding:11px 24px;display:flex;justify-content:space-between;align-items:center;background:#fff;border-bottom:0.5px solid #f0d0c0}
+.notif-btn{position:relative;cursor:pointer;width:32px;height:32px;display:flex;align-items:center;justify-content:center;border-radius:8px;border:0.5px solid #f0d0c0;background:#fff}
+.notif-btn:hover{background:#fde8de}
+.content{flex:1;overflow-y:auto;padding:24px 28px}
+.btn{border:none;border-radius:10px;padding:8px 16px;font-size:13px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:6px;transition:opacity 0.1s}
+.btn:hover{opacity:0.88}
+.b-orange{background:#D85A30;color:#fff}
+.b-teal{background:#0F6E56;color:#fff}
+.b-purple{background:#534AB7;color:#fff}
+.b-amber{background:#BA7517;color:#fff}
+.b-pink{background:#D4537E;color:#fff}
+.b-blue{background:#185FA5;color:#fff}
+.b-ghost{background:transparent;border:0.5px solid #D85A30;color:#993C1D}
+.card{background:#fff;border:0.5px solid #f0d0c0;border-radius:14px;padding:16px}
+.pill{display:inline-block;padding:2px 9px;border-radius:99px;font-size:11px;font-weight:500}
+.pill-orange{background:#FAECE7;color:#712B13}
+.pill-teal{background:#E1F5EE;color:#085041}
+.pill-amber{background:#FAEEDA;color:#633806}
+.pill-purple{background:#EEEDFE;color:#3C3489}
+.pill-pink{background:#FBEAF0;color:#72243E}
+.pill-green{background:#EAF3DE;color:#27500A}
+.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.grid4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.pbar{height:8px;background:#f0e8e0;border-radius:99px;overflow:hidden;margin:5px 0}
+.pf{height:100%;border-radius:99px;transition:width 0.4s}
+.sec{font-size:11px;font-weight:600;color:#888;margin-bottom:10px;margin-top:18px;text-transform:uppercase;letter-spacing:0.06em}
+.modal-bg{position:fixed;inset:0;background:rgba(40,10,0,0.4);display:flex;align-items:center;justify-content:center;z-index:200}
+.modal{background:#fff;border-radius:16px;padding:24px;width:100%;max-width:440px;border:0.5px solid #f0d0c0;max-height:92vh;overflow-y:auto}
+.modal h3{font-size:16px;font-weight:600;margin-bottom:16px;color:#712B13}
+.fi{margin-bottom:12px}
+.fi label{display:block;font-size:12px;color:#666;margin-bottom:4px;font-weight:500}
+.fi input,.fi select,.fi textarea{width:100%;padding:8px 10px;border:0.5px solid #d8c0b0;border-radius:9px;font-size:13px;background:#fff;color:#1a1a1a;outline:none;font-family:inherit}
+.fi input:focus,.fi select:focus,.fi textarea:focus{border-color:#D85A30;box-shadow:0 0 0 2px #FAECE7}
+.fi textarea{resize:vertical}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ma{display:flex;justify-content:flex-end;gap:10px;margin-top:16px}
+.msg-bubble{display:inline-block;padding:7px 12px;border-radius:14px;font-size:13px;max-width:72%}
+.recipe-header{background:#D85A30;padding:14px 16px;border-radius:14px 14px 0 0}
+.recipe-body{padding:14px 16px;border:0.5px solid #f0d0c0;border-top:none;border-radius:0 0 14px 14px}
+.step-num{width:22px;height:22px;border-radius:50%;background:#FAECE7;color:#993C1D;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);border:0.5px solid #f0d0c0;border-radius:14px;overflow:hidden;background:#fff}
+.cal-hd{text-align:center;padding:9px 4px;font-size:11px;font-weight:600;color:#993C1D;background:#fff5f0;border-bottom:0.5px solid #f0d0c0}
+.cal-day{border-right:0.5px solid #f0d0c0;border-bottom:0.5px solid #f0d0c0;min-height:90px;padding:7px 5px}
+.cal-day:last-child{border-right:none}
+.cal-num{font-size:13px;font-weight:500;margin-bottom:5px;width:22px;height:22px;display:flex;align-items:center;justify-content:center;border-radius:50%}
+.cal-num.today{background:#D85A30;color:#fff}
+.cal-ev{font-size:11px;padding:2px 5px;border-radius:4px;margin-bottom:2px}
+.txn-tbl{width:100%;border-collapse:collapse;font-size:13px}
+.txn-tbl th{text-align:left;padding:8px 12px;color:#888;font-weight:400;font-size:12px;border-bottom:0.5px solid #f0d0c0}
+.txn-tbl td{padding:10px 12px;border-bottom:0.5px solid #f5ece6}
+.txn-tbl tr:last-child td{border-bottom:none}
+.kids-tabs{display:flex;gap:6px;margin-bottom:18px}
+.ktab{padding:7px 16px;border-radius:99px;font-size:13px;cursor:pointer;border:0.5px solid #f0d0c0;background:#fff;color:#666;transition:all 0.15s}
+.ktab.active{background:#D85A30;color:#fff;border-color:#D85A30}
+.shop-item{background:#fff;border:0.5px solid #f0d0c0;border-radius:12px;padding:14px;text-align:center}
+.habit-card{background:#fff;border:0.5px solid #f0d0c0;border-radius:14px;padding:16px}
+.doc-card{background:#fff;border:0.5px solid #f0d0c0;border-radius:14px;padding:14px;cursor:pointer;transition:background 0.1s}
+.doc-card:hover{background:#fff9f7}
+.notif-item{display:flex;gap:12px;padding:12px 16px;border-bottom:0.5px solid #f5e8e0;align-items:flex-start}
+.notif-item:last-child{border-bottom:none}
+.notif-item.unread{background:#fff9f6}
+.ann-card{background:#FAEEDA;border-radius:10px;padding:10px 14px;text-align:center;margin-bottom:8px}
+</style>
+</head>
+<body>
+
+<div class="app" id="app">
+<div class="sidebar" id="sidebar-el">
+  <div class="logo" id="logo-el">
+    <div class="logo-icon" id="logo-icon-el">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
+    </div>
+    FamSync
+  </div>
+  <nav id="nav-el"></nav>
+  <div class="sidebar-bottom">
+    <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+      <div class="av" id="cur-av" style="width:30px;height:30px"></div>
+      <div>
+        <div style="font-size:13px;font-weight:500" id="cur-name"></div>
+        <div style="font-size:11px" id="cur-role"></div>
+      </div>
+    </div>
+    <div style="font-size:11px;margin-bottom:5px;color:#888">Switch user</div>
+    <div style="display:flex;gap:6px" id="switcher-el"></div>
+  </div>
+</div>
+
+<div class="main">
+  <div class="topbar">
+    <span style="font-size:15px;font-weight:600;color:#712B13" id="topbar-title">Dashboard</span>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-size:13px;color:#993C1D" id="topbar-date"></span>
+      <div class="notif-btn" onclick="nav('notifications')" id="notif-btn">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#993C1D" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        <div id="notif-dot" style="width:8px;height:8px;background:#E24B4A;border-radius:50%;position:absolute;top:6px;right:6px"></div>
+      </div>
+    </div>
+  </div>
+  <div class="content" id="content-el"></div>
+</div>
+
+<div class="modal-bg" id="modal-bg" style="display:none">
+  <div class="modal" id="modal-body"></div>
+</div>
+</div>
+
+<script>
+const USERS=[
+  {name:'Mom',role:'parent',initials:'M',bg:'#FAECE7',color:'#993C1D',accent:'#D85A30',age:null},
+  {name:'Dad',role:'parent',initials:'D',bg:'#E1F5EE',color:'#085041',accent:'#0F6E56',age:null},
+  {name:'Leo',role:'kid',initials:'L',bg:'#FAEEDA',color:'#633806',accent:'#BA7517',age:10},
+  {name:'Mia',role:'kid',initials:'Mi',bg:'#FBEAF0',color:'#72243E',accent:'#D4537E',age:8}
+];
+
+const PARENT_PAGES=[
+  {id:'dashboard',label:'Dashboard',ic:'home'},
+  {id:'notifications',label:'Reminders',ic:'bell'},
+  {id:'calendar',label:'Calendar',ic:'cal'},
+  {id:'tasks',label:'Tasks & Chores',ic:'check'},
+  {id:'kids',label:"Kids' Zone",ic:'star'},
+  {id:'meals',label:'Meal Planner',ic:'fork'},
+  {id:'groceries',label:'Groceries',ic:'cart'},
+  {id:'budget',label:'Budget',ic:'dollar'},
+  {id:'reports',label:'Reports',ic:'chart'},
+  {id:'habits',label:'Habits',ic:'zap'},
+  {id:'goals',label:'Goals',ic:'target'},
+  {id:'documents',label:'Documents',ic:'file'},
+  {id:'hub',label:'Family Hub',ic:'msg'},
+  {id:'outings',label:'Outings',ic:'map'}
+];
+
+const KID_PAGES=[
+  {id:'kid-home',label:'My Home',ic:'home'},
+  {id:'kid-chores',label:'My Chores',ic:'check'},
+  {id:'kid-rewards',label:'Rewards Shop',ic:'star'},
+  {id:'kid-habits',label:'My Habits',ic:'zap'},
+  {id:'kid-calendar',label:'My Schedule',ic:'cal'},
+  {id:'kid-hub',label:'Family Chat',ic:'msg'},
+  {id:'kid-outings',label:'Outings',ic:'map'},
+  {id:'kid-goals',label:'Goals',ic:'target'}
+];
+
+const ICONS={
+  home:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
+  bell:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>`,
+  cal:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`,
+  check:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>`,
+  star:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
+  fork:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="3" y1="2" x2="3" y2="22"/><path d="M7 2v6a3 3 0 01-3 3v9"/><line x1="21" y1="2" x2="21" y2="22"/><path d="M21 2v6a3 3 0 01-3 3v9"/></svg>`,
+  cart:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>`,
+  dollar:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 100 7h5a3.5 3.5 0 110 7H6"/></svg>`,
+  chart:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>`,
+  zap:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+  target:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>`,
+  file:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>`,
+  msg:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="14" rx="2"/><polyline points="3 21 12 17 21 21"/></svg>`,
+  map:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>`,
+  plus:`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`,
+  thumb:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 9V5a3 3 0 00-3-3l-4 9v11h11.28a2 2 0 002-1.7l1.38-9a2 2 0 00-2-2.3H14z"/><path d="M7 22H4a2 2 0 01-2-2v-7a2 2 0 012-2h3"/></svg>`,
+  send:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>`,
+  lock:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>`,
+  pin:`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
+  book:`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>`,
+  clock:`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`
+};
+
+function ic(n,sz=15){
+  if(!ICONS[n])return '';
+  return ICONS[n].replace(/width="15" height="15"/g,`width="${sz}" height="${sz}"`);
+}
+
+let S={
+  currentUser:USERS[0],
+  page:'dashboard',
+  kidsTab:'chores',
+  notifications:[
+    {id:'n1',title:'Dentist appointment in 2 hours',sub:'Wed Apr 15 • 12:51 PM',color:'#D85A30',unread:true},
+    {id:'n2',title:'Pay electricity bill due today',sub:'Assigned to Mom',color:'#BA7517',unread:true},
+    {id:'n3',title:"Tonight's dinner: Spaghetti Bolognese",sub:'Remember to defrost ground beef',color:'#0F6E56',unread:true},
+    {id:'n4',title:'Daily walk — not logged yet today',sub:'Keep your 5-day streak alive!',color:'#534AB7',unread:false},
+    {id:'n5',title:'Family Vacation savings on track',sub:'25% reached — $500 of $2000',color:'#D4537E',unread:false}
+  ],
+  tasks:[
+    {id:'t1',title:'Pay electricity bill',assignee:'Mom',isChore:false,done:false,points:0},
+    {id:'t2',title:'Clean room',assignee:'Leo',isChore:true,done:false,points:50},
+    {id:'t3',title:'Take out trash',assignee:'Leo',isChore:true,done:true,points:30},
+    {id:'t4',title:'Vacuum living room',assignee:'Mia',isChore:true,done:false,points:40},
+    {id:'t5',title:'Set dinner table',assignee:'Mia',isChore:true,done:true,points:20}
+  ],
+  events:[
+    {id:'e1',title:'Soccer Practice',date:'2026-04-14',time:'3:00 PM',assignee:'Leo',type:'sport'},
+    {id:'e2',title:'Dentist',date:'2026-04-15',time:'12:51 PM',assignee:'Mom',type:'appointment'},
+    {id:'e3',title:"Leo's Piano",date:'2026-04-16',time:'4:00 PM',assignee:'Leo',type:'kids'},
+    {id:'e4',title:"Mia's Checkup",date:'2026-04-17',time:'10:00 AM',assignee:'Mia',type:'kids'}
+  ],
+  kidsAppts:[
+    {id:'ka1',child:'Leo',title:'Piano lesson',date:'2026-04-16',time:'4:00 PM',notes:'Bring lesson book'},
+    {id:'ka2',child:'Mia',title:'Annual checkup',date:'2026-04-17',time:'10:00 AM',notes:'Fasting required'},
+    {id:'ka3',child:'Leo',title:'Soccer tryouts',date:'2026-04-19',time:'9:00 AM',notes:'Bring boots'}
+  ],
+  habits:[
+    {id:'h1',name:'Morning walk',streak:5,color:'#D85A30',owner:'Mom',days:[1,1,1,1,1,0,0]},
+    {id:'h2',name:'Read 20 minutes',streak:3,color:'#534AB7',owner:'Leo',days:[0,1,1,1,0,0,0]},
+    {id:'h3',name:'Drink 8 glasses of water',streak:7,color:'#0F6E56',owner:'Mom',days:[1,1,1,1,1,1,1]},
+    {id:'h4',name:'Practice piano',streak:4,color:'#BA7517',owner:'Leo',days:[1,1,0,1,1,0,0]},
+    {id:'h5',name:'Brush teeth twice',streak:6,color:'#D4537E',owner:'Mia',days:[1,1,1,1,1,1,0]}
+  ],
+  shopItems:[
+    {id:'s1',name:'Extra screen time (30 min)',pts:100},
+    {id:'s2',name:'Choose dinner',pts:150},
+    {id:'s3',name:'Movie night pick',pts:200},
+    {id:'s4',name:'Skip one chore',pts:300},
+    {id:'s5',name:'Stay up 30 min later',pts:120},
+    {id:'s6',name:'Favourite snack',pts:80}
+  ],
+  meals:[
+    {id:'m1',name:'Spaghetti Bolognese',type:'Dinner',date:'2026-04-14',ingredients:['Pasta','Ground Beef','Tomato Sauce','Onion','Garlic'],steps:['Brown the ground beef with onion and garlic.','Add tomato sauce and simmer 20 mins.','Cook pasta al dente, combine and serve.'],prepTime:'35 mins',serves:4},
+    {id:'m2',name:'Avocado Toast',type:'Breakfast',date:'2026-04-15',ingredients:['Sourdough Bread','Avocado','Eggs','Chilli Flakes'],steps:['Toast bread until golden.','Mash avocado with salt and lemon.','Poach eggs and place on top.'],prepTime:'15 mins',serves:2}
+  ],
+  groceries:[
+    {id:'g1',name:'Milk',category:'Dairy',checked:false,fromMeal:false},
+    {id:'g2',name:'Eggs',category:'Dairy',checked:false,fromMeal:false},
+    {id:'g3',name:'Pasta',category:'Pantry',checked:true,fromMeal:true},
+    {id:'g4',name:'Ground Beef',category:'Meat',checked:false,fromMeal:true},
+    {id:'g5',name:'Avocado',category:'Produce',checked:false,fromMeal:true},
+    {id:'g6',name:'Sourdough Bread',category:'Bakery',checked:false,fromMeal:true}
+  ],
+  expenses:[
+    {id:'x1',date:'2026-04-15',desc:'April rent',category:'Housing',paidBy:'Mom',amount:1000},
+    {id:'x2',date:'2026-04-14',desc:'Weekly groceries',category:'Groceries',paidBy:'Mom',amount:120.50},
+    {id:'x3',date:'2026-04-13',desc:'Internet bill',category:'Utilities',paidBy:'Dad',amount:60},
+    {id:'x4',date:'2026-04-07',desc:'Billy Medical Centre',category:'Medical',paidBy:'Mom',amount:258},
+    {id:'x5',date:'2026-03-31',desc:'March rent',category:'Housing',paidBy:'Mom',amount:1000},
+    {id:'x6',date:'2026-03-28',desc:'Groceries',category:'Groceries',paidBy:'Dad',amount:98},
+    {id:'x7',date:'2026-03-15',desc:'Car service',category:'Transport',paidBy:'Dad',amount:180}
+  ],
+  goals:[
+    {id:'gl1',title:'Family Vacation',category:'Savings',current:500,target:2000,color:'#D85A30'},
+    {id:'gl2',title:'Emergency Fund',category:'Savings',current:3200,target:5000,color:'#0F6E56'},
+    {id:'gl3',title:'New Bicycle',current:80,target:200,color:'#BA7517',owner:'Leo'},
+    {id:'gl4',title:'Art Supplies',current:40,target:100,color:'#D4537E',owner:'Mia'}
+  ],
+  documents:[
+    {id:'d1',name:'Insurance Policy',category:'Insurance',date:'2026-01-15',color:'#D85A30'},
+    {id:'d2',name:"Leo's Birth Certificate",category:'Identity',date:'2010-03-22',color:'#0F6E56'},
+    {id:'d3',name:'Home Lease Agreement',category:'Legal',date:'2025-06-01',color:'#534AB7'},
+    {id:'d4',name:'Medical Records — Mia',category:'Medical',date:'2026-04-01',color:'#D4537E'},
+    {id:'d5',name:'Tax Return 2025',category:'Finance',date:'2026-03-10',color:'#BA7517'}
+  ],
+  messages:[
+    {id:'msg1',type:'announcement',from:'Mom',text:"Don't forget to take out the trash!",time:'Apr 14, 12:51 PM'},
+    {id:'msg2',from:'Leo',text:'Can we have pizza tonight?',time:'10:58 AM'},
+    {id:'msg3',from:'Mom',text:'Already planned Spaghetti Bolognese!',time:'10:59 AM'},
+    {id:'msg4',from:'Dad',text:"I'll be home by 6.",time:'11:00 AM'}
+  ],
+  outings:[
+    {id:'o1',title:'Zoo Trip',desc:'Visit the new panda exhibit.',suggestedBy:'Leo',votes:3,voted:true,category:'Nature',location:'Singapore Zoo',cost:'$35/person',date:'Next weekend',scheduled:false},
+    {id:'o2',title:'Movie Night',desc:'New animated movie at local theater.',suggestedBy:'Mia',votes:2,voted:false,category:'Entertainment',location:'Shaw Theatres',cost:'$15/person',date:'This Friday',scheduled:false}
+  ],
+  recipes:[
+    {id:'r1',name:'Spaghetti Bolognese',category:'Pasta',prepTime:'35 mins',serves:4,difficulty:'Medium',ingredients:['Pasta','Ground Beef','Tomato Sauce','Onion','Garlic'],steps:['Brown the ground beef with onion and garlic.','Add tomato sauce and simmer 20 mins.','Cook pasta al dente, combine and serve.'],notes:'Can substitute beef with turkey.',rating:5},
+    {id:'r2',name:'Avocado Toast',category:'Breakfast',prepTime:'15 mins',serves:2,difficulty:'Easy',ingredients:['Sourdough Bread','Avocado','Eggs','Chilli Flakes'],steps:['Toast bread until golden.','Mash avocado with salt and lemon.','Poach eggs and place on top.'],notes:'Add feta for extra flavour.',rating:4},
+    {id:'r3',name:'Chicken Stir Fry',category:'Asian',prepTime:'25 mins',serves:4,difficulty:'Easy',ingredients:['Chicken Breast','Bell Peppers','Soy Sauce','Garlic','Ginger','Noodles'],steps:['Slice chicken and marinate in soy sauce.','Stir fry chicken until golden.','Add vegetables and toss together.'],notes:'Great with rice or noodles.',rating:5}
+  ],
+  mealTab:'planner',
+  isAnn:false
+};
+
+function userPoints(name){
+  return S.tasks.filter(t=>t.assignee===name&&t.isChore&&t.done).reduce((a,t)=>a+(t.points||0),0);
+}
+
+function applyTheme(){
+  const u=S.currentUser, isKid=u.role==='kid';
+  const sb=document.getElementById('sidebar-el');
+  sb.style.background=isKid?u.bg:'#fff5f0';
+  sb.style.borderRight=isKid?`0.5px solid ${u.color}33`:'0.5px solid #f0d0c0';
+  document.getElementById('logo-el').style.borderBottom=isKid?`0.5px solid ${u.color}33`:'0.5px solid #f0d0c0';
+  document.getElementById('logo-icon-el').style.background=isKid?u.accent:'#D85A30';
+  document.getElementById('cur-role').style.color=isKid?u.accent:'#993C1D';
+}
+
+function renderNav(){
+  const u=S.currentUser, pages=u.role==='kid'?KID_PAGES:PARENT_PAGES;
+  const unread=S.notifications.filter(n=>n.unread).length;
+  document.getElementById('nav-el').innerHTML=pages.map(p=>`
+    <div class="ni${S.page===p.id?' active':''}" style="${S.page===p.id?`background:${u.accent}`:''}" onclick="nav('${p.id}')">
+      <span class="ni-ic">${ic(p.ic)}</span>${p.label}
+      ${p.id==='notifications'&&unread?`<span class="notif-badge">${unread}</span>`:''}
+    </div>`).join('');
+}
+
+function renderSidebarUser(){
+  const u=S.currentUser;
+  const av=document.getElementById('cur-av');
+  av.textContent=u.initials;
+  av.style.cssText=`background:${u.bg};color:${u.color};width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;border:2px solid ${u.accent}`;
+  document.getElementById('cur-name').textContent=u.name;
+  document.getElementById('cur-role').textContent=u.role==='kid'?`Age ${u.age} · ${userPoints(u.name)} pts`:'Parent';
+  document.getElementById('switcher-el').innerHTML=USERS.map(usr=>`
+    <div title="Switch to ${usr.name}" onclick="doSwitch('${usr.name}')" style="background:${usr.bg};color:${usr.color};width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;cursor:pointer;border:2px solid ${usr.name===u.name?u.accent:'transparent'};transition:border-color 0.15s">${usr.initials}</div>`).join('');
+  const pages=u.role==='kid'?KID_PAGES:PARENT_PAGES;
+  document.getElementById('topbar-title').textContent=pages.find(p=>p.id===S.page)?.label||'Home';
+  const d=new Date();
+  document.getElementById('topbar-date').textContent=d.toLocaleDateString('en-US',{weekday:'short',month:'long',day:'numeric'});
+  const unread=S.notifications.filter(n=>n.unread).length;
+  document.getElementById('notif-dot').style.display=unread?'block':'none';
+}
+
+function doSwitch(name){
+  const target=USERS.find(u=>u.name===name);
+  if(!target)return;
+  S.currentUser=target;
+  S.page=target.role==='kid'?'kid-home':'dashboard';
+  applyTheme(); renderNav(); renderSidebarUser(); renderPage();
+}
+
+function nav(p){
+  S.page=p;
+  const pages=S.currentUser.role==='kid'?KID_PAGES:PARENT_PAGES;
+  document.getElementById('topbar-title').textContent=pages.find(x=>x.id===p)?.label||p;
+  renderNav(); renderPage();
+}
+
+function closeModal(){document.getElementById('modal-bg').style.display='none';}
+
+function openModal(type,extra){
+  const bg=document.getElementById('modal-bg'),mb=document.getElementById('modal-body');
+  bg.style.display='flex';
+  const modals={
+    event:`<h3>Add New Event</h3>
+      <div class="fi"><label>Title</label><input type="text" id="m-t"></div>
+      <div class="frow"><div class="fi"><label>Date</label><input type="date" id="m-d" value="2026-04-15"></div><div class="fi"><label>Time</label><input type="time" id="m-ti" value="12:00"></div></div>
+      <div class="fi"><label>Type</label><select id="m-ty"><option>General</option><option>appointment</option><option>sport</option><option>kids</option></select></div>
+      <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="saveEvent()">Save Event</button></div>`,
+    meal:`<h3>Add Meal Plan</h3>
+      <div class="fi"><label>Recipe name</label><input type="text" id="m-t"></div>
+      <div class="frow"><div class="fi"><label>Date</label><input type="date" id="m-d" value="2026-04-15"></div><div class="fi"><label>Type</label><select id="m-ty"><option>Dinner</option><option>Breakfast</option><option>Lunch</option></select></div></div>
+      <div class="frow"><div class="fi"><label>Prep time</label><input type="text" id="m-pt" placeholder="30 mins"></div><div class="fi"><label>Serves</label><input type="number" id="m-sv" value="4" min="1"></div></div>
+      <div class="fi"><label>Ingredients (comma separated)</label><textarea id="m-ing" rows="2" placeholder="Chicken, Rice, Broccoli"></textarea></div>
+      <div class="fi"><label>Steps (one per line)</label><textarea id="m-st" rows="4" placeholder="Step 1: ..."></textarea></div>
+      <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="saveMeal()">Save Meal</button></div>`,
+    habit:`<h3>New Habit</h3>
+      <div class="fi"><label>Habit name</label><input type="text" id="m-t" placeholder="e.g. Morning walk"></div>
+      <div class="fi"><label>Assign to</label><select id="m-own">${USERS.map(u=>`<option>${u.name}</option>`).join('')}</select></div>
+      <div class="fi"><label>Color</label><select id="m-c"><option value="#D85A30">Coral</option><option value="#534AB7">Purple</option><option value="#0F6E56">Teal</option><option value="#D4537E">Pink</option><option value="#BA7517">Amber</option></select></div>
+      <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="saveHabit()">Add Habit</button></div>`,
+    goal:`<h3>Create New Goal</h3>
+      <div class="fi"><label>Goal title</label><input type="text" id="m-t"></div>
+      <div class="frow"><div class="fi"><label>Target ($)</label><input type="number" id="m-amt" placeholder="2000"></div><div class="fi"><label>Category</label><select id="m-cat"><option>Savings</option><option>Vacation</option><option>Electronics</option><option>Education</option></select></div></div>
+      <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="saveGoal()">Create Goal</button></div>`,
+    expense:`<h3>Add Expense</h3>
+      <div class="fi"><label>Amount ($)</label><input type="number" id="m-amt" placeholder="0.00" step="0.01"></div>
+      <div class="fi"><label>Description</label><input type="text" id="m-t"></div>
+      <div class="frow"><div class="fi"><label>Category</label><select id="m-cat"><option>Groceries</option><option>Housing</option><option>Utilities</option><option>Medical</option><option>Transport</option><option>Other</option></select></div><div class="fi"><label>Date</label><input type="date" id="m-d" value="2026-04-15"></div></div>
+      <div class="fi"><label>Paid by</label><select id="m-pb">${USERS.map(u=>`<option>${u.name}</option>`).join('')}</select></div>
+      <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="saveExpense()">Save Expense</button></div>`,
+    doc:`<h3>Upload Document</h3>
+      <div class="fi"><label>Document name</label><input type="text" id="m-t"></div>
+      <div class="fi"><label>Category</label><select id="m-cat"><option>Insurance</option><option>Identity</option><option>Legal</option><option>Medical</option><option>Finance</option><option>Education</option></select></div>
+      <div class="fi"><label>Date</label><input type="date" id="m-d" value="2026-04-15"></div>
+      <div style="background:#f5ece6;border-radius:9px;padding:16px;text-align:center;border:1px dashed #d8c0b0;margin-bottom:12px;font-size:13px;color:#888;cursor:pointer">${ic('file',16)} Click to upload file</div>
+      <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="saveDoc()">Save Document</button></div>`,
+    outing:`<h3>Suggest an Outing</h3>
+      <div class="fi"><label>Where to?</label><input type="text" id="m-t" placeholder="e.g. Science Museum"></div>
+      <div class="fi"><label>Description</label><textarea id="m-desc" rows="3" placeholder="Why should we go here?"></textarea></div>
+      <div class="fi"><label>Location (Optional)</label><input type="text" id="m-loc" placeholder="e.g. 123 Main St"></div>
+      <div class="frow"><div class="fi"><label>Est. Cost (Optional)</label><input type="text" id="m-cost" placeholder="e.g. $20/person"></div><div class="fi"><label>Preferred Date (Optional)</label><input type="text" id="m-date" placeholder="e.g. Next weekend"></div></div>
+      <div class="frow"><div class="fi"><label>Category</label><select id="m-cat"><option>Other</option><option>Nature</option><option>Adventure</option><option>Culture</option><option>Food</option><option>Sports</option><option>Entertainment</option><option>Education</option></select></div><div class="fi"><label>No. of people</label><input type="number" id="m-ppl" placeholder="4" min="1"></div></div>
+      <div class="frow"><div class="fi"><label>Duration</label><input type="text" id="m-dur" placeholder="e.g. Half day"></div><div class="fi"><label>Age suitability</label><select id="m-age"><option>All ages</option><option>Kids (3–10)</option><option>Teens (11–17)</option><option>Adults only</option><option>Family (all)</option></select></div></div>
+      <div class="fi"><label>Notes / Things to bring</label><textarea id="m-notes" rows="2"></textarea></div>
+      <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-pink" onclick="saveOuting()">Suggest</button></div>`,
+    choreAssign:`<h3>Assign Chore to ${extra}</h3>
+      <div class="fi"><label>Chore description</label><input type="text" id="m-t" placeholder="e.g. Wash dishes"></div>
+      <div class="fi"><label>Points</label><input type="number" id="m-pts" value="30" min="5" step="5"></div>
+      <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="saveChore('${extra}')">Assign</button></div>`,
+    kidsAppt:`<h3>Add Kids Appointment</h3>
+      <div class="fi"><label>Child</label><select id="m-child">${USERS.filter(u=>u.role==='kid').map(u=>`<option>${u.name}</option>`).join('')}</select></div>
+      <div class="fi"><label>Title</label><input type="text" id="m-t" placeholder="e.g. Dentist checkup"></div>
+      <div class="frow"><div class="fi"><label>Date</label><input type="date" id="m-d" value="2026-04-20"></div><div class="fi"><label>Time</label><input type="time" id="m-ti" value="10:00"></div></div>
+      <div class="fi"><label>Notes</label><input type="text" id="m-notes" placeholder="Bring insurance card..."></div>
+      <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="saveKidsAppt()">Save</button></div>`,
+    recipe:`<h3>Add New Recipe</h3>
+      <div class="fi"><label>Recipe name</label><input type="text" id="r-name" placeholder="e.g. Chicken Fried Rice"></div>
+      <div class="frow"><div class="fi"><label>Category</label><select id="r-cat"><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Pasta</option><option>Asian</option><option>Salads</option><option>Soups</option><option>Snacks</option><option>Desserts</option><option>Other</option></select></div><div class="fi"><label>Difficulty</label><select id="r-diff"><option>Easy</option><option>Medium</option><option>Hard</option></select></div></div>
+      <div class="frow"><div class="fi"><label>Prep time</label><input type="text" id="r-prep" placeholder="e.g. 30 mins"></div><div class="fi"><label>Serves</label><input type="number" id="r-srv" value="4" min="1"></div></div>
+      <div class="fi"><label>Rating (1–5)</label><select id="r-rating"><option value="5">5 stars</option><option value="4">4 stars</option><option value="3">3 stars</option><option value="2">2 stars</option><option value="1">1 star</option></select></div>
+      <div class="fi"><label>Ingredients (comma separated)</label><textarea id="r-ing" rows="2" placeholder="Chicken, Rice, Soy Sauce, Garlic"></textarea></div>
+      <div class="fi"><label>Steps (one per line)</label><textarea id="r-steps" rows="4" placeholder="Step 1: Prep ingredients..."></textarea></div>
+      <div class="fi"><label>Notes / Tips (Optional)</label><textarea id="r-notes" rows="2" placeholder="e.g. Can substitute with..."></textarea></div>
+      <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="saveRecipe()">Save Recipe</button></div>`
+  };
+  mb.innerHTML=modals[type]||'';
+}
+
+function saveEvent(){const t=document.getElementById('m-t').value.trim();if(!t)return;S.events.push({id:'e'+Date.now(),title:t,date:document.getElementById('m-d').value,time:document.getElementById('m-ti').value,type:document.getElementById('m-ty').value,assignee:'Mom'});closeModal();renderPage();}
+function saveMeal(){const n=document.getElementById('m-t').value.trim();if(!n)return;S.meals.push({id:'m'+Date.now(),name:n,type:document.getElementById('m-ty').value,date:document.getElementById('m-d').value,ingredients:document.getElementById('m-ing').value.split(',').map(s=>s.trim()).filter(Boolean),steps:document.getElementById('m-st').value.split('\n').map(s=>s.trim()).filter(Boolean),prepTime:document.getElementById('m-pt').value||'?',serves:parseInt(document.getElementById('m-sv').value)||4});closeModal();renderPage();}
+function saveRecipe(){const n=document.getElementById('r-name').value.trim();if(!n)return;S.recipes.push({id:'r'+Date.now(),name:n,category:document.getElementById('r-cat').value,prepTime:document.getElementById('r-prep').value,serves:parseInt(document.getElementById('r-srv').value)||4,difficulty:document.getElementById('r-diff').value,ingredients:document.getElementById('r-ing').value.split(',').map(s=>s.trim()).filter(Boolean),steps:document.getElementById('r-steps').value.split('\n').map(s=>s.trim()).filter(Boolean),notes:document.getElementById('r-notes').value,rating:parseInt(document.getElementById('r-rating').value)||5});closeModal();renderPage();}
+function saveHabit(){const n=document.getElementById('m-t').value.trim();if(!n)return;S.habits.push({id:'h'+Date.now(),name:n,streak:0,color:document.getElementById('m-c').value,owner:document.getElementById('m-own').value,days:[0,0,0,0,0,0,0]});closeModal();renderPage();}
+function saveGoal(){const t=document.getElementById('m-t').value.trim(),a=parseFloat(document.getElementById('m-amt').value);if(!t||isNaN(a))return;S.goals.push({id:'gl'+Date.now(),title:t,category:document.getElementById('m-cat').value,current:0,target:a,color:'#D85A30'});closeModal();renderPage();}
+function saveExpense(){const a=parseFloat(document.getElementById('m-amt').value),d=document.getElementById('m-t').value.trim();if(isNaN(a)||!d)return;S.expenses.unshift({id:'x'+Date.now(),date:document.getElementById('m-d').value,desc:d,category:document.getElementById('m-cat').value,paidBy:document.getElementById('m-pb').value,amount:a});closeModal();renderPage();}
+function saveDoc(){const n=document.getElementById('m-t').value.trim();if(!n)return;S.documents.push({id:'d'+Date.now(),name:n,category:document.getElementById('m-cat').value,date:document.getElementById('m-d').value,color:'#D85A30'});closeModal();renderPage();}
+function saveOuting(){const t=document.getElementById('m-t').value.trim();if(!t)return;S.outings.push({id:'o'+Date.now(),title:t,desc:document.getElementById('m-desc').value,location:document.getElementById('m-loc').value,cost:document.getElementById('m-cost').value,date:document.getElementById('m-date').value,category:document.getElementById('m-cat').value,suggestedBy:S.currentUser.name,votes:0,voted:false,scheduled:false});closeModal();renderPage();}
+function saveChore(child){const t=document.getElementById('m-t').value.trim();if(!t)return;S.tasks.push({id:'t'+Date.now(),title:t,assignee:child,category:'Chores',isChore:true,points:parseInt(document.getElementById('m-pts').value)||30,done:false});closeModal();renderPage();}
+function saveKidsAppt(){const t=document.getElementById('m-t').value.trim();if(!t)return;const appt={id:'ka'+Date.now(),child:document.getElementById('m-child').value,title:t,date:document.getElementById('m-d').value,time:document.getElementById('m-ti').value,notes:document.getElementById('m-notes').value};S.kidsAppts.push(appt);S.events.push({id:'e'+Date.now(),title:t,date:appt.date,time:appt.time,type:'kids',assignee:appt.child});closeModal();renderPage();}
+
+function toggleTask(id){const t=S.tasks.find(t=>t.id===id);if(t){t.done=!t.done;renderSidebarUser();renderPage();}}
+function toggleGroc(id){const g=S.groceries.find(g=>g.id===id);if(g){g.checked=!g.checked;renderPage();}}
+function toggleHabit(id,day){const h=S.habits.find(h=>h.id===id);if(h){h.days[day]=h.days[day]?0:1;h.streak=h.days.filter(Boolean).length;renderPage();}}
+function addGoalFunds(id){const el=document.getElementById('ga-'+id);if(!el)return;const a=parseFloat(el.value);if(isNaN(a)||a<=0)return;const g=S.goals.find(g=>g.id===id);if(g)g.current=Math.min(g.target,g.current+a);renderPage();}
+function voteOuting(id){const o=S.outings.find(o=>o.id===id);if(o&&!o.voted){o.votes++;o.voted=true;renderPage();}}
+function scheduleOuting(id){const o=S.outings.find(o=>o.id===id);if(o){o.scheduled=true;renderPage();}}
+function redeemItem(id){const item=S.shopItems.find(s=>s.id===id),u=S.currentUser,pts=userPoints(u.name);if(pts>=item.pts){let d=item.pts;for(let t of S.tasks.filter(t=>t.assignee===u.name&&t.isChore&&t.done)){if(d<=0)break;const take=Math.min(t.points,d);t.points-=take;d-=take;}alert(item.name+' redeemed!');renderSidebarUser();renderPage();}}
+function syncGroceries(){let added=0;S.meals.forEach(m=>{m.ingredients.forEach(ing=>{if(!S.groceries.find(g=>g.name.toLowerCase()===ing.toLowerCase())){const cats={Pasta:'Pantry','Ground Beef':'Meat','Tomato Sauce':'Pantry','Onion':'Produce','Garlic':'Produce','Sourdough Bread':'Bakery','Avocado':'Produce','Eggs':'Dairy','Chilli Flakes':'Pantry'};S.groceries.push({id:'g'+Date.now()+Math.random(),name:ing,category:cats[ing]||'Other',checked:false,fromMeal:true});added++;}});});alert(added?added+' ingredient(s) synced!':'Already up to date.');if(added)renderPage();}
+function addTask(){const v=document.getElementById('ti').value.trim();if(!v)return;S.tasks.push({id:'t'+Date.now(),title:v,assignee:document.getElementById('ta').value,category:document.getElementById('tcat').value,isChore:document.getElementById('tch').checked,points:50,done:false});renderPage();}
+function addGrocery(){const v=document.getElementById('gi').value.trim();if(!v)return;S.groceries.push({id:'g'+Date.now(),name:v,category:document.getElementById('gcat').value,checked:false,fromMeal:false});renderPage();}
+function sendMsg(){const el=document.getElementById('hub-in');if(!el||!el.value.trim())return;const t=new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});if(S.isAnn){S.messages.push({id:'msg'+Date.now(),type:'announcement',from:S.currentUser.name,text:el.value.trim(),time:t});}else{S.messages.push({id:'msg'+Date.now(),from:S.currentUser.name,text:el.value.trim(),time:t});}renderPage();}
+function sendKidMsg(){const el=document.getElementById('kid-msg');if(!el||!el.value.trim())return;S.messages.push({id:'msg'+Date.now(),from:S.currentUser.name,text:el.value.trim(),time:new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})});renderPage();}
+function markAllRead(){S.notifications.forEach(n=>n.unread=false);renderNav();renderSidebarUser();renderPage();}
+function setKidsTab(t){S.kidsTab=t;renderPage();}
+
+function renderPage(){
+  const c=document.getElementById('content-el');
+  const u=S.currentUser;
+  if(u.role==='kid'){
+    const pages={'kid-home':kidHome,'kid-chores':kidChores,'kid-rewards':kidRewards,'kid-habits':kidHabits,'kid-calendar':kidCalendar,'kid-hub':kidHub,'kid-outings':kidOutings,'kid-goals':kidGoals};
+    c.innerHTML=(pages[S.page]||kidHome)();
+  } else {
+    const pages={dashboard:pgDash,notifications:pgNotif,calendar:pgCal,tasks:pgTasks,kids:pgKids,meals:pgMeals,groceries:pgGroceries,budget:pgBudget,reports:pgReports,habits:pgHabits,goals:pgGoals,documents:pgDocs,hub:pgHub,outings:pgOutings};
+    c.innerHTML=(pages[S.page]||pgDash)();
+    if(S.page==='reports')setTimeout(drawReportCharts,50);
+    if(S.page==='budget')setTimeout(drawBudgetDonut,50);
+  }
+}
+
+function pgDash(){
+  const total=S.expenses.reduce((s,x)=>s+x.amount,0);
+  const myTasks=S.tasks.filter(t=>t.assignee===S.currentUser.name&&!t.done);
+  const todayEvts=S.events.filter(e=>e.date==='2026-04-15');
+  const habitsDone=S.habits.filter(h=>h.days[6]===1).length;
+  const unread=S.notifications.filter(n=>n.unread).length;
+  return`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+    <div><div style="font-size:20px;font-weight:600">Welcome back, ${S.currentUser.name}!</div><div style="font-size:13px;color:#888;margin-top:3px">Here's your family overview for today.</div></div>
+  </div>
+  <div class="grid4" style="margin-bottom:20px">
+    <div class="card" style="text-align:center"><div style="font-size:24px;font-weight:600;color:#D85A30">${todayEvts.length}</div><div style="font-size:12px;color:#888">Events today</div></div>
+    <div class="card" style="text-align:center"><div style="font-size:24px;font-weight:600;color:#BA7517">${myTasks.length}</div><div style="font-size:12px;color:#888">Tasks pending</div></div>
+    <div class="card" style="text-align:center"><div style="font-size:24px;font-weight:600;color:#0F6E56">${habitsDone}/${S.habits.length}</div><div style="font-size:12px;color:#888">Habits done</div></div>
+    <div class="card" style="text-align:center;cursor:pointer" onclick="nav('notifications')"><div style="font-size:24px;font-weight:600;color:#E24B4A">${unread}</div><div style="font-size:12px;color:#888">New reminders</div></div>
+  </div>
+  <div class="grid3">
+    <div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><span style="font-weight:500;font-size:14px">Today's Schedule</span><span style="font-size:12px;color:#D85A30;cursor:pointer" onclick="nav('calendar')">View all</span></div>
+    ${todayEvts.map(e=>`<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:8px"><div style="width:8px;height:8px;border-radius:50%;background:#D85A30;flex-shrink:0;margin-top:4px"></div><div><div style="font-size:13px;font-weight:500">${e.title}</div><div style="font-size:12px;color:#888">${e.time}</div></div></div>`).join('')||'<div style="font-size:13px;color:#888">No events today.</div>'}
+    </div>
+    <div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px"><span style="font-weight:500;font-size:14px">My Tasks</span><span style="font-size:12px;color:#D85A30;cursor:pointer" onclick="nav('tasks')">View all</span></div>
+    ${myTasks.map(t=>`<div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;cursor:pointer" onclick="toggleTask('${t.id}')"><div style="width:16px;height:16px;border-radius:50%;border:1.5px solid #d0c0b0;flex-shrink:0"></div><span style="font-size:13px">${t.title}</span></div>`).join('')||'<div style="font-size:13px;color:#888">All done!</div>'}
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <div class="card"><div style="font-weight:500;font-size:14px;margin-bottom:8px">Habits Today</div>
+      ${S.habits.slice(0,3).map(h=>`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><span style="font-size:13px">${h.name}</span><div style="display:flex;gap:3px">${h.days.map(d=>`<div style="width:12px;height:12px;border-radius:50%;background:${d?h.color:'#f0e8e0'}"></div>`).join('')}</div></div>`).join('')}
+      </div>
+      <div class="card"><div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px">Total Expenses</div>
+      <div style="font-size:22px;font-weight:600;margin-bottom:10px">$${total.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
+      ${S.goals.slice(0,1).map(g=>`<div style="display:flex;justify-content:space-between;font-size:12px;color:#888;margin-bottom:4px"><span>${g.title}</span><span>$${g.current}/$${g.target}</span></div><div class="pbar"><div class="pf" style="width:${(g.current/g.target*100).toFixed(1)}%;background:${g.color}"></div></div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+}
+
+function pgNotif(){
+  const unread=S.notifications.filter(n=>n.unread), read=S.notifications.filter(n=>!n.unread);
+  return`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+    <div><div style="font-size:20px;font-weight:600">Reminders</div><div style="font-size:13px;color:#888;margin-top:3px">Stay on top of what matters today.</div></div>
+    <button class="btn b-ghost" onclick="markAllRead()">Mark all read</button>
+  </div>
+  ${unread.length?`<div class="sec">New (${unread.length})</div><div class="card" style="padding:0;margin-bottom:16px">${unread.map(n=>`<div class="notif-item"><div style="width:32px;height:32px;border-radius:50%;background:${n.color}22;display:flex;align-items:center;justify-content:center;flex-shrink:0">${ic('bell',14)}</div><div style="flex:1"><div style="font-size:13px;font-weight:500">${n.title}</div><div style="font-size:12px;color:#888;margin-top:2px">${n.sub}</div></div><div style="width:8px;height:8px;border-radius:50%;background:#E24B4A;flex-shrink:0;margin-top:5px"></div></div>`).join('')}</div>`:''}
+  ${read.length?`<div class="sec">Earlier</div><div class="card" style="padding:0">${read.map(n=>`<div class="notif-item"><div style="width:32px;height:32px;border-radius:50%;background:${n.color}22;display:flex;align-items:center;justify-content:center;flex-shrink:0">${ic('bell',14)}</div><div style="flex:1"><div style="font-size:13px;font-weight:500">${n.title}</div><div style="font-size:12px;color:#888;margin-top:2px">${n.sub}</div></div></div>`).join('')}</div>`:''}`;
+}
+
+function pgCal(){
+  const days=['SUN','MON','TUE','WED','THU','FRI','SAT'];
+  const dates=['2026-04-12','2026-04-13','2026-04-14','2026-04-15','2026-04-16','2026-04-17','2026-04-18'];
+  const nums=[12,13,14,15,16,17,18];
+  const tc={sport:'background:#E1F5EE;color:#085041',appointment:'background:#FCEBEB;color:#A32D2D',kids:'background:#EEEDFE;color:#3C3489',General:'background:#f5ece6;color:#712B13'};
+  return`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+    <div><div style="font-size:20px;font-weight:600">Family Calendar</div><div style="font-size:13px;color:#888;margin-top:3px">Keep track of everyone's schedule.</div></div>
+    <button class="btn b-orange" onclick="openModal('event')">${ic('plus')} Add Event</button>
+  </div>
+  <div class="cal-grid">
+    ${days.map(d=>`<div class="cal-hd">${d}</div>`).join('')}
+    ${dates.map((ds,i)=>{const evts=S.events.filter(e=>e.date===ds);return`<div class="cal-day"><div class="cal-num${ds==='2026-04-15'?' today':''}">${nums[i]}</div>${evts.map(e=>`<div class="cal-ev" style="${tc[e.type]||tc.General}">${e.title}</div>`).join('')}</div>`;}).join('')}
+  </div>`;
+}
+
+function pgTasks(){
+  const my=S.tasks.filter(t=>t.assignee===S.currentUser.name);
+  const others=S.tasks.filter(t=>t.assignee!==S.currentUser.name);
+  return`<div style="font-size:20px;font-weight:600;margin-bottom:20px">Tasks & Chores</div>
+  <div class="card" style="margin-bottom:20px">
+    <div style="font-weight:500;font-size:14px;margin-bottom:12px">Add new task</div>
+    <input type="text" id="ti" placeholder="What needs to be done?" style="width:100%;padding:9px 12px;border:0.5px solid #d8c0b0;border-radius:9px;font-size:13px;background:#fff;outline:none;margin-bottom:10px;color:#1a1a1a">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+      <select id="ta" style="padding:7px 10px;border:0.5px solid #d8c0b0;border-radius:9px;font-size:13px;background:#fff;outline:none">${USERS.map(u=>`<option>${u.name}</option>`).join('')}</select>
+      <select id="tcat" style="padding:7px 10px;border:0.5px solid #d8c0b0;border-radius:9px;font-size:13px;background:#fff;outline:none"><option>Chores</option><option>Bills</option><option>Errands</option><option>Other</option></select>
+      <label style="display:flex;align-items:center;gap:6px;font-size:13px"><input type="checkbox" id="tch"> Chore (earns points)</label>
+      <button class="btn b-orange" onclick="addTask()">${ic('plus')} Add</button>
+    </div>
+  </div>
+  ${my.length?`<div class="sec">My Tasks</div>${my.map(t=>`<div class="card" style="display:flex;align-items:center;gap:12px;margin-bottom:8px;cursor:pointer;justify-content:space-between" onclick="toggleTask('${t.id}')"><div style="display:flex;align-items:center;gap:12px"><div style="width:16px;height:16px;border-radius:50%;${t.done?'background:#0F6E56;border:none':'border:1.5px solid #d0c0b0'};flex-shrink:0"></div><div><div style="font-size:13px;font-weight:500;${t.done?'text-decoration:line-through;color:#aaa':''}">${t.title}</div><div style="font-size:12px;color:#888">For: ${t.assignee}${t.isChore?` · <span style="color:#BA7517">${t.points} pts</span>`:''}</div></div></div><span class="pill ${t.done?'pill-teal':'pill-orange'}">${t.done?'Done':'Pending'}</span></div>`).join('')}`:''}
+  ${others.length?`<div class="sec">Family Tasks</div>${others.map(t=>`<div class="card" style="display:flex;align-items:center;gap:12px;margin-bottom:8px;cursor:pointer;justify-content:space-between" onclick="toggleTask('${t.id}')"><div style="display:flex;align-items:center;gap:12px"><div style="width:16px;height:16px;border-radius:50%;${t.done?'background:#0F6E56;border:none':'border:1.5px solid #d0c0b0'};flex-shrink:0"></div><div><div style="font-size:13px;font-weight:500;${t.done?'text-decoration:line-through;color:#aaa':''}">${t.title}</div><div style="font-size:12px;color:#888">For: ${t.assignee}${t.isChore?` · <span style="color:#BA7517">${t.points} pts</span>`:''}</div></div></div><span class="pill ${t.done?'pill-teal':'pill-orange'}">${t.done?'Done':'Pending'}</span></div>`).join('')}`:''}`;
+}
+
+function pgKids(){
+  const tabs=['chores','appointments','rewards'];
+  return`<div style="font-size:20px;font-weight:600;margin-bottom:18px">Kids' Zone</div>
+  <div class="kids-tabs">${tabs.map(t=>`<div class="ktab${S.kidsTab===t?' active':''}" onclick="setKidsTab('${t}')">${t.charAt(0).toUpperCase()+t.slice(1)}</div>`).join('')}</div>
+  ${S.kidsTab==='chores'?kidsChoresParent():S.kidsTab==='appointments'?kidsApptsParent():kidsRewardsParent()}`;
+}
+
+function kidsChoresParent(){
+  const kids=USERS.filter(u=>u.role==='kid');
+  return`<div class="grid2">${kids.map(k=>{const tasks=S.tasks.filter(t=>t.assignee===k.name&&t.isChore);const pts=tasks.filter(t=>t.done).reduce((s,t)=>s+(t.points||0),0);return`<div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><div style="width:36px;height:36px;border-radius:50%;background:${k.bg};color:${k.color};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600">${k.initials}</div><div><div style="font-weight:500">${k.name}</div><div style="font-size:12px;color:#888">${pts} pts earned</div></div></div>${tasks.map(t=>`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;cursor:pointer" onclick="toggleTask('${t.id}')"><div style="display:flex;align-items:center;gap:8px"><div style="width:16px;height:16px;border-radius:50%;${t.done?`background:${k.accent}`:'border:1.5px solid #d0c0b0'};flex-shrink:0"></div><span style="font-size:13px;${t.done?'text-decoration:line-through;color:#aaa':''}">${t.title}</span></div><span style="background:${k.bg};color:${k.accent};padding:2px 8px;border-radius:99px;font-size:11px;font-weight:500">${t.points} pts</span></div>`).join('')}<button class="btn b-orange" style="width:100%;justify-content:center;margin-top:10px" onclick="openModal('choreAssign','${k.name}')">${ic('plus')} Assign Chore</button></div>`;}).join('')}</div>`;
+}
+
+function kidsApptsParent(){
+  return`<div style="display:flex;justify-content:flex-end;margin-bottom:12px"><button class="btn b-orange" onclick="openModal('kidsAppt')">${ic('plus')} Add Appointment</button></div>
+  <div class="grid2">${S.kidsAppts.map(a=>`<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div><div style="font-weight:500;font-size:14px">${a.title}</div><div style="font-size:12px;color:#888;margin-top:2px">${a.date} · ${a.time}</div></div><span class="pill pill-orange">${a.child}</span></div>${a.notes?`<div style="font-size:12px;color:#888;background:#fff5f0;padding:7px 10px;border-radius:8px">${a.notes}</div>`:''}</div>`).join('')}</div>`;
+}
+
+function kidsRewardsParent(){
+  return`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px">${S.shopItems.map(item=>`<div class="shop-item"><div style="font-size:22px;font-weight:600;color:#D85A30;margin-bottom:2px">${item.pts}</div><div style="font-size:11px;color:#888;margin-bottom:6px">points</div><div style="font-size:13px;font-weight:500">${item.name}</div></div>`).join('')}</div>`;
+}
+
+function pgMeals(){
+  if(!S.mealTab) S.mealTab='planner';
+  const tabs=[{id:'planner',label:'Meal Planner'},{id:'recipes',label:'Recipe Book'}];
+  const typeColors={Dinner:'background:#FAEEDA;color:#633806',Breakfast:'background:#E1F5EE;color:#085041',Lunch:'background:#E6F1FB;color:#0C447C'};
+  const diffColors={Easy:'background:#EAF3DE;color:#27500A',Medium:'background:#FAEEDA;color:#633806',Hard:'background:#FCEBEB;color:#A32D2D'};
+  const catColors2={Breakfast:'#0F6E56',Lunch:'#185FA5',Dinner:'#D85A30',Pasta:'#BA7517',Asian:'#D4537E',Salads:'#3B6D11',Soups:'#534AB7',Snacks:'#993C1D',Desserts:'#D4537E',Other:'#888'};
+
+  const plannerHTML=()=>`
+    <div style="display:flex;gap:8px;margin-bottom:20px">
+      <button class="btn b-ghost" onclick="syncGroceries()" style="font-size:13px">${ic('cart')} Sync to Groceries</button>
+      <button class="btn b-orange" onclick="openModal('meal')" style="font-size:13px">${ic('plus')} Add Meal</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px">
+      ${S.meals.map(m=>`
+      <div style="background:#fff;border:0.5px solid #f0d0c0;border-radius:14px;overflow:hidden">
+        <div style="padding:14px 16px;border-bottom:0.5px solid #f5ece6">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+            <span style="${typeColors[m.type]||'background:#f5ece6;color:#712B13'};padding:3px 10px;border-radius:99px;font-size:11px;font-weight:600">${m.type.toUpperCase()}</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d0c0b0" stroke-width="1.8"><line x1="3" y1="2" x2="3" y2="22"/><path d="M7 2v6a3 3 0 01-3 3v9"/><line x1="21" y1="2" x2="21" y2="22"/><path d="M21 2v6a3 3 0 01-3 3v9"/></svg>
+          </div>
+          <div style="font-size:16px;font-weight:600;margin-bottom:3px">${m.name}</div>
+          <div style="font-size:13px;color:#888">${new Date(m.date+'T00:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}</div>
+        </div>
+        <div style="padding:12px 16px">
+          <div style="display:flex;align-items:center;gap:6px;font-size:12px;color:#888;margin-bottom:8px">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>
+            Ingredients
+          </div>
+          <div>${m.ingredients.map(i=>`<span style="display:inline-block;padding:3px 9px;border:0.5px solid #e8d8d0;border-radius:99px;font-size:12px;margin-right:4px;margin-bottom:4px;color:#1a1a1a">${i}</span>`).join('')}</div>
+          ${m.prepTime?`<div style="font-size:12px;color:#aaa;margin-top:8px">${ic('clock',11)} ${m.prepTime} · Serves ${m.serves}</div>`:''}
+        </div>
+      </div>`).join('')}
+    </div>`;
+
+  const recipesHTML=()=>`
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px">
+      <input type="text" id="recipe-search" placeholder="Search recipes..." style="flex:1;min-width:180px;padding:8px 12px;border:0.5px solid #d8c0b0;border-radius:9px;font-size:13px;background:#fff;outline:none;color:#1a1a1a" oninput="renderPage()">
+      <button class="btn b-orange" onclick="openModal('recipe')">${ic('plus')} Add Recipe</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px">
+      ${S.recipes.filter(r=>{const q=(document.getElementById('recipe-search')?.value||'').toLowerCase();return!q||r.name.toLowerCase().includes(q)||r.category.toLowerCase().includes(q);}).map(r=>`
+      <div style="background:#fff;border:0.5px solid #f0d0c0;border-radius:14px;overflow:hidden">
+        <div style="background:${catColors2[r.category]||'#D85A30'};padding:14px 16px">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+            <span style="background:rgba(255,255,255,0.22);color:#fff;padding:2px 9px;border-radius:99px;font-size:11px;font-weight:600">${r.category.toUpperCase()}</span>
+            <span style="color:rgba(255,255,255,0.9);font-size:12px">${'★'.repeat(r.rating||5)}</span>
+          </div>
+          <div style="font-size:16px;font-weight:600;color:#fff;margin-bottom:3px">${r.name}</div>
+          <div style="display:flex;gap:10px;font-size:12px;color:rgba(255,255,255,0.8)">
+            <span>${r.prepTime||'?'}</span>
+            <span>Serves ${r.serves||4}</span>
+            <span style="${diffColors[r.difficulty]||''};padding:1px 7px;border-radius:99px;font-size:11px">${r.difficulty||'Easy'}</span>
+          </div>
+        </div>
+        <div style="padding:14px 16px">
+          <div style="font-size:12px;font-weight:500;color:#888;margin-bottom:6px">Ingredients</div>
+          <div style="margin-bottom:12px">${r.ingredients.map(i=>`<span style="display:inline-block;padding:3px 9px;border:0.5px solid #e8d8d0;border-radius:99px;font-size:12px;margin-right:4px;margin-bottom:4px;color:#1a1a1a">${i}</span>`).join('')}</div>
+          <div style="font-size:12px;font-weight:500;color:#888;margin-bottom:6px">Steps</div>
+          ${r.steps.map((s,i)=>`<div style="display:flex;gap:8px;margin-bottom:6px;align-items:flex-start"><div style="width:20px;height:20px;border-radius:50%;background:#FAECE7;color:#993C1D;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0">${i+1}</div><div style="font-size:13px">${s}</div></div>`).join('')}
+          ${r.notes?`<div style="margin-top:10px;font-size:12px;color:#888;background:#fff9f6;padding:8px 10px;border-radius:8px;border-left:3px solid #D85A30">💡 ${r.notes}</div>`:''}
+          <button class="btn b-orange" style="width:100%;justify-content:center;margin-top:12px;font-size:12px" onclick="addMealFromRecipe('${r.id}')">Add to Meal Plan</button>
+        </div>
+      </div>`).join('')}
+    </div>`;
+
+  return`
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:20px;flex-wrap:wrap;gap:12px">
+    <div><div style="font-size:20px;font-weight:600">Meal Planning</div><div style="font-size:13px;color:#888;margin-top:3px">Plan your family meals and recipes.</div></div>
+  </div>
+  <div style="display:flex;gap:2px;background:#f5ece6;border-radius:10px;padding:3px;margin-bottom:22px;width:fit-content">
+    ${tabs.map(t=>`<button onclick="S.mealTab='${t.id}';renderPage()" style="padding:7px 20px;border-radius:8px;border:none;font-size:13px;font-weight:500;cursor:pointer;transition:all 0.15s;background:${S.mealTab===t.id?'#fff':'transparent'};color:${S.mealTab===t.id?'#D85A30':'#888'};${S.mealTab===t.id?'box-shadow:0 1px 3px rgba(0,0,0,0.08)':''}">${t.label}</button>`).join('')}
+  </div>
+  ${S.mealTab==='planner'?plannerHTML():recipesHTML()}`;
+}
+
+function addMealFromRecipe(id){
+  const r=S.recipes.find(r=>r.id===id);if(!r)return;
+  const today=new Date().toISOString().split('T')[0];
+  S.meals.push({id:'m'+Date.now(),name:r.name,type:'Dinner',date:today,ingredients:r.ingredients,steps:r.steps,prepTime:r.prepTime,serves:r.serves});
+  S.mealTab='planner';
+  renderPage();
+  alert(r.name+' added to your meal plan!');
+}
+
+function pgGroceries(){
+  const cats=[...new Set(S.groceries.map(g=>g.category))];
+  const fromMeal=S.groceries.filter(g=>g.fromMeal&&!g.checked).length;
+  return`<div style="font-size:20px;font-weight:600;margin-bottom:16px">Grocery List</div>
+  ${fromMeal?`<div style="background:#E1F5EE;border:0.5px solid #5DCAA5;border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:13px;color:#085041">${fromMeal} item(s) synced from meal plans</div>`:''}
+  <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
+    <input type="text" id="gi" placeholder="Add an item..." style="flex:1;min-width:200px;padding:8px 12px;border:0.5px solid #d8c0b0;border-radius:9px;font-size:13px;background:#fff;outline:none;color:#1a1a1a" onkeydown="if(event.key==='Enter')addGrocery()">
+    <select id="gcat" style="padding:8px 10px;border:0.5px solid #d8c0b0;border-radius:9px;font-size:13px;background:#fff;outline:none"><option>Produce</option><option>Dairy</option><option>Pantry</option><option>Meat</option><option>Bakery</option><option>Snacks</option></select>
+    <button class="btn b-teal" onclick="addGrocery()">${ic('plus')} Add</button>
+  </div>
+  ${cats.map(cat=>`<div class="card" style="margin-bottom:12px"><div style="font-size:13px;font-weight:500;margin-bottom:10px;display:flex;justify-content:space-between"><span>${cat}</span><span style="font-size:12px;color:#888">${S.groceries.filter(g=>g.category===cat&&g.checked).length}/${S.groceries.filter(g=>g.category===cat).length}</span></div>${S.groceries.filter(g=>g.category===cat).map(g=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;cursor:pointer" onclick="toggleGroc('${g.id}')"><div style="width:16px;height:16px;border-radius:50%;${g.checked?'background:#0F6E56;border:none':'border:1.5px solid #d0c0b0'};flex-shrink:0"></div><span style="font-size:13px;${g.checked?'text-decoration:line-through;color:#aaa':''}">${g.name}</span>${g.fromMeal?`<span class="pill pill-teal" style="font-size:10px">meal</span>`:''}</div>`).join('')}</div>`).join('')}`;
+}
+
+function pgBudget(){
+  const total=S.expenses.reduce((s,x)=>s+x.amount,0);
+  return`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+    <div><div style="font-size:20px;font-weight:600">Budget Tracker</div><div style="font-size:13px;color:#888;margin-top:3px">Manage household expenses and spending.</div></div>
+    <button class="btn b-orange" onclick="openModal('expense')">${ic('plus')} Add Expense</button>
+  </div>
+  <div class="grid2" style="margin-bottom:20px">
+    <div class="card" style="text-align:center;display:flex;flex-direction:column;align-items:center;justify-content:center">
+      <div style="width:44px;height:44px;border-radius:50%;background:#FAECE7;display:flex;align-items:center;justify-content:center;margin-bottom:10px;color:#993C1D">${ic('dollar',20)}</div>
+      <div style="font-size:11px;color:#888;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px">Total Expenses</div>
+      <div style="font-size:28px;font-weight:600">$${total.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2})}</div>
+    </div>
+    <div class="card"><div style="font-weight:500;font-size:14px;margin-bottom:12px">Spending by Category</div>
+    <div style="position:relative;height:160px"><canvas id="budget-donut" role="img" aria-label="Budget donut chart"></canvas></div>
+    <div id="budget-legend" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;font-size:12px"></div></div>
+  </div>
+  <div class="card"><div style="font-weight:500;font-size:14px;margin-bottom:12px">Recent Transactions</div>
+  <table class="txn-tbl"><thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Paid By</th><th style="text-align:right">Amount</th></tr></thead>
+  <tbody>${S.expenses.map(x=>`<tr><td style="color:#888">${x.date}</td><td style="font-weight:500">${x.desc}</td><td><span class="pill pill-orange">${x.category}</span></td><td>${x.paidBy}</td><td style="text-align:right;font-weight:500">$${x.amount.toFixed(2)}</td></tr>`).join('')}</tbody></table></div>`;
+}
+
+function drawBudgetDonut(){
+  const canvas=document.getElementById('budget-donut');if(!canvas)return;
+  if(canvas._chart){canvas._chart.destroy();}
+  const cats={};S.expenses.forEach(x=>{cats[x.category]=(cats[x.category]||0)+x.amount});
+  const labels=Object.keys(cats),data=Object.values(cats);
+  const colors=['#D85A30','#378ADD','#0F6E56','#BA7517','#D4537E','#534AB7'];
+  canvas._chart=new Chart(canvas,{type:'doughnut',data:{labels,datasets:[{data,backgroundColor:colors.slice(0,labels.length),borderWidth:2,borderColor:'#fff'}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},cutout:'65%'}});
+  const legend=document.getElementById('budget-legend');
+  if(legend)legend.innerHTML=labels.map((l,i)=>`<span style="display:flex;align-items:center;gap:4px"><span style="width:10px;height:10px;border-radius:2px;background:${colors[i]};display:inline-block"></span><span style="color:#888">${l}</span></span>`).join('');
+}
+
+function pgReports(){
+  const total=S.expenses.reduce((s,x)=>s+x.amount,0);
+  const habitsAvg=Math.round(S.habits.reduce((s,h)=>s+h.streak,0)/S.habits.length);
+  const goalPct=Math.round(S.goals.reduce((s,g)=>s+g.current/g.target,0)/S.goals.length*100);
+  return`<div style="font-size:20px;font-weight:600;margin-bottom:20px">Reports & Analytics</div>
+  <div class="grid4" style="margin-bottom:20px">
+    <div class="card" style="text-align:center"><div style="font-size:20px;font-weight:600;color:#D85A30">$${total.toLocaleString()}</div><div style="font-size:12px;color:#888">Total spending</div></div>
+    <div class="card" style="text-align:center"><div style="font-size:20px;font-weight:600;color:#0F6E56">${habitsAvg}</div><div style="font-size:12px;color:#888">Avg habit streak</div></div>
+    <div class="card" style="text-align:center"><div style="font-size:20px;font-weight:600;color:#534AB7">${goalPct}%</div><div style="font-size:12px;color:#888">Avg goal progress</div></div>
+    <div class="card" style="text-align:center"><div style="font-size:20px;font-weight:600;color:#D4537E">${S.tasks.filter(t=>t.done).length}</div><div style="font-size:12px;color:#888">Tasks completed</div></div>
+  </div>
+  <div class="grid2" style="margin-bottom:16px">
+    <div class="card"><div style="font-weight:500;font-size:14px;margin-bottom:12px">Monthly Spending</div><div style="position:relative;height:200px"><canvas id="spending-chart" role="img" aria-label="Monthly spending chart"></canvas></div></div>
+    <div class="card"><div style="font-weight:500;font-size:14px;margin-bottom:12px">Goal Progress</div>${S.goals.map(g=>{const pct=(g.current/g.target*100).toFixed(1);return`<div style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px"><span style="font-weight:500">${g.title}</span><span style="color:#888">${pct}%</span></div><div class="pbar" style="height:10px"><div class="pf" style="width:${pct}%;background:${g.color}"></div></div></div>`;}).join('')}</div>
+  </div>
+  <div class="card"><div style="font-weight:500;font-size:14px;margin-bottom:12px">Habit Streaks</div><div style="position:relative;height:180px"><canvas id="habit-chart" role="img" aria-label="Habit streak chart"></canvas></div></div>`;
+}
+
+function drawReportCharts(){
+  const sc=document.getElementById('spending-chart');
+  if(sc){if(sc._chart)sc._chart.destroy();sc._chart=new Chart(sc,{type:'bar',data:{labels:['Jan','Feb','Mar','Apr'],datasets:[{label:'Spending',data:[1820,2100,1678,1438],backgroundColor:'#FAECE7',borderColor:'#D85A30',borderWidth:1.5,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{ticks:{callback:v=>'$'+v},grid:{color:'rgba(0,0,0,0.05)'}},x:{grid:{display:false}}}}});}
+  const hc=document.getElementById('habit-chart');
+  if(hc){if(hc._chart)hc._chart.destroy();hc._chart=new Chart(hc,{type:'bar',data:{labels:S.habits.map(h=>h.name.length>18?h.name.slice(0,16)+'…':h.name),datasets:[{label:'Streak',data:S.habits.map(h=>h.streak),backgroundColor:S.habits.map(h=>h.color+'44'),borderColor:S.habits.map(h=>h.color),borderWidth:1.5,borderRadius:4}]},options:{indexAxis:'y',responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{ticks:{stepSize:1},grid:{color:'rgba(0,0,0,0.05)'}},y:{grid:{display:false}}}}});}
+}
+
+function pgHabits(){
+  const days=['M','T','W','T','F','S','S'];
+  return`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+    <div><div style="font-size:20px;font-weight:600">Habit Tracker</div><div style="font-size:13px;color:#888;margin-top:3px">Build healthy habits with daily streaks.</div></div>
+    <button class="btn b-orange" onclick="openModal('habit')">${ic('plus')} New Habit</button>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px">
+    ${S.habits.map(h=>`<div class="habit-card"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div style="font-size:14px;font-weight:500">${h.name}<div style="font-size:11px;color:#888;margin-top:2px">${h.owner}</div></div><span class="pill pill-orange">${h.streak}-day streak</span></div><div style="display:flex;gap:5px;align-items:center">${h.days.map((d,i)=>`<div style="display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:20px;height:20px;border-radius:50%;background:${d?h.color:'#f0e8e0'};cursor:pointer" onclick="toggleHabit('${h.id}',${i})"></div><div style="font-size:10px;color:#888">${days[i]}</div></div>`).join('')}</div><div class="pbar" style="margin-top:10px"><div class="pf" style="width:${(h.days.filter(Boolean).length/7*100).toFixed(0)}%;background:${h.color}"></div></div></div>`).join('')}
+  </div>`;
+}
+
+function pgGoals(){
+  return`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+    <div><div style="font-size:20px;font-weight:600">Family Goals</div><div style="font-size:13px;color:#888;margin-top:3px">Track savings targets and shared objectives.</div></div>
+    <button class="btn b-orange" onclick="openModal('goal')">${ic('plus')} Create Goal</button>
+  </div>
+  <div class="grid3">${S.goals.map(g=>{const pct=Math.min(100,g.current/g.target*100),done=g.current>=g.target;return`<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px"><div><div style="font-size:15px;font-weight:500">${g.title}</div><span class="pill pill-orange" style="margin-top:4px;display:inline-block">${g.category||'Family'}</span></div><div style="width:34px;height:34px;border-radius:50%;background:${g.color}22;display:flex;align-items:center;justify-content:center;color:${g.color}">${ic('target',16)}</div></div><div style="display:flex;justify-content:space-between;font-size:12px;color:#888;margin-bottom:4px"><span>$${g.current.toLocaleString()} of $${g.target.toLocaleString()}</span><span>${pct.toFixed(1)}%</span></div><div class="pbar" style="height:10px;margin-bottom:12px"><div class="pf" style="width:${pct}%;background:${g.color}"></div></div>${done?`<div style="text-align:center;padding:8px;background:#EAF3DE;color:#27500A;border-radius:9px;font-size:13px;font-weight:500">Goal reached!</div>`:`<div style="display:flex;gap:8px"><input type="number" id="ga-${g.id}" placeholder="Add amount" style="flex:1;padding:7px 10px;border:0.5px solid #d8c0b0;border-radius:9px;font-size:13px;background:#fff;outline:none;color:#1a1a1a"><button class="btn b-orange" onclick="addGoalFunds('${g.id}')">${ic('plus')} Add</button></div>`}</div>`;}).join('')}</div>`;
+}
+
+function pgDocs(){
+  const cats=[...new Set(S.documents.map(d=>d.category))];
+  return`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+    <div><div style="font-size:20px;font-weight:600">Documents</div><div style="font-size:13px;color:#888;margin-top:3px">Secure storage for important family records.</div></div>
+    <button class="btn b-orange" onclick="openModal('doc')">${ic('plus')} Upload</button>
+  </div>
+  <div style="background:#E6F1FB;border:0.5px solid #85B7EB;border-radius:10px;padding:10px 14px;margin-bottom:18px;font-size:13px;color:#0C447C;display:flex;align-items:center;gap:8px">${ic('lock',14)} All documents are securely stored and accessible only to your family.</div>
+  ${cats.map(cat=>`<div style="margin-bottom:20px"><div class="sec">${cat}</div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px">${S.documents.filter(d=>d.category===cat).map(d=>`<div class="doc-card"><div style="width:40px;height:40px;border-radius:10px;background:${d.color}22;color:${d.color};display:flex;align-items:center;justify-content:center;margin-bottom:10px">${ic('file',20)}</div><div style="font-size:13px;font-weight:500;margin-bottom:4px">${d.name}</div><div style="font-size:11px;color:#888">${d.date}</div></div>`).join('')}</div></div>`).join('')}`;
+}
+
+function pgHub(){
+  return`<div style="font-size:20px;font-weight:600;margin-bottom:20px">Family Hub</div>
+  <div style="max-width:560px">
+    <div class="card" style="min-height:320px;display:flex;flex-direction:column;gap:10px;margin-bottom:12px">
+      ${S.messages.map(m=>{
+        if(m.type==='announcement')return`<div class="ann-card"><div style="font-size:13px;font-weight:500;color:#633806">Announcement from ${m.from}</div><div style="font-size:13px;color:#633806">${m.text}</div><div style="font-size:11px;color:#854F0B;margin-top:3px">${m.time}</div></div>`;
+        const isSelf=m.from===S.currentUser.name;
+        if(isSelf)return`<div style="display:flex;flex-direction:column;align-items:flex-end"><div class="msg-bubble" style="background:#D85A30;color:#fff">${m.text}</div><div style="font-size:11px;color:#aaa;margin-top:2px">${m.time}</div></div>`;
+        return`<div><div style="font-size:12px;color:#888;margin-bottom:3px">${m.from}</div><div class="msg-bubble" style="background:#f5ece6">${m.text}</div><div style="font-size:11px;color:#aaa;margin-top:2px">${m.time}</div></div>`;
+      }).join('')}
+    </div>
+    <label style="display:flex;align-items:center;gap:8px;font-size:13px;margin-bottom:8px"><input type="checkbox" id="is-ann" onchange="S.isAnn=this.checked"> Mark as Announcement</label>
+    <div style="display:flex;gap:8px">
+      <input type="text" id="hub-in" placeholder="Type a message..." style="flex:1;padding:9px 14px;border:0.5px solid #d8c0b0;border-radius:99px;font-size:13px;background:#fff;outline:none;color:#1a1a1a" onkeydown="if(event.key==='Enter')sendMsg()">
+      <button style="width:36px;height:36px;border-radius:50%;background:#D85A30;border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff" onclick="sendMsg()">${ic('send')}</button>
+    </div>
+  </div>`;
+}
+
+function pgOutings(){
+  const cats=['All','Nature','Adventure','Culture','Food','Sports','Entertainment','Education','Other'];
+  if(!S.outingFilter)S.outingFilter='All';
+  const filtered=S.outingFilter==='All'?S.outings:S.outings.filter(o=>o.category===S.outingFilter);
+  return`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+    <div><div style="font-size:20px;font-weight:600">Family Outings</div><div style="font-size:13px;color:#888;margin-top:3px">Suggest and vote on fun places to go!</div></div>
+    <button class="btn b-pink" onclick="openModal('outing')">${ic('plus')} Suggest Outing</button>
+  </div>
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px">
+    ${cats.map(c=>`<div style="padding:6px 14px;border-radius:99px;font-size:12px;cursor:pointer;border:0.5px solid ${S.outingFilter===c?'#D85A30':'#f0d0c0'};background:${S.outingFilter===c?'#D85A30':'#fff'};color:${S.outingFilter===c?'#fff':'#666'}" onclick="S.outingFilter='${c}';renderPage()">${c}</div>`).join('')}
+  </div>
+  <div class="grid2">${filtered.map(o=>`<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div><div style="font-weight:500;font-size:15px">${o.title}</div>${o.category?`<span class="pill pill-orange" style="margin-top:4px;display:inline-block">${o.category}</span>`:''}</div><span style="color:#A32D2D;font-weight:500;font-size:13px;display:flex;align-items:center;gap:4px">${ic('thumb',13)} ${o.votes}</span></div><div style="font-size:13px;color:#888;margin-bottom:8px">${o.desc}</div><div style="display:flex;flex-wrap:wrap;gap:8px;font-size:12px;color:#888;margin-bottom:10px">${o.location?`<span>${ic('pin',11)} ${o.location}</span>`:''} ${o.cost?`<span>$: ${o.cost}</span>`:''} ${o.date?`<span>📅 ${o.date}</span>`:''}</div><div style="font-size:12px;color:#aaa;margin-bottom:12px">Suggested by ${o.suggestedBy}</div>${o.scheduled?`<div style="background:#EAF3DE;color:#27500A;border-radius:9px;padding:8px;text-align:center;font-size:13px;font-weight:500">Scheduled!</div>`:`<div style="display:flex;gap:8px">${o.voted?`<button style="flex:1;padding:8px;background:#FCEBEB;color:#A32D2D;border:none;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer">Voted!</button>`:`<button class="btn b-ghost" style="flex:1;justify-content:center" onclick="voteOuting('${o.id}')">Vote</button>`}<button class="btn b-purple" style="flex:1;justify-content:center" onclick="scheduleOuting('${o.id}')">Schedule</button></div>`}</div>`).join('')}</div>`;
+}
+
+function kidHome(){
+  const u=S.currentUser,pts=userPoints(u.name);
+  const myTasks=S.tasks.filter(t=>t.assignee===u.name&&t.isChore&&!t.done);
+  const myHabits=S.habits.filter(h=>h.owner===u.name);
+  const myEvents=S.events.filter(e=>e.assignee===u.name);
+  return`<div style="background:${u.accent};border-radius:16px;padding:20px;margin-bottom:20px;color:#fff;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:20px;font-weight:600">Hi ${u.name}!</div><div style="font-size:13px;opacity:0.85;margin-top:3px">You have ${myTasks.length} chore${myTasks.length!==1?'s':''} to do today</div></div><div style="text-align:center"><div style="font-size:32px;font-weight:600">${pts}</div><div style="font-size:12px;opacity:0.85">points</div></div></div>
+  <div class="grid3" style="margin-bottom:20px">
+    <div class="card" style="text-align:center;cursor:pointer" onclick="nav('kid-chores')"><div style="font-size:24px;font-weight:600;color:${u.accent}">${myTasks.length}</div><div style="font-size:12px;color:#888">Chores left</div></div>
+    <div class="card" style="text-align:center;cursor:pointer" onclick="nav('kid-habits')"><div style="font-size:24px;font-weight:600;color:${u.accent}">${myHabits.filter(h=>h.days[6]).length}/${myHabits.length}</div><div style="font-size:12px;color:#888">Habits today</div></div>
+    <div class="card" style="text-align:center;cursor:pointer" onclick="nav('kid-rewards')"><div style="font-size:24px;font-weight:600;color:${u.accent}">${pts}</div><div style="font-size:12px;color:#888">Points to spend</div></div>
+  </div>
+  ${myTasks.length?`<div class="sec">My chores</div>${myTasks.slice(0,3).map(t=>`<div class="card" style="display:flex;align-items:center;gap:12px;margin-bottom:8px;cursor:pointer" onclick="toggleTask('${t.id}')"><div style="width:16px;height:16px;border-radius:50%;border:1.5px solid #d0c0b0;flex-shrink:0"></div><div style="flex:1"><div style="font-size:13px;font-weight:500">${t.title}</div></div><span style="background:${u.bg};color:${u.accent};padding:2px 9px;border-radius:99px;font-size:11px;font-weight:500">${t.points} pts</span></div>`).join('')}`:''}
+  ${myEvents.length?`<div class="sec">My schedule</div>${myEvents.map(e=>`<div class="card" style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:13px;font-weight:500">${e.title}</span><span style="font-size:12px;color:#888">${e.date} · ${e.time}</span></div>`).join('')}`:''}`;
+}
+
+function kidChores(){
+  const u=S.currentUser,mine=S.tasks.filter(t=>t.assignee===u.name&&t.isChore),done=mine.filter(t=>t.done).length;
+  return`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px"><div><div style="font-size:20px;font-weight:600">My Chores</div><div style="font-size:13px;color:#888;margin-top:3px">${done}/${mine.length} completed</div></div><span style="font-size:18px;font-weight:600;color:${u.accent}">${userPoints(u.name)} pts</span></div>
+  <div class="pbar" style="height:10px;margin-bottom:20px"><div class="pf" style="width:${mine.length?done/mine.length*100:0}%;background:${u.accent}"></div></div>
+  ${mine.map(t=>`<div class="card" style="display:flex;align-items:center;gap:12px;margin-bottom:10px;cursor:pointer${t.done?';opacity:0.6':''}" onclick="toggleTask('${t.id}')"><div style="width:20px;height:20px;border-radius:50%;${t.done?`background:${u.accent};border:none`:'border:1.5px solid #d0c0b0'};flex-shrink:0;display:flex;align-items:center;justify-content:center">${t.done?`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`:''}</div><div style="flex:1"><div style="font-size:14px;font-weight:500;${t.done?'text-decoration:line-through;color:#aaa':''}">${t.title}</div></div><span style="background:${u.bg};color:${u.accent};padding:3px 10px;border-radius:99px;font-size:12px;font-weight:500">${t.points} pts</span></div>`).join('')}`;
+}
+
+function kidRewards(){
+  const u=S.currentUser,pts=userPoints(u.name);
+  return`<div style="margin-bottom:20px"><div style="font-size:20px;font-weight:600;margin-bottom:4px">Rewards Shop</div><div style="font-size:14px;color:#888">You have <span style="font-size:18px;font-weight:600;color:${u.accent};margin:0 4px">${pts}</span> points!</div></div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px">${S.shopItems.map(item=>{const can=pts>=item.pts;return`<div class="shop-item" style="${!can?'opacity:0.55':''}"><div style="font-size:26px;font-weight:600;color:${u.accent};margin-bottom:2px">${item.pts}</div><div style="font-size:11px;color:#888;margin-bottom:8px">points</div><div style="font-size:13px;font-weight:500;margin-bottom:12px">${item.name}</div><button style="width:100%;padding:7px;background:${can?u.accent:'#e0d8d0'};color:${can?'#fff':'#999'};border:none;border-radius:8px;font-size:12px;font-weight:500;cursor:${can?'pointer':'not-allowed'}" ${can?`onclick="redeemItem('${item.id}')"`:'disabled'}>${can?'Redeem':'Need more pts'}</button></div>`;}).join('')}</div>`;
+}
+
+function kidHabits(){
+  const u=S.currentUser,mine=S.habits.filter(h=>h.owner===u.name),days=['M','T','W','T','F','S','S'];
+  return`<div style="margin-bottom:20px"><div style="font-size:20px;font-weight:600">My Habits</div><div style="font-size:13px;color:#888;margin-top:3px">Build great habits every day!</div></div>
+  ${mine.length===0?`<div class="card" style="text-align:center;padding:32px;color:#888">No habits yet — ask a parent to add some!</div>`:''}
+  ${mine.map(h=>`<div class="habit-card" style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div style="font-size:14px;font-weight:500">${h.name}</div><span style="background:${u.bg};color:${u.accent};padding:2px 9px;border-radius:99px;font-size:12px;font-weight:500">${h.streak}-day streak</span></div><div style="display:flex;gap:6px">${h.days.map((d,i)=>`<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><div style="width:22px;height:22px;border-radius:50%;background:${d?h.color:'#f0e8e0'};cursor:pointer" onclick="toggleHabit('${h.id}',${i})"></div><div style="font-size:10px;color:#888">${days[i]}</div></div>`).join('')}</div></div>`).join('')}`;
+}
+
+function kidCalendar(){
+  const u=S.currentUser,mine=S.events.filter(e=>e.assignee===u.name);
+  return`<div style="margin-bottom:20px"><div style="font-size:20px;font-weight:600">My Schedule</div></div>
+  ${mine.length===0?`<div class="card" style="text-align:center;padding:32px;color:#888">No upcoming events.</div>`:''}
+  ${mine.map(e=>`<div class="card" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div style="display:flex;align-items:center;gap:12px"><div style="width:36px;height:36px;border-radius:50%;background:${u.bg};color:${u.accent};display:flex;align-items:center;justify-content:center">${ic('cal',16)}</div><div><div style="font-size:14px;font-weight:500">${e.title}</div><div style="font-size:12px;color:#888">${e.date} · ${e.time}</div></div></div></div>`).join('')}`;
+}
+
+function kidHub(){
+  const u=S.currentUser;
+  return`<div style="margin-bottom:20px"><div style="font-size:20px;font-weight:600">Family Chat</div></div>
+  <div class="card" style="min-height:280px;display:flex;flex-direction:column;gap:10px;margin-bottom:12px">
+    ${S.messages.map(m=>{
+      if(m.type==='announcement')return`<div class="ann-card"><div style="font-size:13px;font-weight:500;color:#633806">Announcement from ${m.from}</div><div style="font-size:13px;color:#633806">${m.text}</div></div>`;
+      const isSelf=m.from===u.name;
+      if(isSelf)return`<div style="display:flex;flex-direction:column;align-items:flex-end"><div class="msg-bubble" style="background:${u.accent};color:#fff">${m.text}</div><div style="font-size:11px;color:#aaa;margin-top:2px">${m.time}</div></div>`;
+      return`<div><div style="font-size:12px;color:#888;margin-bottom:3px">${m.from}</div><div class="msg-bubble" style="background:#f5ece6">${m.text}</div><div style="font-size:11px;color:#aaa;margin-top:2px">${m.time}</div></div>`;
+    }).join('')}
+  </div>
+  <div style="display:flex;gap:8px">
+    <input type="text" id="kid-msg" placeholder="Say something..." style="flex:1;padding:9px 14px;border:0.5px solid #d8c0b0;border-radius:99px;font-size:13px;background:#fff;outline:none;color:#1a1a1a" onkeydown="if(event.key==='Enter')sendKidMsg()">
+    <button style="width:36px;height:36px;border-radius:50%;background:${u.accent};border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff" onclick="sendKidMsg()">${ic('send')}</button>
+  </div>`;
+}
+
+function kidOutings(){
+  const u=S.currentUser;
+  return`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px"><div><div style="font-size:20px;font-weight:600">Family Outings</div><div style="font-size:13px;color:#888;margin-top:3px">Vote on where to go next!</div></div><button class="btn" style="background:${u.accent};color:#fff" onclick="openKidSuggestModal()">${ic('plus')} Suggest</button></div>
+  <div class="grid2">${S.outings.map(o=>`<div class="card"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><div style="font-weight:500;font-size:15px">${o.title}</div><span style="color:#A32D2D;font-weight:500;font-size:13px">${ic('thumb',13)} ${o.votes}</span></div><div style="font-size:13px;color:#888;margin-bottom:8px">${o.desc}</div><div style="font-size:12px;color:#aaa;margin-bottom:10px">Suggested by ${o.suggestedBy}</div>${o.voted?`<div style="background:#FCEBEB;color:#A32D2D;border-radius:9px;padding:8px;text-align:center;font-size:13px;font-weight:500">Voted!</div>`:`<button style="width:100%;padding:8px;background:${u.accent};color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer" onclick="voteOuting('${o.id}')">Vote for this!</button>`}</div>`).join('')}</div>`;
+}
+
+function openKidSuggestModal(){
+  const u=S.currentUser,bg=document.getElementById('modal-bg'),mb=document.getElementById('modal-body');
+  bg.style.display='flex';
+  mb.innerHTML=`<h3 style="color:${u.accent}">Suggest an Outing!</h3>
+  <div class="fi"><label>Where should we go?</label><input type="text" id="ko-t" placeholder="e.g. Science Museum"></div>
+  <div class="fi"><label>Why would it be fun?</label><textarea id="ko-d" rows="3" placeholder="Tell your family why!"></textarea></div>
+  <div class="fi"><label>When?</label><input type="text" id="ko-date" placeholder="e.g. This weekend"></div>
+  <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn" style="background:${u.accent};color:#fff" onclick="saveKidOuting()">Suggest!</button></div>`;
+}
+
+function saveKidOuting(){
+  const t=document.getElementById('ko-t').value.trim();if(!t)return;
+  S.outings.push({id:'o'+Date.now(),title:t,desc:document.getElementById('ko-d').value,suggestedBy:S.currentUser.name,votes:1,voted:true,category:'Other',date:document.getElementById('ko-date').value,cost:'',location:'',scheduled:false});
+  closeModal();renderPage();
+}
+
+function kidGoals(){
+  const u=S.currentUser,mine=S.goals.filter(g=>g.owner===u.name||!g.owner);
+  return`<div style="margin-bottom:20px"><div style="font-size:20px;font-weight:600">My Goals</div><div style="font-size:13px;color:#888;margin-top:3px">Save up and reach your goals!</div></div>
+  ${mine.map(g=>{const pct=Math.min(100,g.current/g.target*100);return`<div class="card" style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div style="font-weight:500;font-size:14px">${g.title}</div><span style="font-size:13px;color:${g.color};font-weight:500">${pct.toFixed(0)}%</span></div><div style="font-size:12px;color:#888;margin-bottom:6px">$${g.current} of $${g.target}</div><div class="pbar" style="height:10px"><div class="pf" style="width:${pct}%;background:${g.color}"></div></div></div>`;}).join('')}`;
+}
+
+applyTheme();
+renderNav();
+renderSidebarUser();
+renderPage();
+</script>
+</body>
+</html>
