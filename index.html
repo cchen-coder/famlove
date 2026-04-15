@@ -152,7 +152,8 @@ const PARENT_PAGES=[
   {id:'goals',label:'Goals',ic:'target'},
   {id:'documents',label:'Documents',ic:'file'},
   {id:'hub',label:'Family Hub',ic:'msg'},
-  {id:'outings',label:'Outings',ic:'map'}
+  {id:'outings',label:'Outings',ic:'map'},
+  {id:'travel',label:'Travel',ic:'plane'}
 ];
 
 const KID_PAGES=[
@@ -187,7 +188,14 @@ const ICONS={
   lock:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>`,
   pin:`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>`,
   book:`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>`,
-  clock:`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`
+  clock:`<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+  plane:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 19.5 2.5S18 3 16.5 4.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>`,
+  luggage:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="6" y="7" width="12" height="14" rx="2"/><path d="M9 7V5a2 2 0 012-2h2a2 2 0 012 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>`,
+  hotel:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><rect x="9" y="14" width="6" height="8"/></svg>`,
+  alert:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
+  drag:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="7" r="1"/><circle cx="15" cy="7" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="9" cy="17" r="1"/><circle cx="15" cy="17" r="1"/></svg>`,
+  compass:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>`,
+  heart:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>`
 };
 
 function ic(n,sz=15){
@@ -289,6 +297,60 @@ let S={
     {id:'r3',name:'Chicken Stir Fry',category:'Asian',prepTime:'25 mins',serves:4,difficulty:'Easy',ingredients:['Chicken Breast','Bell Peppers','Soy Sauce','Garlic','Ginger','Noodles'],steps:['Slice chicken and marinate in soy sauce.','Stir fry chicken until golden.','Add vegetables and toss together.'],notes:'Great with rice or noodles.',rating:5}
   ],
   mealTab:'planner',
+  travelTab:'itinerary',
+  travel:{
+    tripName:'Bali Family Holiday',
+    destination:'Bali, Indonesia',
+    dates:'Jul 5–15, 2026',
+    budget:5000,
+    spent:1420,
+    itinerary:[
+      {id:'i1',day:'Jul 5',time:'08:00',title:'Flight SQ476 — SIN to DPS',type:'flight',assignee:'All',notes:'Terminal 3, check in 2hrs early',done:false},
+      {id:'i2',day:'Jul 5',time:'15:30',title:'Check in — The Layar Villa',type:'hotel',assignee:'All',notes:'Pool villa, late checkout pre-arranged',done:false},
+      {id:'i3',day:'Jul 6',time:'09:00',title:'Tegallalang Rice Terraces',type:'attraction',assignee:'All',notes:'Bring sunscreen & comfortable shoes',done:false},
+      {id:'i4',day:'Jul 6',time:'13:00',title:'Lunch at Locavore',type:'restaurant',assignee:'All',notes:'Reservation confirmed for 4',done:false},
+      {id:'i5',day:'Jul 7',time:'10:00',title:'Surf lesson at Kuta Beach',type:'activity',assignee:'Leo',notes:'Kids board included',done:false},
+      {id:'i6',day:'Jul 8',time:'All Day',title:'Uluwatu Temple & Kecak Dance',type:'attraction',assignee:'All',notes:'Show at sunset — 6pm',done:false}
+    ],
+    bookings:[
+      {id:'b1',type:'flight',title:'SQ476 SIN→DPS',detail:'Jul 5 · 08:00–14:45 · Singapore Airlines',status:'confirmed',ref:'SQ476A8X',color:'#185FA5'},
+      {id:'b2',type:'flight',title:'SQ477 DPS→SIN',detail:'Jul 15 · 16:00–21:30 · Singapore Airlines',status:'confirmed',ref:'SQ477B9Y',color:'#185FA5'},
+      {id:'b3',type:'hotel',title:'The Layar Villa',detail:'Jul 5–15 · 10 nights · Seminyak',status:'confirmed',ref:'TLV-20264',color:'#0F6E56'},
+      {id:'b4',type:'car',title:'Car Rental — Toyota Innova',detail:'Jul 6–14 · With driver · 9 days',status:'confirmed',ref:'BALI-CR-882',color:'#BA7517'}
+    ],
+    bucketList:[
+      {id:'bl1',title:'Mount Batur sunrise hike',category:'Adventure',addedBy:'Dad',liked:['Mom','Dad'],done:false},
+      {id:'bl2',title:'Cooking class in Ubud',category:'Food',addedBy:'Mom',liked:['Mom'],done:false},
+      {id:'bl3',title:'Waterpark — Waterbom Bali',category:'Kids',addedBy:'Leo',liked:['Leo','Mia'],done:false},
+      {id:'bl4',title:'Tanah Lot Temple at sunset',category:'Culture',addedBy:'Mom',liked:['Mom','Dad'],done:true},
+      {id:'bl5',title:'Beachside seafood BBQ',category:'Food',addedBy:'Mia',liked:['Mia','Leo','Dad'],done:false}
+    ],
+    packing:[
+      {id:'p1',item:'Passports & travel docs',category:'Documents',packed:true,who:'All'},
+      {id:'p2',item:'Travel insurance cards',category:'Documents',packed:false,who:'Mom'},
+      {id:'p3',item:'Sunscreen SPF50+',category:'Health',packed:true,who:'All'},
+      {id:'p4',item:"Leo's asthma inhaler",category:'Health',packed:false,who:'Leo'},
+      {id:'p5',item:'Mosquito repellent',category:'Health',packed:false,who:'All'},
+      {id:'p6',item:'Kids swim gear',category:'Clothing',packed:true,who:'Leo & Mia'},
+      {id:'p7',item:'Lightweight rain jackets',category:'Clothing',packed:false,who:'All'},
+      {id:'p8',item:'Power adapters',category:'Electronics',packed:false,who:'Dad'},
+      {id:'p9',item:'GoPro + spare batteries',category:'Electronics',packed:false,who:'Dad'},
+      {id:'p10',item:'Mia\'s comfort toy',category:'Kids',packed:true,who:'Mia'}
+    ],
+    expenses:[
+      {id:'te1',desc:'Flights x4',amount:1200,paidBy:'Dad',date:'2026-04-10',category:'Transport',split:'Family'},
+      {id:'te2',desc:'Villa deposit',amount:220,paidBy:'Mom',date:'2026-04-11',category:'Accommodation',split:'Family'}
+    ],
+    emergency:{
+      hospital:'BIMC Hospital Bali — +62 361 761263',
+      ambulance:'118',
+      police:'110',
+      embassy:'Singapore Embassy Jakarta — +62 21 2995 0400',
+      transport:'Grab / Gojek app — available islandwide',
+      currency:'1 SGD ≈ 11,200 IDR',
+      language:'Bahasa Indonesia — Hello: Halo, Thank you: Terima kasih, Help: Tolong'
+    }
+  },
   isAnn:false
 };
 
@@ -452,7 +514,7 @@ function renderPage(){
     const pages={'kid-home':kidHome,'kid-chores':kidChores,'kid-rewards':kidRewards,'kid-habits':kidHabits,'kid-calendar':kidCalendar,'kid-hub':kidHub,'kid-outings':kidOutings,'kid-goals':kidGoals};
     c.innerHTML=(pages[S.page]||kidHome)();
   } else {
-    const pages={dashboard:pgDash,notifications:pgNotif,calendar:pgCal,tasks:pgTasks,kids:pgKids,meals:pgMeals,groceries:pgGroceries,budget:pgBudget,reports:pgReports,habits:pgHabits,goals:pgGoals,documents:pgDocs,hub:pgHub,outings:pgOutings};
+    const pages={dashboard:pgDash,notifications:pgNotif,calendar:pgCal,tasks:pgTasks,kids:pgKids,meals:pgMeals,groceries:pgGroceries,budget:pgBudget,reports:pgReports,habits:pgHabits,goals:pgGoals,documents:pgDocs,hub:pgHub,outings:pgOutings,travel:pgTravel};
     c.innerHTML=(pages[S.page]||pgDash)();
     if(S.page==='reports')setTimeout(drawReportCharts,50);
     if(S.page==='budget')setTimeout(drawBudgetDonut,50);
@@ -858,6 +920,311 @@ function kidGoals(){
   const u=S.currentUser,mine=S.goals.filter(g=>g.owner===u.name||!g.owner);
   return`<div style="margin-bottom:20px"><div style="font-size:20px;font-weight:600">My Goals</div><div style="font-size:13px;color:#888;margin-top:3px">Save up and reach your goals!</div></div>
   ${mine.map(g=>{const pct=Math.min(100,g.current/g.target*100);return`<div class="card" style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div style="font-weight:500;font-size:14px">${g.title}</div><span style="font-size:13px;color:${g.color};font-weight:500">${pct.toFixed(0)}%</span></div><div style="font-size:12px;color:#888;margin-bottom:6px">$${g.current} of $${g.target}</div><div class="pbar" style="height:10px"><div class="pf" style="width:${pct}%;background:${g.color}"></div></div></div>`;}).join('')}`;
+}
+
+applyTheme();
+renderNav();
+renderSidebarUser();
+renderPage();
+
+function pgTravel(){
+  const T=S.travel;
+  const tabs=[{id:'itinerary',label:'Itinerary'},{id:'bookings',label:'Bookings'},{id:'bucketlist',label:'Bucket List'},{id:'map',label:'Map'},{id:'expenses',label:'Expenses'},{id:'packing',label:'Packing'},{id:'emergency',label:'Emergency'}];
+  const budgetPct=Math.min(100,(T.spent/T.budget*100)).toFixed(0);
+  const typeIcon={flight:'✈',hotel:'🏨',car:'🚗',restaurant:'🍽',attraction:'🏛',activity:'🎯'};
+  const typeColor={flight:'#185FA5',hotel:'#0F6E56',car:'#BA7517',restaurant:'#D4537E',attraction:'#534AB7',activity:'#D85A30'};
+
+  const tabBar=()=>`<div style="display:flex;gap:2px;background:#f5ece6;border-radius:10px;padding:3px;margin-bottom:22px;flex-wrap:wrap">
+    ${tabs.map(t=>`<button onclick="S.travelTab='${t.id}';renderPage()" style="padding:6px 14px;border-radius:8px;border:none;font-size:12px;font-weight:500;cursor:pointer;background:${S.travelTab===t.id?'#fff':'transparent'};color:${S.travelTab===t.id?'#D85A30':'#888'};${S.travelTab===t.id?'box-shadow:0 1px 3px rgba(0,0,0,0.08)':''}">${t.label}</button>`).join('')}
+  </div>`;
+
+  const itineraryTab=()=>{
+    const days=[...new Set(T.itinerary.map(i=>i.day))];
+    return`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div style="font-size:14px;color:#888">${T.itinerary.filter(i=>i.done).length}/${T.itinerary.length} activities completed</div>
+      <button class="btn b-orange" onclick="addItineraryItem()" style="font-size:12px">${ic('plus')} Add Activity</button>
+    </div>
+    ${days.map(day=>`
+      <div style="margin-bottom:20px">
+        <div style="font-size:12px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;display:flex;align-items:center;gap:8px">
+          <div style="height:1px;flex:1;background:#f0d0c0"></div>${day}<div style="height:1px;flex:1;background:#f0d0c0"></div>
+        </div>
+        ${T.itinerary.filter(i=>i.day===day).map((item,idx,arr)=>`
+        <div style="display:flex;gap:12px;margin-bottom:10px">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:0">
+            <div style="width:32px;height:32px;border-radius:50%;background:${typeColor[item.type]||'#D85A30'}22;color:${typeColor[item.type]||'#D85A30'};font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0">${typeIcon[item.type]||'•'}</div>
+            ${idx<arr.length-1?`<div style="width:2px;flex:1;background:#f0d0c0;margin:3px 0;min-height:16px"></div>`:''}
+          </div>
+          <div style="flex:1;background:#fff;border:0.5px solid #f0d0c0;border-radius:12px;padding:12px 14px;${item.done?'opacity:0.55':''}">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start">
+              <div>
+                <div style="font-size:13px;font-weight:600;${item.done?'text-decoration:line-through;color:#aaa':''}">${item.title}</div>
+                <div style="font-size:12px;color:#888;margin-top:2px">${item.time}${item.notes?` · ${item.notes}`:''}</div>
+              </div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="background:${typeColor[item.type]||'#D85A30'}18;color:${typeColor[item.type]||'#D85A30'};padding:2px 8px;border-radius:99px;font-size:11px;font-weight:500;text-transform:capitalize">${item.type}</span>
+                <div style="width:18px;height:18px;border-radius:50%;${item.done?`background:#0F6E56;border:none`:'border:1.5px solid #d0c0b0'};cursor:pointer;display:flex;align-items:center;justify-content:center" onclick="toggleItinerary('${item.id}')">
+                  ${item.done?`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`:''}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>`).join('')}
+      </div>`).join('')}`;
+  };
+
+  const bookingsTab=()=>`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
+    ${T.bookings.map(b=>`<div style="background:#fff;border:0.5px solid #f0d0c0;border-radius:14px;overflow:hidden">
+      <div style="background:${b.color};padding:12px 16px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:18px">${typeIcon[b.type]||'📋'}</span>
+        <span style="background:rgba(255,255,255,0.2);color:#fff;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600;text-transform:capitalize">${b.status}</span>
+      </div>
+      <div style="padding:14px 16px">
+        <div style="font-size:15px;font-weight:600;margin-bottom:4px">${b.title}</div>
+        <div style="font-size:12px;color:#888;margin-bottom:10px">${b.detail}</div>
+        <div style="background:#f5f5f5;border-radius:8px;padding:8px 10px;font-size:12px;color:#555">
+          Ref: <span style="font-weight:600;font-family:monospace">${b.ref}</span>
+        </div>
+      </div>
+    </div>`).join('')}
+    <div style="background:#fff;border:1px dashed #d0c0b0;border-radius:14px;padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;gap:8px;min-height:160px;color:#888" onclick="alert('Add booking coming soon')">
+      <div style="width:36px;height:36px;border-radius:50%;background:#f5ece6;display:flex;align-items:center;justify-content:center;color:#D85A30">${ic('plus',18)}</div>
+      <div style="font-size:13px;font-weight:500">Add Booking</div>
+    </div>
+  </div>`;
+
+  const bucketTab=()=>{
+    const catColor={Adventure:'#D85A30',Food:'#BA7517',Kids:'#D4537E',Culture:'#534AB7',Nature:'#0F6E56',Other:'#888'};
+    return`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div style="font-size:13px;color:#888">${T.bucketList.filter(b=>b.done).length} of ${T.bucketList.length} done</div>
+      <button class="btn b-orange" onclick="addBucketItem()" style="font-size:12px">${ic('heart',13)} Add Wish</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px">
+      ${T.bucketList.map(b=>`<div style="background:#fff;border:0.5px solid ${b.done?'#d0e8d0':'#f0d0c0'};border-radius:12px;padding:14px;${b.done?'opacity:0.65':''}">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <div style="font-size:14px;font-weight:600;${b.done?'text-decoration:line-through;color:#aaa':''}">${b.title}</div>
+          <span style="background:${catColor[b.category]||'#888'}18;color:${catColor[b.category]||'#888'};padding:2px 8px;border-radius:99px;font-size:11px;font-weight:500">${b.category}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-size:12px;color:#888">By ${b.addedBy} · ${b.liked.length} liked</div>
+          <div style="display:flex;gap:6px">
+            <button onclick="toggleBucketLike('${b.id}')" style="padding:4px 10px;border-radius:99px;border:0.5px solid #f0d0c0;background:${b.liked.includes(S.currentUser.name)?'#FCEBEB':'#fff'};color:${b.liked.includes(S.currentUser.name)?'#A32D2D':'#888'};font-size:12px;cursor:pointer">${ic('heart',11)} ${b.liked.length}</button>
+            <button onclick="toggleBucketDone('${b.id}')" style="padding:4px 10px;border-radius:99px;border:0.5px solid #f0d0c0;background:${b.done?'#EAF3DE':'#fff'};color:${b.done?'#27500A':'#888'};font-size:12px;cursor:pointer">${b.done?'Done!':'Mark done'}</button>
+          </div>
+        </div>
+      </div>`).join('')}
+    </div>`;
+  };
+
+  const mapTab=()=>`<div style="background:#fff;border:0.5px solid #f0d0c0;border-radius:14px;overflow:hidden;margin-bottom:16px">
+    <div style="background:linear-gradient(135deg,#e8f4e8 0%,#d4e8d4 40%,#c8dfc8 100%);height:260px;position:relative;display:flex;align-items:center;justify-content:center">
+      <svg viewBox="0 0 600 260" width="100%" height="100%" style="position:absolute;inset:0">
+        <rect width="600" height="260" fill="#d4e8d4"/>
+        <ellipse cx="300" cy="130" rx="240" ry="100" fill="#c8dfc8" opacity="0.6"/>
+        <path d="M80 180 Q200 120 300 140 Q400 160 520 110" stroke="#a0c8a0" stroke-width="3" fill="none"/>
+        <path d="M100 140 Q180 160 260 130 Q340 100 420 120 Q480 135 540 115" stroke="#90b890" stroke-width="2" fill="none" stroke-dasharray="6,4"/>
+        <circle cx="200" cy="145" r="7" fill="#185FA5" opacity="0.9"/>
+        <text x="210" y="138" font-size="10" fill="#185FA5" font-weight="600">✈ Airport</text>
+        <circle cx="300" cy="130" r="7" fill="#0F6E56" opacity="0.9"/>
+        <text x="310" y="123" font-size="10" fill="#0F6E56" font-weight="600">🏨 Villa</text>
+        <circle cx="240" cy="110" r="6" fill="#534AB7" opacity="0.9"/>
+        <text x="248" y="106" font-size="9" fill="#534AB7">🏛 Tegallalang</text>
+        <circle cx="360" cy="150" r="6" fill="#D85A30" opacity="0.9"/>
+        <text x="368" y="146" font-size="9" fill="#D85A30">🎯 Surf Lesson</text>
+        <circle cx="420" cy="125" r="6" fill="#D4537E" opacity="0.9"/>
+        <text x="428" y="121" font-size="9" fill="#D4537E">🍽 Locavore</text>
+        <circle cx="160" cy="165" r="6" fill="#BA7517" opacity="0.9"/>
+        <text x="168" y="162" font-size="9" fill="#BA7517">🚗 Car Pickup</text>
+        <path d="M200 145 L240 110 L300 130 L360 150 L420 125" stroke="#D85A30" stroke-width="1.5" fill="none" stroke-dasharray="4,3" opacity="0.6"/>
+      </svg>
+      <div style="position:absolute;bottom:10px;right:10px;background:rgba(255,255,255,0.92);border-radius:8px;padding:6px 10px;font-size:11px;color:#555">
+        📍 ${T.destination}
+      </div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px">
+    ${[
+      {label:'Airport',icon:'✈',color:'#185FA5',detail:'Ngurah Rai Intl'},
+      {label:'Villa',icon:'🏨',color:'#0F6E56',detail:'The Layar, Seminyak'},
+      {label:'Tegallalang',icon:'🏛',color:'#534AB7',detail:'Rice Terraces, Ubud'},
+      {label:'Surf School',icon:'🎯',color:'#D85A30',detail:'Kuta Beach'},
+      {label:'Locavore',icon:'🍽',color:'#D4537E',detail:'Jl. Dewi Sita, Ubud'},
+      {label:'Uluwatu',icon:'🌅',color:'#BA7517',detail:'Temple & Kecak Show'}
+    ].map(p=>`<div style="background:#fff;border:0.5px solid #f0d0c0;border-radius:10px;padding:10px;display:flex;align-items:center;gap:8px">
+      <div style="width:30px;height:30px;border-radius:50%;background:${p.color}18;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">${p.icon}</div>
+      <div><div style="font-size:12px;font-weight:600">${p.label}</div><div style="font-size:11px;color:#888">${p.detail}</div></div>
+    </div>`).join('')}
+  </div>`;
+
+  const expensesTab=()=>{
+    const total=T.expenses.reduce((s,e)=>s+e.amount,0);
+    const remaining=T.budget-total;
+    return`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px">
+      <div class="card" style="text-align:center"><div style="font-size:20px;font-weight:600;color:#D85A30">$${T.budget.toLocaleString()}</div><div style="font-size:12px;color:#888">Trip budget</div></div>
+      <div class="card" style="text-align:center"><div style="font-size:20px;font-weight:600;color:#BA7517">$${total.toFixed(0)}</div><div style="font-size:12px;color:#888">Spent so far</div></div>
+      <div class="card" style="text-align:center"><div style="font-size:20px;font-weight:600;color:#0F6E56">$${remaining.toFixed(0)}</div><div style="font-size:12px;color:#888">Remaining</div></div>
+    </div>
+    <div class="card" style="margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:#888;margin-bottom:6px"><span>Budget used</span><span>${budgetPct}%</span></div>
+      <div class="pbar" style="height:12px"><div class="pf" style="width:${budgetPct}%;background:${budgetPct>80?'#E24B4A':budgetPct>60?'#BA7517':'#0F6E56'}"></div></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
+      <button class="btn b-orange" onclick="addTravelExpense()" style="font-size:12px">${ic('plus')} Log Expense</button>
+    </div>
+    <div class="card" style="padding:0">
+      <table style="width:100%;border-collapse:collapse;font-size:13px">
+        <thead><tr><th style="text-align:left;padding:10px 14px;color:#888;font-weight:400;font-size:12px;border-bottom:0.5px solid #f0d0c0">Description</th><th style="text-align:left;padding:10px 14px;color:#888;font-weight:400;font-size:12px;border-bottom:0.5px solid #f0d0c0">Category</th><th style="text-align:left;padding:10px 14px;color:#888;font-weight:400;font-size:12px;border-bottom:0.5px solid #f0d0c0">Paid By</th><th style="text-align:right;padding:10px 14px;color:#888;font-weight:400;font-size:12px;border-bottom:0.5px solid #f0d0c0">Amount</th></tr></thead>
+        <tbody>${T.expenses.map(e=>`<tr><td style="padding:10px 14px;border-bottom:0.5px solid #f5ece6;font-weight:500">${e.desc}</td><td style="padding:10px 14px;border-bottom:0.5px solid #f5ece6"><span class="pill pill-orange">${e.category}</span></td><td style="padding:10px 14px;border-bottom:0.5px solid #f5ece6;color:#888">${e.paidBy}</td><td style="padding:10px 14px;border-bottom:0.5px solid #f5ece6;text-align:right;font-weight:600">$${e.amount.toFixed(2)}</td></tr>`).join('')}</tbody>
+      </table>
+    </div>`;
+  };
+
+  const packingTab=()=>{
+    const cats=[...new Set(T.packing.map(p=>p.category))];
+    const done=T.packing.filter(p=>p.packed).length;
+    const aiSuggestions=['Hand sanitiser & wet wipes (essential for kids)','Portable first aid kit','Waterproof phone case for beach days','Lightweight day backpack','Kids\' activity book for long flights','Reusable water bottles'];
+    return`<div style="margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div style="font-size:13px;color:#888">${done}/${T.packing.length} items packed</div>
+        <button class="btn b-orange" onclick="addPackingItem()" style="font-size:12px">${ic('plus')} Add Item</button>
+      </div>
+      <div class="pbar" style="height:10px"><div class="pf" style="width:${(done/T.packing.length*100).toFixed(0)}%;background:#D85A30"></div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px">
+      ${cats.map(cat=>`<div class="card">
+        <div style="font-size:12px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px">${cat}</div>
+        ${T.packing.filter(p=>p.category===cat).map(p=>`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;cursor:pointer" onclick="togglePacking('${p.id}')">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="width:16px;height:16px;border-radius:4px;${p.packed?'background:#D85A30;border:none':'border:1.5px solid #d0c0b0'};flex-shrink:0;display:flex;align-items:center;justify-content:center">
+              ${p.packed?`<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`:''}
+            </div>
+            <span style="font-size:13px;${p.packed?'text-decoration:line-through;color:#aaa':''}">${p.item}</span>
+          </div>
+          <span style="font-size:11px;color:#aaa">${p.who}</span>
+        </div>`).join('')}
+      </div>`).join('')}
+    </div>
+    <div style="background:#EEEDFE;border:0.5px solid #AFA9EC;border-radius:12px;padding:14px">
+      <div style="font-size:13px;font-weight:600;color:#3C3489;margin-bottom:10px;display:flex;align-items:center;gap:6px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#534AB7" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        AI-suggested for your trip (ages 8 & 10, tropical weather)
+      </div>
+      ${aiSuggestions.map(s=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;font-size:13px;color:#3C3489">
+        <div style="width:6px;height:6px;border-radius:50%;background:#534AB7;flex-shrink:0"></div>${s}
+      </div>`).join('')}
+    </div>`;
+  };
+
+  const emergencyTab=()=>`<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+    <div style="grid-column:1/-1;background:#FCEBEB;border:0.5px solid #F09595;border-radius:12px;padding:14px;display:flex;align-items:center;gap:10px">
+      <div style="width:36px;height:36px;border-radius:50%;background:#E24B4A;display:flex;align-items:center;justify-content:center;flex-shrink:0">${ic('alert',16)}</div>
+      <div><div style="font-size:13px;font-weight:600;color:#A32D2D">Emergency Contacts — Bali, Indonesia</div><div style="font-size:12px;color:#A32D2D;margin-top:2px">Save these before you go offline</div></div>
+    </div>
+    ${[
+      {label:'Hospital',icon:'🏥',val:S.travel.emergency.hospital,color:'#D85A30'},
+      {label:'Ambulance',icon:'🚑',val:'Call: '+S.travel.emergency.ambulance,color:'#E24B4A'},
+      {label:'Police',icon:'👮',val:'Call: '+S.travel.emergency.police,color:'#185FA5'},
+      {label:'Embassy',icon:'🏛',val:S.travel.emergency.embassy,color:'#534AB7'},
+      {label:'Transport',icon:'🚖',val:S.travel.emergency.transport,color:'#0F6E56'},
+      {label:'Currency',icon:'💱',val:S.travel.emergency.currency,color:'#BA7517'},
+      {label:'Language',icon:'🗣',val:S.travel.emergency.language,color:'#D4537E'}
+    ].map(e=>`<div class="card">
+      <div style="display:flex;align-items:flex-start;gap:10px">
+        <div style="width:34px;height:34px;border-radius:50%;background:${e.color}18;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">${e.icon}</div>
+        <div><div style="font-size:12px;font-weight:600;color:#888;margin-bottom:3px">${e.label}</div><div style="font-size:13px;color:#1a1a1a">${e.val}</div></div>
+      </div>
+    </div>`).join('')}
+    <div class="card" style="grid-column:1/-1;background:#E1F5EE;border-color:#9FE1CB">
+      <div style="font-size:13px;font-weight:600;color:#085041;margin-bottom:8px">Quick Phrase Translator — Bahasa Indonesia</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
+        ${[['Hello','Halo'],['Thank you','Terima kasih'],['Help!','Tolong!'],['Where is...?','Di mana...?'],['How much?','Berapa harganya?'],['Hospital','Rumah sakit'],['Police','Polisi'],['I need a doctor','Saya perlu dokter'],['Emergency','Darurat']].map(([en,id])=>`<div style="background:#fff;border-radius:8px;padding:8px 10px;text-align:center"><div style="font-size:12px;font-weight:600;color:#085041">${en}</div><div style="font-size:12px;color:#1D9E75;margin-top:2px">${id}</div></div>`).join('')}
+      </div>
+    </div>
+  </div>`;
+
+  return`
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;flex-wrap:wrap;gap:12px">
+    <div>
+      <div style="font-size:20px;font-weight:600">${ic('plane',18)} ${T.tripName}</div>
+      <div style="font-size:13px;color:#888;margin-top:3px">${T.destination} · ${T.dates}</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <div style="background:#fff;border:0.5px solid #f0d0c0;border-radius:10px;padding:8px 14px;text-align:center">
+        <div style="font-size:16px;font-weight:600;color:#D85A30">${T.itinerary.length}</div>
+        <div style="font-size:11px;color:#888">Activities</div>
+      </div>
+      <div style="background:#fff;border:0.5px solid #f0d0c0;border-radius:10px;padding:8px 14px;text-align:center">
+        <div style="font-size:16px;font-weight:600;color:#0F6E56">${T.bookings.length}</div>
+        <div style="font-size:11px;color:#888">Bookings</div>
+      </div>
+      <div style="background:#fff;border:0.5px solid #f0d0c0;border-radius:10px;padding:8px 14px;text-align:center">
+        <div style="font-size:16px;font-weight:600;color:#BA7517">$${T.budget.toLocaleString()}</div>
+        <div style="font-size:11px;color:#888">Budget</div>
+      </div>
+    </div>
+  </div>
+  ${tabBar()}
+  ${S.travelTab==='itinerary'?itineraryTab():S.travelTab==='bookings'?bookingsTab():S.travelTab==='bucketlist'?bucketTab():S.travelTab==='map'?mapTab():S.travelTab==='expenses'?expensesTab():S.travelTab==='packing'?packingTab():emergencyTab()}`;
+}
+
+function toggleItinerary(id){const i=S.travel.itinerary.find(x=>x.id===id);if(i)i.done=!i.done;renderPage();}
+function toggleBucketLike(id){const b=S.travel.bucketList.find(x=>x.id===id);if(!b)return;const u=S.currentUser.name;b.liked.includes(u)?b.liked.splice(b.liked.indexOf(u),1):b.liked.push(u);renderPage();}
+function toggleBucketDone(id){const b=S.travel.bucketList.find(x=>x.id===id);if(b)b.done=!b.done;renderPage();}
+function togglePacking(id){const p=S.travel.packing.find(x=>x.id===id);if(p)p.packed=!p.packed;renderPage();}
+function addItineraryItem(){
+  const bg=document.getElementById('modal-bg'),mb=document.getElementById('modal-body');
+  bg.style.display='flex';
+  mb.innerHTML=`<h3>Add Activity</h3>
+  <div class="fi"><label>Title</label><input type="text" id="it-t" placeholder="e.g. Waterbom Bali"></div>
+  <div class="frow"><div class="fi"><label>Day</label><input type="text" id="it-d" placeholder="e.g. Jul 8"></div><div class="fi"><label>Time</label><input type="text" id="it-ti" placeholder="e.g. 10:00 AM"></div></div>
+  <div class="fi"><label>Type</label><select id="it-ty"><option>activity</option><option>attraction</option><option>restaurant</option><option>flight</option><option>hotel</option><option>car</option></select></div>
+  <div class="fi"><label>Notes</label><input type="text" id="it-n" placeholder="e.g. Bring cash"></div>
+  <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="saveItineraryItem()">Add</button></div>`;
+}
+function saveItineraryItem(){
+  const t=document.getElementById('it-t').value.trim();if(!t)return;
+  S.travel.itinerary.push({id:'i'+Date.now(),day:document.getElementById('it-d').value,time:document.getElementById('it-ti').value,title:t,type:document.getElementById('it-ty').value,notes:document.getElementById('it-n').value,assignee:'All',done:false});
+  closeModal();renderPage();
+}
+function addBucketItem(){
+  const bg=document.getElementById('modal-bg'),mb=document.getElementById('modal-body');
+  bg.style.display='flex';
+  mb.innerHTML=`<h3>Add to Bucket List</h3>
+  <div class="fi"><label>What's the wish?</label><input type="text" id="bl-t" placeholder="e.g. Mount Batur sunrise hike"></div>
+  <div class="fi"><label>Category</label><select id="bl-c"><option>Adventure</option><option>Food</option><option>Culture</option><option>Kids</option><option>Nature</option><option>Other</option></select></div>
+  <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="saveBucketItem()">Add</button></div>`;
+}
+function saveBucketItem(){
+  const t=document.getElementById('bl-t').value.trim();if(!t)return;
+  S.travel.bucketList.push({id:'bl'+Date.now(),title:t,category:document.getElementById('bl-c').value,addedBy:S.currentUser.name,liked:[S.currentUser.name],done:false});
+  closeModal();renderPage();
+}
+function addTravelExpense(){
+  const bg=document.getElementById('modal-bg'),mb=document.getElementById('modal-body');
+  bg.style.display='flex';
+  mb.innerHTML=`<h3>Log Travel Expense</h3>
+  <div class="fi"><label>Description</label><input type="text" id="te-t" placeholder="e.g. Dinner at Ku De Ta"></div>
+  <div class="frow"><div class="fi"><label>Amount ($)</label><input type="number" id="te-a" placeholder="0.00" step="0.01"></div><div class="fi"><label>Paid By</label><select id="te-p">${USERS.map(u=>`<option>${u.name}</option>`).join('')}</select></div></div>
+  <div class="fi"><label>Category</label><select id="te-c"><option>Food</option><option>Transport</option><option>Accommodation</option><option>Activities</option><option>Shopping</option><option>Other</option></select></div>
+  <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="saveTravelExpense()">Log</button></div>`;
+}
+function saveTravelExpense(){
+  const t=document.getElementById('te-t').value.trim(),a=parseFloat(document.getElementById('te-a').value);if(!t||isNaN(a))return;
+  S.travel.expenses.push({id:'te'+Date.now(),desc:t,amount:a,paidBy:document.getElementById('te-p').value,date:new Date().toISOString().split('T')[0],category:document.getElementById('te-c').value,split:'Family'});
+  S.travel.spent+=a;closeModal();renderPage();
+}
+function addPackingItem(){
+  const bg=document.getElementById('modal-bg'),mb=document.getElementById('modal-body');
+  bg.style.display='flex';
+  mb.innerHTML=`<h3>Add Packing Item</h3>
+  <div class="fi"><label>Item</label><input type="text" id="pk-t" placeholder="e.g. Sunglasses"></div>
+  <div class="frow"><div class="fi"><label>Category</label><select id="pk-c"><option>Documents</option><option>Health</option><option>Clothing</option><option>Electronics</option><option>Kids</option><option>Other</option></select></div><div class="fi"><label>For</label><select id="pk-w">${['All',...USERS.map(u=>u.name)].map(n=>`<option>${n}</option>`).join('')}</select></div></div>
+  <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="savePackingItem()">Add</button></div>`;
+}
+function savePackingItem(){
+  const t=document.getElementById('pk-t').value.trim();if(!t)return;
+  S.travel.packing.push({id:'pk'+Date.now(),item:t,category:document.getElementById('pk-c').value,packed:false,who:document.getElementById('pk-w').value});
+  closeModal();renderPage();
 }
 
 applyTheme();
