@@ -226,7 +226,9 @@ let S={
     {id:'e1',title:'Soccer Practice',date:'2026-04-14',time:'3:00 PM',assignee:'Leo',type:'sport'},
     {id:'e2',title:'Dentist',date:'2026-04-15',time:'12:51 PM',assignee:'Mom',type:'appointment'},
     {id:'e3',title:"Leo's Piano",date:'2026-04-16',time:'4:00 PM',assignee:'Leo',type:'kids'},
-    {id:'e4',title:"Mia's Checkup",date:'2026-04-17',time:'10:00 AM',assignee:'Mia',type:'kids'}
+    {id:'e4',title:"Mia's Checkup",date:'2026-04-17',time:'10:00 AM',assignee:'Mia',type:'kids'},
+    {id:'e5',title:"🎂 Leo's Birthday!",date:'2026-04-18',time:'All Day',assignee:'All',type:'birthday'},
+    {id:'e6',title:"🎂 Dad's Birthday",date:'2026-04-20',time:'All Day',assignee:'All',type:'birthday'}
   ],
   kidsAppts:[
     {id:'ka1',child:'Leo',title:'Piano lesson',date:'2026-04-16',time:'4:00 PM',notes:'Bring lesson book'},
@@ -294,66 +296,124 @@ let S={
     {id:'o2',title:'Movie Night',desc:'New animated movie at local theater.',suggestedBy:'Mia',votes:2,voted:false,category:'Entertainment',location:'Shaw Theatres',cost:'$15/person',date:'This Friday',scheduled:false}
   ],
   recipes:[
-    {id:'r1',name:'Spaghetti Bolognese',category:'Pasta',prepTime:'35 mins',serves:4,difficulty:'Medium',ingredients:['Pasta','Ground Beef','Tomato Sauce','Onion','Garlic'],steps:['Brown the ground beef with onion and garlic.','Add tomato sauce and simmer 20 mins.','Cook pasta al dente, combine and serve.'],notes:'Can substitute beef with turkey.',rating:5},
-    {id:'r2',name:'Avocado Toast',category:'Breakfast',prepTime:'15 mins',serves:2,difficulty:'Easy',ingredients:['Sourdough Bread','Avocado','Eggs','Chilli Flakes'],steps:['Toast bread until golden.','Mash avocado with salt and lemon.','Poach eggs and place on top.'],notes:'Add feta for extra flavour.',rating:4},
-    {id:'r3',name:'Chicken Stir Fry',category:'Asian',prepTime:'25 mins',serves:4,difficulty:'Easy',ingredients:['Chicken Breast','Bell Peppers','Soy Sauce','Garlic','Ginger','Noodles'],steps:['Slice chicken and marinate in soy sauce.','Stir fry chicken until golden.','Add vegetables and toss together.'],notes:'Great with rice or noodles.',rating:5}
+    {id:'r1',name:'Spaghetti Bolognese',category:'Pasta',prepTime:'35 mins',serves:4,difficulty:'Medium',image:'',
+      ingredients:[{name:'Spaghetti',amount:'400g'},{name:'Ground Beef',amount:'500g'},{name:'Tomato Sauce',amount:'400ml'},{name:'Onion',amount:'1 large'},{name:'Garlic',amount:'3 cloves'},{name:'Olive Oil',amount:'2 tbsp'},{name:'Salt & Pepper',amount:'to taste'}],
+      steps:['Brown the ground beef with onion and garlic in olive oil.','Add tomato sauce, season, and simmer for 20 mins.','Cook spaghetti al dente. Drain and combine with sauce.'],notes:'Can substitute beef with turkey mince.',rating:5},
+    {id:'r2',name:'Avocado Toast',category:'Breakfast',prepTime:'15 mins',serves:2,difficulty:'Easy',image:'',
+      ingredients:[{name:'Sourdough Bread',amount:'4 slices'},{name:'Avocado',amount:'2 ripe'},{name:'Eggs',amount:'2'},{name:'Chilli Flakes',amount:'pinch'},{name:'Lemon Juice',amount:'1 tsp'},{name:'Salt',amount:'to taste'}],
+      steps:['Toast bread until golden.','Mash avocado with lemon juice and salt.','Poach eggs for 3 mins. Plate toast, top with avocado then egg.'],notes:'Add crumbled feta for extra flavour.',rating:4},
+    {id:'r3',name:'Chicken Stir Fry',category:'Asian',prepTime:'25 mins',serves:4,difficulty:'Easy',image:'',
+      ingredients:[{name:'Chicken Breast',amount:'600g'},{name:'Bell Peppers',amount:'2 mixed'},{name:'Soy Sauce',amount:'3 tbsp'},{name:'Garlic',amount:'2 cloves'},{name:'Ginger',amount:'1 tsp'},{name:'Noodles',amount:'300g'},{name:'Sesame Oil',amount:'1 tbsp'}],
+      steps:['Slice chicken, marinate in soy sauce and ginger for 10 mins.','Stir fry chicken on high heat until golden, set aside.','Fry peppers and garlic 2 mins, add noodles, return chicken, toss and serve.'],notes:'Great with jasmine rice instead of noodles.',rating:5},
+    {id:'r4',name:'Chee Cheong Fun',category:'Asian',prepTime:'40 mins',serves:4,difficulty:'Medium',image:'',
+      ingredients:[{name:'Rice Flour',amount:'200g'},{name:'Tapioca Starch',amount:'40g'},{name:'Water',amount:'600ml'},{name:'Cooking Oil',amount:'2 tbsp'},{name:'Salt',amount:'½ tsp'},{name:'Sweet Soy Sauce (Kecap Manis)',amount:'3 tbsp'},{name:'Sesame Oil',amount:'1 tbsp'},{name:'Sesame Seeds',amount:'1 tbsp'},{name:'Fried Shallots',amount:'2 tbsp'},{name:'Char Siu (BBQ Pork)',amount:'150g, optional'}],
+      steps:['Mix rice flour, tapioca starch, salt and water until smooth. Rest batter 20 mins.','Lightly oil a flat tray or steamer plate. Pour a thin layer of batter and steam on high for 3–4 mins until set.','Remove from steamer, roll up gently while still warm. Repeat with remaining batter.','Slice rolls into 4cm pieces. Arrange on plate.','Drizzle with sweet soy sauce and sesame oil. Top with sesame seeds, fried shallots and char siu if using.'],notes:'Serve immediately while warm. Use a well-greased tray to prevent sticking. For plain cheong fun, skip the filling.',rating:5},
+    {id:'r5',name:'Fried Carrot Cake (Chai Tow Kway)',category:'Asian',prepTime:'50 mins',serves:4,difficulty:'Medium',image:'',
+      ingredients:[{name:'Turnip (White Radish)',amount:'500g, grated'},{name:'Rice Flour',amount:'150g'},{name:'Water',amount:'250ml'},{name:'Salt',amount:'1 tsp'},{name:'Eggs',amount:'3'},{name:'Preserved Radish (Chai Poh)',amount:'3 tbsp, rinsed'},{name:'Garlic',amount:'3 cloves, minced'},{name:'Dark Soy Sauce',amount:'2 tbsp'},{name:'Light Soy Sauce',amount:'1 tbsp'},{name:'Oil',amount:'3 tbsp'},{name:'Spring Onion',amount:'2 stalks, chopped'}],
+      steps:['Mix grated radish with rice flour, water and salt. Pour into a greased pan and steam for 30–35 mins until firm. Cool completely, then cut into 2cm cubes.','Heat oil in wok on medium-high. Fry chai poh and garlic until fragrant, about 2 mins.','Add radish cake cubes, fry until golden on edges, pressing lightly.','For black version: add dark soy sauce and toss well. For white version: skip.','Push cake aside, scramble eggs in wok then fold through the cake.','Season with light soy sauce, toss everything together, top with spring onion and serve hot.'],notes:'For crispy texture, do not stir too often — let the cake sit and brown. Chai poh (preserved radish) is key to authentic flavour; find it at Asian grocery stores.',rating:5}
   ],
   mealTab:'planner',
   travelTab:'itinerary',
-  travel:{
-    tripName:'Bali Family Holiday',
-    destination:'Bali, Indonesia',
-    dates:'Jul 5–15, 2026',
-    budget:5000,
-    spent:1420,
-    itinerary:[
-      {id:'i1',day:'Jul 5',time:'08:00',title:'Flight SQ476 — SIN to DPS',type:'flight',assignee:'All',notes:'Terminal 3, check in 2hrs early',done:false},
-      {id:'i2',day:'Jul 5',time:'15:30',title:'Check in — The Layar Villa',type:'hotel',assignee:'All',notes:'Pool villa, late checkout pre-arranged',done:false},
-      {id:'i3',day:'Jul 6',time:'09:00',title:'Tegallalang Rice Terraces',type:'attraction',assignee:'All',notes:'Bring sunscreen & comfortable shoes',done:false},
-      {id:'i4',day:'Jul 6',time:'13:00',title:'Lunch at Locavore',type:'restaurant',assignee:'All',notes:'Reservation confirmed for 4',done:false},
-      {id:'i5',day:'Jul 7',time:'10:00',title:'Surf lesson at Kuta Beach',type:'activity',assignee:'Leo',notes:'Kids board included',done:false},
-      {id:'i6',day:'Jul 8',time:'All Day',title:'Uluwatu Temple & Kecak Dance',type:'attraction',assignee:'All',notes:'Show at sunset — 6pm',done:false}
-    ],
-    bookings:[
-      {id:'b1',type:'flight',title:'SQ476 SIN→DPS',detail:'Jul 5 · 08:00–14:45 · Singapore Airlines',status:'confirmed',ref:'SQ476A8X',color:'#185FA5'},
-      {id:'b2',type:'flight',title:'SQ477 DPS→SIN',detail:'Jul 15 · 16:00–21:30 · Singapore Airlines',status:'confirmed',ref:'SQ477B9Y',color:'#185FA5'},
-      {id:'b3',type:'hotel',title:'The Layar Villa',detail:'Jul 5–15 · 10 nights · Seminyak',status:'confirmed',ref:'TLV-20264',color:'#0F6E56'},
-      {id:'b4',type:'car',title:'Car Rental — Toyota Innova',detail:'Jul 6–14 · With driver · 9 days',status:'confirmed',ref:'BALI-CR-882',color:'#BA7517'}
-    ],
-    bucketList:[
-      {id:'bl1',title:'Mount Batur sunrise hike',category:'Adventure',addedBy:'Dad',liked:['Mom','Dad'],done:false},
-      {id:'bl2',title:'Cooking class in Ubud',category:'Food',addedBy:'Mom',liked:['Mom'],done:false},
-      {id:'bl3',title:'Waterpark — Waterbom Bali',category:'Kids',addedBy:'Leo',liked:['Leo','Mia'],done:false},
-      {id:'bl4',title:'Tanah Lot Temple at sunset',category:'Culture',addedBy:'Mom',liked:['Mom','Dad'],done:true},
-      {id:'bl5',title:'Beachside seafood BBQ',category:'Food',addedBy:'Mia',liked:['Mia','Leo','Dad'],done:false}
-    ],
-    packing:[
-      {id:'p1',item:'Passports & travel docs',category:'Documents',packed:true,who:'All'},
-      {id:'p2',item:'Travel insurance cards',category:'Documents',packed:false,who:'Mom'},
-      {id:'p3',item:'Sunscreen SPF50+',category:'Health',packed:true,who:'All'},
-      {id:'p4',item:"Leo's asthma inhaler",category:'Health',packed:false,who:'Leo'},
-      {id:'p5',item:'Mosquito repellent',category:'Health',packed:false,who:'All'},
-      {id:'p6',item:'Kids swim gear',category:'Clothing',packed:true,who:'Leo & Mia'},
-      {id:'p7',item:'Lightweight rain jackets',category:'Clothing',packed:false,who:'All'},
-      {id:'p8',item:'Power adapters',category:'Electronics',packed:false,who:'Dad'},
-      {id:'p9',item:'GoPro + spare batteries',category:'Electronics',packed:false,who:'Dad'},
-      {id:'p10',item:'Mia\'s comfort toy',category:'Kids',packed:true,who:'Mia'}
-    ],
-    expenses:[
-      {id:'te1',desc:'Flights x4',amount:1200,paidBy:'Dad',date:'2026-04-10',category:'Transport',split:'Family'},
-      {id:'te2',desc:'Villa deposit',amount:220,paidBy:'Mom',date:'2026-04-11',category:'Accommodation',split:'Family'}
-    ],
-    emergency:{
-      hospital:'BIMC Hospital Bali — +62 361 761263',
-      ambulance:'118',
-      police:'110',
-      embassy:'Singapore Embassy Jakarta — +62 21 2995 0400',
-      transport:'Grab / Gojek app — available islandwide',
-      currency:'1 SGD ≈ 11,200 IDR',
-      language:'Bahasa Indonesia — Hello: Halo, Thank you: Terima kasih, Help: Tolong'
+  activeTripId:'t1',
+  trips:[
+    {
+      id:'t1',
+      tripName:'Bali Family Holiday',
+      destination:'Bali, Indonesia',
+      dates:'Jul 5–15, 2026',
+      emoji:'🌴',
+      color:'#0F6E56',
+      budget:5000,
+      spent:1420,
+      itinerary:[
+        {id:'i1',day:'Jul 5',time:'08:00',title:'Flight SQ476 — SIN to DPS',type:'flight',assignee:'All',notes:'Terminal 3, check in 2hrs early',done:false},
+        {id:'i2',day:'Jul 5',time:'15:30',title:'Check in — The Layar Villa',type:'hotel',assignee:'All',notes:'Pool villa, late checkout pre-arranged',done:false},
+        {id:'i3',day:'Jul 6',time:'09:00',title:'Tegallalang Rice Terraces',type:'attraction',assignee:'All',notes:'Bring sunscreen & comfortable shoes',done:false},
+        {id:'i4',day:'Jul 6',time:'13:00',title:'Lunch at Locavore',type:'restaurant',assignee:'All',notes:'Reservation confirmed for 4',done:false},
+        {id:'i5',day:'Jul 7',time:'10:00',title:'Surf lesson at Kuta Beach',type:'activity',assignee:'Leo',notes:'Kids board included',done:false},
+        {id:'i6',day:'Jul 8',time:'All Day',title:'Uluwatu Temple & Kecak Dance',type:'attraction',assignee:'All',notes:'Show at sunset — 6pm',done:false}
+      ],
+      bookings:[
+        {id:'b1',type:'flight',title:'SQ476 SIN→DPS',detail:'Jul 5 · 08:00–14:45 · Singapore Airlines',status:'confirmed',ref:'SQ476A8X',color:'#185FA5'},
+        {id:'b2',type:'flight',title:'SQ477 DPS→SIN',detail:'Jul 15 · 16:00–21:30 · Singapore Airlines',status:'confirmed',ref:'SQ477B9Y',color:'#185FA5'},
+        {id:'b3',type:'hotel',title:'The Layar Villa',detail:'Jul 5–15 · 10 nights · Seminyak',status:'confirmed',ref:'TLV-20264',color:'#0F6E56'},
+        {id:'b4',type:'car',title:'Car Rental — Toyota Innova',detail:'Jul 6–14 · With driver · 9 days',status:'confirmed',ref:'BALI-CR-882',color:'#BA7517'}
+      ],
+      bucketList:[
+        {id:'bl1',title:'Mount Batur sunrise hike',category:'Adventure',addedBy:'Dad',liked:['Mom','Dad'],done:false},
+        {id:'bl2',title:'Cooking class in Ubud',category:'Food',addedBy:'Mom',liked:['Mom'],done:false},
+        {id:'bl3',title:'Waterpark — Waterbom Bali',category:'Kids',addedBy:'Leo',liked:['Leo','Mia'],done:false},
+        {id:'bl4',title:'Tanah Lot Temple at sunset',category:'Culture',addedBy:'Mom',liked:['Mom','Dad'],done:true},
+        {id:'bl5',title:'Beachside seafood BBQ',category:'Food',addedBy:'Mia',liked:['Mia','Leo','Dad'],done:false}
+      ],
+      packing:[
+        {id:'p1',item:'Passports & travel docs',category:'Documents',packed:true,who:'All'},
+        {id:'p2',item:'Travel insurance cards',category:'Documents',packed:false,who:'Mom'},
+        {id:'p3',item:'Sunscreen SPF50+',category:'Health',packed:true,who:'All'},
+        {id:'p4',item:"Leo's asthma inhaler",category:'Health',packed:false,who:'Leo'},
+        {id:'p5',item:'Mosquito repellent',category:'Health',packed:false,who:'All'},
+        {id:'p6',item:'Kids swim gear',category:'Clothing',packed:true,who:'Leo & Mia'},
+        {id:'p7',item:'Lightweight rain jackets',category:'Clothing',packed:false,who:'All'},
+        {id:'p8',item:'Power adapters',category:'Electronics',packed:false,who:'Dad'},
+        {id:'p9',item:'GoPro + spare batteries',category:'Electronics',packed:false,who:'Dad'},
+        {id:'p10',item:"Mia's comfort toy",category:'Kids',packed:true,who:'Mia'}
+      ],
+      expenses:[
+        {id:'te1',desc:'Flights x4',amount:1200,paidBy:'Dad',date:'2026-04-10',category:'Transport',split:'Family'},
+        {id:'te2',desc:'Villa deposit',amount:220,paidBy:'Mom',date:'2026-04-11',category:'Accommodation',split:'Family'}
+      ],
+      emergency:{
+        hospital:'BIMC Hospital Bali — +62 361 761263',
+        ambulance:'118',police:'110',
+        embassy:'Singapore Embassy Jakarta — +62 21 2995 0400',
+        transport:'Grab / Gojek app — available islandwide',
+        currency:'1 SGD ≈ 11,200 IDR',
+        language:'Bahasa Indonesia — Hello: Halo, Thank you: Terima kasih, Help: Tolong'
+      }
+    },
+    {
+      id:'t2',
+      tripName:'Tokyo Family Adventure',
+      destination:'Tokyo, Japan',
+      dates:'Dec 20–29, 2026',
+      emoji:'🗼',
+      color:'#E24B4A',
+      budget:8000,
+      spent:1500,
+      itinerary:[
+        {id:'j1',day:'Dec 20',time:'09:00',title:'Flight SQ637 — SIN to NRT',type:'flight',assignee:'All',notes:'Narita Terminal 1',done:false},
+        {id:'j2',day:'Dec 20',time:'18:00',title:'Check in — Shinjuku Hotel Gracery',type:'hotel',assignee:'All',notes:'Godzilla head on roof! Kids will love it',done:false},
+        {id:'j3',day:'Dec 21',time:'All Day',title:'Shibuya & Harajuku',type:'attraction',assignee:'All',notes:'Visit Takeshita Street and Meiji Shrine',done:false},
+        {id:'j4',day:'Dec 22',time:'09:00',title:'DisneySea Tokyo',type:'activity',assignee:'All',notes:'Book fast passes in advance',done:false}
+      ],
+      bookings:[
+        {id:'jb1',type:'flight',title:'SQ637 SIN→NRT',detail:'Dec 20 · 09:00–17:30 · Singapore Airlines',status:'confirmed',ref:'SQ637C2K',color:'#185FA5'},
+        {id:'jb2',type:'hotel',title:'Hotel Gracery Shinjuku',detail:'Dec 20–29 · 9 nights · Shinjuku',status:'confirmed',ref:'HGS-20261',color:'#0F6E56'}
+      ],
+      bucketList:[
+        {id:'jbl1',title:'TeamLab Planets',category:'Culture',addedBy:'Mom',liked:['Mom','Dad'],done:false},
+        {id:'jbl2',title:'Tsukiji Fish Market breakfast',category:'Food',addedBy:'Dad',liked:['Dad'],done:false},
+        {id:'jbl3',title:'Akihabara for the kids',category:'Kids',addedBy:'Leo',liked:['Leo','Mia'],done:false}
+      ],
+      packing:[
+        {id:'jp1',item:'Warm winter jackets',category:'Clothing',packed:false,who:'All'},
+        {id:'jp2',item:'IC Card (Suica)',category:'Documents',packed:false,who:'All'},
+        {id:'jp3',item:'Universal power adapter',category:'Electronics',packed:false,who:'Dad'}
+      ],
+      expenses:[
+        {id:'je1',desc:'Flights x4',amount:1500,paidBy:'Dad',date:'2026-04-12',category:'Transport',split:'Family'}
+      ],
+      emergency:{
+        hospital:'St Luke\'s International Hospital — +81 3-5550-7166',
+        ambulance:'119',police:'110',
+        embassy:'Singapore Embassy Tokyo — +81 3-3586-9111',
+        transport:'IC Card (Suica/Pasmo) for trains & buses',
+        currency:'1 SGD ≈ 115 JPY',
+        language:'Japanese — Hello: Konnichiwa, Thank you: Arigatou, Help: Tasukete'
+      }
     }
-  },
-  isAnn:false
+  ],
+  travel:null,
 };
 
 function userPoints(name){
@@ -421,7 +481,8 @@ function openModal(type,extra){
     event:`<h3>Add New Event</h3>
       <div class="fi"><label>Title</label><input type="text" id="m-t"></div>
       <div class="frow"><div class="fi"><label>Date</label><input type="date" id="m-d" value="2026-04-15"></div><div class="fi"><label>Time</label><input type="time" id="m-ti" value="12:00"></div></div>
-      <div class="fi"><label>Type</label><select id="m-ty"><option>General</option><option>appointment</option><option>sport</option><option>kids</option></select></div>
+      <div class="fi"><label>Type</label><select id="m-ty" onchange="toggleBirthdayField(this.value)"><option>General</option><option>appointment</option><option>sport</option><option>kids</option><option>birthday</option></select></div>
+      <div class="fi" id="birthday-who-field" style="display:none"><label>Whose birthday?</label><input type="text" id="m-bwho" placeholder="e.g. Leo"></div>
       <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="saveEvent()">Save Event</button></div>`,
     meal:`<h3>Add Meal Plan</h3>
       <div class="fi"><label>Choose from your recipes (optional)</label>
@@ -476,18 +537,166 @@ function openModal(type,extra){
       <div class="fi"><label>Title</label><input type="text" id="m-t" placeholder="e.g. Dentist checkup"></div>
       <div class="frow"><div class="fi"><label>Date</label><input type="date" id="m-d" value="2026-04-20"></div><div class="fi"><label>Time</label><input type="time" id="m-ti" value="10:00"></div></div>
       <div class="fi"><label>Notes</label><input type="text" id="m-notes" placeholder="Bring insurance card..."></div>
-      <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="saveKidsAppt()">Save</button></div>`,
-    recipe:`<h3>Add New Recipe</h3>
-      <div class="fi"><label>Recipe name</label><input type="text" id="r-name" placeholder="e.g. Chicken Fried Rice"></div>
-      <div class="frow"><div class="fi"><label>Category</label><select id="r-cat"><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Pasta</option><option>Asian</option><option>Salads</option><option>Soups</option><option>Snacks</option><option>Desserts</option><option>Other</option></select></div><div class="fi"><label>Difficulty</label><select id="r-diff"><option>Easy</option><option>Medium</option><option>Hard</option></select></div></div>
-      <div class="frow"><div class="fi"><label>Prep time</label><input type="text" id="r-prep" placeholder="e.g. 30 mins"></div><div class="fi"><label>Serves</label><input type="number" id="r-srv" value="4" min="1"></div></div>
-      <div class="fi"><label>Rating (1–5)</label><select id="r-rating"><option value="5">5 stars</option><option value="4">4 stars</option><option value="3">3 stars</option><option value="2">2 stars</option><option value="1">1 star</option></select></div>
-      <div class="fi"><label>Ingredients (comma separated)</label><textarea id="r-ing" rows="2" placeholder="Chicken, Rice, Soy Sauce, Garlic"></textarea></div>
-      <div class="fi"><label>Steps (one per line)</label><textarea id="r-steps" rows="4" placeholder="Step 1: Prep ingredients..."></textarea></div>
-      <div class="fi"><label>Notes / Tips (Optional)</label><textarea id="r-notes" rows="2" placeholder="e.g. Can substitute with..."></textarea></div>
-      <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="saveRecipe()">Save Recipe</button></div>`
+      <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="saveKidsAppt()">Save</button></div>`
   };
-  mb.innerHTML=modals[type]||'';
+  mb.innerHTML=type==='recipe'?'':modals[type]||'';
+  if(type==='recipe'){openRecipeModal(null);return;}
+}
+
+function openRecipeModal(existing){
+  const bg=document.getElementById('modal-bg');
+  bg.style.display='flex';
+  const modal=document.getElementById('modal-body');
+  // Widen modal for recipe
+  modal.style.maxWidth='680px';
+  modal.style.width='95vw';
+
+  const ingRows=existing?existing.ingredients.map(i=>({name:i.name||i,amount:i.amount||''})):[{name:'',amount:''},{name:'',amount:''}];
+  const stepsVal=existing?existing.steps.join('\n'):'';
+  const catColors={'#0F6E56':'Breakfast','#185FA5':'Lunch','#D85A30':'Dinner','#BA7517':'Pasta','#D4537E':'Asian'};
+
+  const renderIngRows=()=>ingRows.map((row,i)=>`
+    <div style="display:grid;grid-template-columns:1fr 140px 32px;gap:8px;margin-bottom:8px" id="ing-row-${i}">
+      <input type="text" placeholder="Ingredient name" value="${row.name}" oninput="updateIngRow(${i},'name',this.value)"
+        style="padding:9px 12px;border:0.5px solid #d8c0b0;border-radius:9px;font-size:13px;background:#fff;outline:none;color:#1a1a1a">
+      <input type="text" placeholder="Amount" value="${row.amount}" oninput="updateIngRow(${i},'amount',this.value)"
+        style="padding:9px 12px;border:0.5px solid #d8c0b0;border-radius:9px;font-size:13px;background:#fff;outline:none;color:#1a1a1a;text-align:center">
+      <button onclick="removeIngRow(${i})" style="width:32px;height:38px;border-radius:9px;background:#FCEBEB;border:0.5px solid #f0d0c0;cursor:pointer;color:#A32D2D;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0">×</button>
+    </div>`).join('');
+
+  const ratingStars=(val)=>[5,4,3,2,1].map(n=>`<option value="${n}" ${(existing?.rating||5)===n?'selected':''}>${'★'.repeat(n)}${'☆'.repeat(5-n)}</option>`).join('');
+
+  modal.innerHTML=`
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+    <h3 style="color:#993C1D;font-size:18px;margin:0">${existing?'Edit Recipe':'Add New Recipe'}</h3>
+    <button onclick="closeRecipeModal()" style="width:30px;height:30px;border-radius:50%;background:#f5ece6;border:none;cursor:pointer;color:#993C1D;font-size:18px;display:flex;align-items:center;justify-content:center">×</button>
+  </div>
+
+  <div style="margin-bottom:16px">
+    <label style="display:block;font-size:12px;color:#666;margin-bottom:6px;font-weight:500">Recipe Photo</label>
+    <div id="r-img-preview" style="width:100%;height:160px;border-radius:12px;border:1px dashed #d8c0b0;background:${existing&&existing.image?'url(\''+existing.image+'\') center/cover no-repeat':'#fdf8f5'};display:flex;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden" onclick="document.getElementById('r-img-input').click()">
+      ${existing&&existing.image?'':`<div style="text-align:center;color:#aaa"><div style="font-size:28px;margin-bottom:6px">📷</div><div style="font-size:13px">Tap to add a photo</div></div>`}
+    </div>
+    <input type="file" id="r-img-input" accept="image/*" style="display:none" onchange="previewRecipeImg(this)">
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+    <div style="grid-column:1/-1">
+      <label style="display:block;font-size:12px;color:#666;margin-bottom:5px;font-weight:500">Recipe Name</label>
+      <input type="text" id="r-name" placeholder="e.g. Chicken Fried Rice" value="${existing?.name||''}"
+        style="width:100%;padding:11px 14px;border:0.5px solid #d8c0b0;border-radius:10px;font-size:16px;font-weight:500;background:#fff;outline:none;color:#1a1a1a">
+    </div>
+    <div>
+      <label style="display:block;font-size:12px;color:#666;margin-bottom:5px;font-weight:500">Category</label>
+      <select id="r-cat" style="width:100%;padding:10px 12px;border:0.5px solid #d8c0b0;border-radius:10px;font-size:13px;background:#fff;outline:none">
+        ${['Breakfast','Lunch','Dinner','Pasta','Asian','Salads','Soups','Snacks','Desserts','Other'].map(c=>`<option ${existing?.category===c?'selected':''}>${c}</option>`).join('')}
+      </select>
+    </div>
+    <div>
+      <label style="display:block;font-size:12px;color:#666;margin-bottom:5px;font-weight:500">Difficulty</label>
+      <select id="r-diff" style="width:100%;padding:10px 12px;border:0.5px solid #d8c0b0;border-radius:10px;font-size:13px;background:#fff;outline:none">
+        ${['Easy','Medium','Hard'].map(d=>`<option ${existing?.difficulty===d?'selected':''}>${d}</option>`).join('')}
+      </select>
+    </div>
+    <div>
+      <label style="display:block;font-size:12px;color:#666;margin-bottom:5px;font-weight:500">Prep Time</label>
+      <input type="text" id="r-prep" placeholder="e.g. 30 mins" value="${existing?.prepTime||''}"
+        style="width:100%;padding:10px 12px;border:0.5px solid #d8c0b0;border-radius:10px;font-size:13px;background:#fff;outline:none;color:#1a1a1a">
+    </div>
+    <div>
+      <label style="display:block;font-size:12px;color:#666;margin-bottom:5px;font-weight:500">Serves</label>
+      <input type="number" id="r-srv" value="${existing?.serves||4}" min="1"
+        style="width:100%;padding:10px 12px;border:0.5px solid #d8c0b0;border-radius:10px;font-size:13px;background:#fff;outline:none;color:#1a1a1a">
+    </div>
+    <div>
+      <label style="display:block;font-size:12px;color:#666;margin-bottom:5px;font-weight:500">Rating</label>
+      <select id="r-rating" style="width:100%;padding:10px 12px;border:0.5px solid #d8c0b0;border-radius:10px;font-size:13px;background:#fff;outline:none">
+        ${ratingStars(existing?.rating||5)}
+      </select>
+    </div>
+  </div>
+
+  <div style="margin-bottom:16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+      <label style="font-size:12px;color:#666;font-weight:500">Ingredients</label>
+      <div style="display:grid;grid-template-columns:1fr 140px 32px;gap:8px;width:calc(100% - 80px)">
+        <span style="font-size:11px;color:#aaa;padding-left:4px">Name</span>
+        <span style="font-size:11px;color:#aaa;text-align:center">Amount / Qty</span>
+        <span></span>
+      </div>
+    </div>
+    <div id="r-ing-rows">${renderIngRows()}</div>
+    <button onclick="addIngRow()" style="margin-top:6px;padding:8px 16px;background:#fff;border:1px dashed #d0c0b0;border-radius:9px;cursor:pointer;font-size:13px;color:#D85A30;font-weight:500;width:100%">
+      + Add Ingredient
+    </button>
+  </div>
+
+  <div style="margin-bottom:16px">
+    <label style="display:block;font-size:12px;color:#666;margin-bottom:8px;font-weight:500">Steps <span style="color:#aaa;font-weight:400">(one step per line)</span></label>
+    <textarea id="r-steps" rows="5" placeholder="Step 1: Prep your ingredients&#10;Step 2: Heat the pan&#10;Step 3: Cook and serve"
+      style="width:100%;padding:11px 14px;border:0.5px solid #d8c0b0;border-radius:10px;font-size:13px;background:#fff;outline:none;color:#1a1a1a;resize:vertical;font-family:inherit;line-height:1.6">${stepsVal}</textarea>
+  </div>
+
+  <div style="margin-bottom:20px">
+    <label style="display:block;font-size:12px;color:#666;margin-bottom:5px;font-weight:500">Notes / Tips <span style="color:#aaa;font-weight:400">(optional)</span></label>
+    <textarea id="r-notes" rows="2" placeholder="e.g. Can substitute chicken with tofu for a vegetarian version"
+      style="width:100%;padding:11px 14px;border:0.5px solid #d8c0b0;border-radius:10px;font-size:13px;background:#fff;outline:none;color:#1a1a1a;resize:vertical;font-family:inherit">${existing?.notes||''}</textarea>
+  </div>
+
+  <div style="display:flex;justify-content:flex-end;gap:10px;padding-top:16px;border-top:0.5px solid #f0d0c0">
+    <button onclick="closeRecipeModal()" style="padding:10px 22px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:14px;color:#666">Cancel</button>
+    <button onclick="saveRecipe('${existing?.id||''}')" style="padding:10px 24px;background:#D85A30;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer">${existing?'Save Changes':'Save Recipe'}</button>
+  </div>`;
+
+  // Store ing rows in closure-accessible variable on window
+  window._recipeIngRows=ingRows;
+}
+
+function closeRecipeModal(){
+  const modal=document.getElementById('modal-body');
+  modal.style.maxWidth='440px';
+  modal.style.width='100%';
+  closeModal();
+}
+
+function updateIngRow(i,field,val){
+  if(window._recipeIngRows&&window._recipeIngRows[i])window._recipeIngRows[i][field]=val;
+}
+
+function addIngRow(){
+  if(!window._recipeIngRows)window._recipeIngRows=[];
+  window._recipeIngRows.push({name:'',amount:''});
+  const container=document.getElementById('r-ing-rows');
+  if(!container)return;
+  const i=window._recipeIngRows.length-1;
+  const div=document.createElement('div');
+  div.style.cssText='display:grid;grid-template-columns:1fr 140px 32px;gap:8px;margin-bottom:8px';
+  div.id='ing-row-'+i;
+  div.innerHTML=`
+    <input type="text" placeholder="Ingredient name" oninput="updateIngRow(${i},'name',this.value)"
+      style="padding:9px 12px;border:0.5px solid #d8c0b0;border-radius:9px;font-size:13px;background:#fff;outline:none;color:#1a1a1a">
+    <input type="text" placeholder="Amount" oninput="updateIngRow(${i},'amount',this.value)"
+      style="padding:9px 12px;border:0.5px solid #d8c0b0;border-radius:9px;font-size:13px;background:#fff;outline:none;color:#1a1a1a;text-align:center">
+    <button onclick="removeIngRow(${i})" style="width:32px;height:38px;border-radius:9px;background:#FCEBEB;border:0.5px solid #f0d0c0;cursor:pointer;color:#A32D2D;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0">×</button>`;
+  container.appendChild(div);
+  div.querySelector('input').focus();
+}
+
+function removeIngRow(i){
+  if(!window._recipeIngRows)return;
+  window._recipeIngRows.splice(i,1);
+  // Re-render the whole modal ingredient section
+  const container=document.getElementById('r-ing-rows');
+  if(!container)return;
+  const rows=window._recipeIngRows;
+  container.innerHTML=rows.map((row,idx)=>`
+    <div style="display:grid;grid-template-columns:1fr 140px 32px;gap:8px;margin-bottom:8px" id="ing-row-${idx}">
+      <input type="text" placeholder="Ingredient name" value="${row.name}" oninput="updateIngRow(${idx},'name',this.value)"
+        style="padding:9px 12px;border:0.5px solid #d8c0b0;border-radius:9px;font-size:13px;background:#fff;outline:none;color:#1a1a1a">
+      <input type="text" placeholder="Amount" value="${row.amount}" oninput="updateIngRow(${idx},'amount',this.value)"
+        style="padding:9px 12px;border:0.5px solid #d8c0b0;border-radius:9px;font-size:13px;background:#fff;outline:none;color:#1a1a1a;text-align:center">
+      <button onclick="removeIngRow(${idx})" style="width:32px;height:38px;border-radius:9px;background:#FCEBEB;border:0.5px solid #f0d0c0;cursor:pointer;color:#A32D2D;font-size:18px;display:flex;align-items:center;justify-content:center;flex-shrink:0">×</button>
+    </div>`).join('');
 }
 
 function prefillFromRecipe(id){
@@ -497,16 +706,81 @@ function prefillFromRecipe(id){
   document.getElementById('m-t').value=r.name;
   document.getElementById('m-pt').value=r.prepTime||'';
   document.getElementById('m-sv').value=r.serves||4;
-  document.getElementById('m-ing').value=r.ingredients.join(', ');
+  const ingNames=r.ingredients.map(i=>typeof i==='string'?i:i.name);
+  document.getElementById('m-ing').value=ingNames.join(', ');
   document.getElementById('m-st').value=r.steps.join('\n');
   const tyMap={Breakfast:'Breakfast',Lunch:'Lunch',Dinner:'Dinner',Pasta:'Dinner',Asian:'Dinner',Salads:'Lunch',Soups:'Lunch',Snacks:'Lunch',Desserts:'Dinner',Other:'Dinner'};
   const sel=document.getElementById('m-ty');
   const mapped=tyMap[r.category]||'Dinner';
   for(let i=0;i<sel.options.length;i++){if(sel.options[i].value===mapped){sel.selectedIndex=i;break;}}
 }
-function saveEvent(){const t=document.getElementById('m-t').value.trim();if(!t)return;S.events.push({id:'e'+Date.now(),title:t,date:document.getElementById('m-d').value,time:document.getElementById('m-ti').value,type:document.getElementById('m-ty').value,assignee:'Mom'});closeModal();renderPage();}
+function toggleBirthdayField(val){
+  const f=document.getElementById('birthday-who-field');
+  if(f) f.style.display=val==='birthday'?'block':'none';
+}
+function saveEvent(){
+  const ty=document.getElementById('m-ty').value;
+  let title=document.getElementById('m-t').value.trim();
+  if(!title&&ty==='birthday'){
+    const who=document.getElementById('m-bwho')?.value.trim()||'';
+    title=who?`🎂 ${who}'s Birthday`:'🎂 Birthday';
+  }
+  if(!title)return;
+  S.events.push({id:'e'+Date.now(),title,date:document.getElementById('m-d').value,time:ty==='birthday'?'All Day':document.getElementById('m-ti').value,type:ty,assignee:'All'});
+  closeModal();renderPage();
+}
 function saveMeal(){const n=document.getElementById('m-t').value.trim();if(!n)return;S.meals.push({id:'m'+Date.now(),name:n,type:document.getElementById('m-ty').value,date:document.getElementById('m-d').value,ingredients:document.getElementById('m-ing').value.split(',').map(s=>s.trim()).filter(Boolean),steps:document.getElementById('m-st').value.split('\n').map(s=>s.trim()).filter(Boolean),prepTime:document.getElementById('m-pt').value||'?',serves:parseInt(document.getElementById('m-sv').value)||4});closeModal();renderPage();}
-function saveRecipe(){const n=document.getElementById('r-name').value.trim();if(!n)return;S.recipes.push({id:'r'+Date.now(),name:n,category:document.getElementById('r-cat').value,prepTime:document.getElementById('r-prep').value,serves:parseInt(document.getElementById('r-srv').value)||4,difficulty:document.getElementById('r-diff').value,ingredients:document.getElementById('r-ing').value.split(',').map(s=>s.trim()).filter(Boolean),steps:document.getElementById('r-steps').value.split('\n').map(s=>s.trim()).filter(Boolean),notes:document.getElementById('r-notes').value,rating:parseInt(document.getElementById('r-rating').value)||5});closeModal();renderPage();}
+function previewRecipeImg(input){
+  if(!input.files||!input.files[0])return;
+  const reader=new FileReader();
+  reader.onload=e=>{
+    window._recipeImg=e.target.result;
+    const prev=document.getElementById('r-img-preview');
+    if(prev){prev.style.background=`url('${e.target.result}') center/cover no-repeat`;prev.innerHTML='';}
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+function saveRecipe(editId){
+  const n=document.getElementById('r-name').value.trim();
+  if(!n)return;
+  const ingredients=(window._recipeIngRows||[]).filter(r=>r.name.trim()).map(r=>({name:r.name.trim(),amount:r.amount.trim()}));
+  const steps=document.getElementById('r-steps').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  const existingImg=editId?S.recipes.find(r=>r.id===editId)?.image||'':'';
+  const recipe={
+    id:editId||'r'+Date.now(),
+    name:n,
+    category:document.getElementById('r-cat').value,
+    prepTime:document.getElementById('r-prep').value,
+    serves:parseInt(document.getElementById('r-srv').value)||4,
+    difficulty:document.getElementById('r-diff').value,
+    ingredients,steps,
+    notes:document.getElementById('r-notes').value,
+    rating:parseInt(document.getElementById('r-rating').value)||5,
+    image:window._recipeImg||existingImg
+  };
+  if(editId){const idx=S.recipes.findIndex(r=>r.id===editId);if(idx>=0)S.recipes[idx]=recipe;}
+  else S.recipes.push(recipe);
+  window._recipeIngRows=null;
+  window._recipeImg=null;
+  closeRecipeModal();renderPage();
+}
+
+function prefillFromRecipe(id){
+  if(!id) return;
+  const r=S.recipes.find(r=>r.id===id);
+  if(!r) return;
+  document.getElementById('m-t').value=r.name;
+  document.getElementById('m-pt').value=r.prepTime||'';
+  document.getElementById('m-sv').value=r.serves||4;
+  const ingNames=r.ingredients.map(i=>typeof i==='string'?i:i.name);
+  document.getElementById('m-ing').value=ingNames.join(', ');
+  document.getElementById('m-st').value=r.steps.join('\n');
+  const tyMap={Breakfast:'Breakfast',Lunch:'Lunch',Dinner:'Dinner',Pasta:'Dinner',Asian:'Dinner',Salads:'Lunch',Soups:'Lunch',Snacks:'Lunch',Desserts:'Dinner',Other:'Dinner'};
+  const sel=document.getElementById('m-ty');
+  const mapped=tyMap[r.category]||'Dinner';
+  for(let i=0;i<sel.options.length;i++){if(sel.options[i].value===mapped){sel.selectedIndex=i;break;}}
+}
 function saveHabit(){const n=document.getElementById('m-t').value.trim();if(!n)return;S.habits.push({id:'h'+Date.now(),name:n,streak:0,color:document.getElementById('m-c').value,owner:document.getElementById('m-own').value,days:[0,0,0,0,0,0,0],addedBy:'parent'});closeModal();renderPage();}
 function saveGoal(){const t=document.getElementById('m-t').value.trim(),a=parseFloat(document.getElementById('m-amt').value);if(!t||isNaN(a))return;S.goals.push({id:'gl'+Date.now(),title:t,category:document.getElementById('m-cat').value,current:0,target:a,color:'#D85A30'});closeModal();renderPage();}
 function saveExpense(){const a=parseFloat(document.getElementById('m-amt').value),d=document.getElementById('m-t').value.trim();if(isNaN(a)||!d)return;S.expenses.unshift({id:'x'+Date.now(),date:document.getElementById('m-d').value,desc:d,category:document.getElementById('m-cat').value,paidBy:document.getElementById('m-pb').value,amount:a});closeModal();renderPage();}
@@ -633,14 +907,18 @@ function pgCal(){
   const days=['SUN','MON','TUE','WED','THU','FRI','SAT'];
   const dates=['2026-04-12','2026-04-13','2026-04-14','2026-04-15','2026-04-16','2026-04-17','2026-04-18'];
   const nums=[12,13,14,15,16,17,18];
-  const tc={sport:'background:#E1F5EE;color:#085041',appointment:'background:#FCEBEB;color:#A32D2D',kids:'background:#EEEDFE;color:#3C3489',General:'background:#f5ece6;color:#712B13'};
+  const tc={sport:'background:#E1F5EE;color:#085041',appointment:'background:#FCEBEB;color:#A32D2D',kids:'background:#EEEDFE;color:#3C3489',birthday:'background:#FBEAF0;color:#72243E;font-weight:600',General:'background:#f5ece6;color:#712B13'};
+  const birthdays=S.events.filter(e=>e.type==='birthday');
   return`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
     <div><div style="font-size:20px;font-weight:600">Family Calendar</div><div style="font-size:13px;color:#888;margin-top:3px">Keep track of everyone's schedule.</div></div>
     <button class="btn b-orange" onclick="openModal('event')">${ic('plus')} Add Event</button>
   </div>
+  ${birthdays.length?`<div style="background:#FBEAF0;border:0.5px solid #ED93B1;border-radius:10px;padding:10px 16px;margin-bottom:16px;display:flex;gap:16px;flex-wrap:wrap">
+    ${birthdays.map(b=>`<span style="font-size:13px;color:#72243E">🎂 <strong>${b.title.replace('🎂 ','')}</strong> — ${b.date}</span>`).join('')}
+  </div>`:''}
   <div class="cal-grid">
     ${days.map(d=>`<div class="cal-hd">${d}</div>`).join('')}
-    ${dates.map((ds,i)=>{const evts=S.events.filter(e=>e.date===ds);return`<div class="cal-day"><div class="cal-num${ds==='2026-04-15'?' today':''}">${nums[i]}</div>${evts.map(e=>`<div class="cal-ev" style="${tc[e.type]||tc.General}">${e.title}</div>`).join('')}</div>`;}).join('')}
+    ${dates.map((ds,i)=>{const evts=S.events.filter(e=>e.date===ds);const hasBday=evts.some(e=>e.type==='birthday');return`<div class="cal-day" style="${hasBday?'background:#fff9fe':''}"><div class="cal-num${ds==='2026-04-15'?' today':''}">${nums[i]}</div>${evts.map(e=>`<div class="cal-ev" style="${tc[e.type]||tc.General}">${e.title}</div>`).join('')}</div>`;}).join('')}
   </div>`;
 }
 
@@ -733,12 +1011,16 @@ function pgMeals(){
       <button class="btn b-orange" onclick="openModal('meal')" style="font-size:13px">${ic('plus')} Add Meal</button>
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px">
-      ${S.meals.map(m=>`
+      ${S.meals.map(m=>{
+        const linkedRecipe=S.recipes.find(r=>r.name.toLowerCase()===m.name.toLowerCase());
+        const img=m.image||linkedRecipe?.image||'';
+        return`
       <div style="background:#fff;border:0.5px solid #f0d0c0;border-radius:14px;overflow:hidden">
+        ${img?`<div style="height:140px;background:url('${img}') center/cover no-repeat;position:relative"><div style="position:absolute;bottom:0;left:0;right:0;height:50%;background:linear-gradient(transparent,rgba(0,0,0,0.35))"></div></div>`:''}
         <div style="padding:14px 16px;border-bottom:0.5px solid #f5ece6">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
             <span style="${typeColors[m.type]||'background:#f5ece6;color:#712B13'};padding:3px 10px;border-radius:99px;font-size:11px;font-weight:600">${m.type.toUpperCase()}</span>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d0c0b0" stroke-width="1.8"><line x1="3" y1="2" x2="3" y2="22"/><path d="M7 2v6a3 3 0 01-3 3v9"/><line x1="21" y1="2" x2="21" y2="22"/><path d="M21 2v6a3 3 0 01-3 3v9"/></svg>
+            ${linkedRecipe?`<button onclick="S.mealTab='recipes';renderPage()" style="padding:3px 10px;background:#FAECE7;border:none;border-radius:99px;font-size:11px;font-weight:600;cursor:pointer;color:#993C1D;display:flex;align-items:center;gap:4px"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>View Recipe</button>`:`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d0c0b0" stroke-width="1.8"><line x1="3" y1="2" x2="3" y2="22"/><path d="M7 2v6a3 3 0 01-3 3v9"/><line x1="21" y1="2" x2="21" y2="22"/><path d="M21 2v6a3 3 0 01-3 3v9"/></svg>`}
           </div>
           <div style="font-size:16px;font-weight:600;margin-bottom:3px">${m.name}</div>
           <div style="font-size:13px;color:#888">${new Date(m.date+'T00:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}</div>
@@ -751,36 +1033,89 @@ function pgMeals(){
           <div>${m.ingredients.map(i=>`<span style="display:inline-block;padding:3px 9px;border:0.5px solid #e8d8d0;border-radius:99px;font-size:12px;margin-right:4px;margin-bottom:4px;color:#1a1a1a">${i}</span>`).join('')}</div>
           ${m.prepTime?`<div style="font-size:12px;color:#aaa;margin-top:8px">${ic('clock',11)} ${m.prepTime} · Serves ${m.serves}</div>`:''}
         </div>
-      </div>`).join('')}
+      </div>`;}).join('')}
     </div>`;
 
   const recipesHTML=()=>`
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px">
       <input type="text" id="recipe-search" placeholder="Search recipes..." style="flex:1;min-width:180px;padding:8px 12px;border:0.5px solid #d8c0b0;border-radius:9px;font-size:13px;background:#fff;outline:none;color:#1a1a1a" oninput="renderPage()">
-      <button class="btn b-orange" onclick="openModal('recipe')">${ic('plus')} Add Recipe</button>
+      <button class="btn b-orange" onclick="openRecipeModal(null)">${ic('plus')} Add Recipe</button>
     </div>
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:18px">
       ${S.recipes.filter(r=>{const q=(document.getElementById('recipe-search')?.value||'').toLowerCase();return!q||r.name.toLowerCase().includes(q)||r.category.toLowerCase().includes(q);}).map(r=>`
-      <div style="background:#fff;border:0.5px solid #f0d0c0;border-radius:14px;overflow:hidden">
-        <div style="background:${catColors2[r.category]||'#D85A30'};padding:14px 16px">
-          <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
-            <span style="background:rgba(255,255,255,0.22);color:#fff;padding:2px 9px;border-radius:99px;font-size:11px;font-weight:600">${r.category.toUpperCase()}</span>
-            <span style="color:rgba(255,255,255,0.9);font-size:12px">${'★'.repeat(r.rating||5)}</span>
+      <div style="background:#fff;border:0.5px solid #f0d0c0;border-radius:16px;overflow:hidden;display:flex;flex-direction:column">
+
+        ${r.image?`<div style="height:180px;background:url('${r.image}') center/cover no-repeat;position:relative"><div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 40%,rgba(0,0,0,0.5))"></div><div style="position:absolute;bottom:0;left:0;right:0;padding:12px 16px"><span style="background:rgba(255,255,255,0.2);color:#fff;padding:2px 9px;border-radius:99px;font-size:11px;font-weight:600;backdrop-filter:blur(4px)">${r.category.toUpperCase()}</span><div style="font-size:18px;font-weight:700;color:#fff;margin-top:4px">${r.name}</div></div><div style="position:absolute;top:10px;right:12px;color:rgba(255,255,255,0.95);font-size:13px">${'★'.repeat(r.rating||5)}</div></div>`:''}
+
+        <div style="background:${r.image?catColors2[r.category]||'#D85A30':''+catColors2[r.category]||'#D85A30'};padding:${r.image?'10px 16px':'16px 18px'}">
+          ${!r.image?`<div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+            <span style="background:rgba(255,255,255,0.22);color:#fff;padding:3px 10px;border-radius:99px;font-size:11px;font-weight:600;letter-spacing:.04em">${r.category.toUpperCase()}</span>
+            <span style="color:rgba(255,255,255,0.95);font-size:13px;letter-spacing:1px">${'★'.repeat(r.rating||5)}</span>
           </div>
-          <div style="font-size:16px;font-weight:600;color:#fff;margin-bottom:3px">${r.name}</div>
-          <div style="display:flex;gap:10px;font-size:12px;color:rgba(255,255,255,0.8)">
-            <span>${r.prepTime||'?'}</span>
-            <span>Serves ${r.serves||4}</span>
-            <span style="${diffColors[r.difficulty]||''};padding:1px 7px;border-radius:99px;font-size:11px">${r.difficulty||'Easy'}</span>
+          <div style="font-size:18px;font-weight:700;color:#fff;margin-bottom:6px">${r.name}</div>`:''}
+          <div style="display:flex;gap:12px;font-size:12px;color:rgba(255,255,255,0.85);flex-wrap:wrap">
+            <span style="display:flex;align-items:center;gap:4px">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+              ${r.prepTime||'?'}
+            </span>
+            <span style="display:flex;align-items:center;gap:4px">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+              Serves ${r.serves||4}
+            </span>
+            <span style="background:rgba(255,255,255,0.2);color:#fff;padding:1px 8px;border-radius:99px;font-size:11px">${r.difficulty||'Easy'}</span>
           </div>
         </div>
-        <div style="padding:14px 16px">
-          <div style="font-size:12px;font-weight:500;color:#888;margin-bottom:6px">Ingredients</div>
-          <div style="margin-bottom:12px">${r.ingredients.map(i=>`<span style="display:inline-block;padding:3px 9px;border:0.5px solid #e8d8d0;border-radius:99px;font-size:12px;margin-right:4px;margin-bottom:4px;color:#1a1a1a">${i}</span>`).join('')}</div>
-          <div style="font-size:12px;font-weight:500;color:#888;margin-bottom:6px">Steps</div>
-          ${r.steps.map((s,i)=>`<div style="display:flex;gap:8px;margin-bottom:6px;align-items:flex-start"><div style="width:20px;height:20px;border-radius:50%;background:#FAECE7;color:#993C1D;font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0">${i+1}</div><div style="font-size:13px">${s}</div></div>`).join('')}
-          ${r.notes?`<div style="margin-top:10px;font-size:12px;color:#888;background:#fff9f6;padding:8px 10px;border-radius:8px;border-left:3px solid #D85A30">💡 ${r.notes}</div>`:''}
-          <button class="btn b-orange" style="width:100%;justify-content:center;margin-top:12px;font-size:12px" onclick="addMealFromRecipe('${r.id}')">Add to Meal Plan</button>
+
+        <div style="padding:16px 18px;flex:1;display:flex;flex-direction:column;gap:14px">
+
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Ingredients</div>
+            <table style="width:100%;border-collapse:collapse">
+              <thead>
+                <tr style="border-bottom:1.5px solid #f0d0c0">
+                  <th style="text-align:left;font-size:11px;color:#aaa;font-weight:500;padding:0 0 5px;width:55%">Item</th>
+                  <th style="text-align:right;font-size:11px;color:#aaa;font-weight:500;padding:0 0 5px">Amount</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${r.ingredients.map((ing,i)=>{
+                  const name=typeof ing==='string'?ing:ing.name;
+                  const amt=typeof ing==='string'?'':ing.amount;
+                  return`<tr style="border-bottom:0.5px solid #f9f0ec">
+                    <td style="padding:7px 0;font-size:13px;color:#1a1a1a">${name}</td>
+                    <td style="padding:7px 0;font-size:13px;color:#D85A30;font-weight:500;text-align:right">${amt||'—'}</td>
+                  </tr>`;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+
+          <div>
+            <div style="font-size:11px;font-weight:700;color:#888;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">Method</div>
+            ${r.steps.map((s,i)=>`
+            <div style="display:flex;gap:10px;margin-bottom:8px;align-items:flex-start">
+              <div style="width:22px;height:22px;border-radius:50%;background:#FAECE7;color:#993C1D;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px">${i+1}</div>
+              <div style="font-size:13px;color:#333;line-height:1.5">${s}</div>
+            </div>`).join('')}
+          </div>
+
+          ${r.notes?`<div style="background:#fff9f5;border-left:3px solid #D85A30;border-radius:0 8px 8px 0;padding:10px 12px;font-size:12px;color:#712B13;line-height:1.5">
+            <span style="font-weight:700">Tip:</span> ${r.notes}
+          </div>`:''}
+
+          <div style="display:flex;gap:8px;margin-top:auto;padding-top:4px">
+            <button class="btn b-orange" style="flex:1;justify-content:center;font-size:12px" onclick="addMealFromRecipe('${r.id}')">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              Add to Meal Plan
+            </button>
+            <button onclick="openRecipeModal(S.recipes.find(r=>r.id==='${r.id}'))" style="padding:8px 14px;background:#fff;border:0.5px solid #f0d0c0;border-radius:10px;font-size:12px;font-weight:500;cursor:pointer;color:#666">
+              Edit
+            </button>
+            <button onclick="deleteRecipe('${r.id}')" style="padding:8px 12px;background:#FCEBEB;border:0.5px solid #f0d0c0;border-radius:10px;font-size:12px;cursor:pointer;color:#A32D2D">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/></svg>
+            </button>
+          </div>
+
         </div>
       </div>`).join('')}
     </div>`;
@@ -798,10 +1133,17 @@ function pgMeals(){
 function addMealFromRecipe(id){
   const r=S.recipes.find(r=>r.id===id);if(!r)return;
   const today=new Date().toISOString().split('T')[0];
-  S.meals.push({id:'m'+Date.now(),name:r.name,type:'Dinner',date:today,ingredients:r.ingredients,steps:r.steps,prepTime:r.prepTime,serves:r.serves});
+  const ingNames=r.ingredients.map(i=>typeof i==='string'?i:i.name);
+  S.meals.push({id:'m'+Date.now(),name:r.name,type:'Dinner',date:today,ingredients:ingNames,steps:r.steps,prepTime:r.prepTime,serves:r.serves});
   S.mealTab='planner';
   renderPage();
   alert(r.name+' added to your meal plan!');
+}
+
+function deleteRecipe(id){
+  if(!confirm('Delete this recipe?')) return;
+  S.recipes=S.recipes.filter(r=>r.id!==id);
+  renderPage();
 }
 
 function pgGroceries(){
@@ -1439,11 +1781,317 @@ function saveKidOuting(){
 }
 
 function pgTravel(){
-  const T=S.travel;
+  const T=S.trips.find(t=>t.id===S.activeTripId)||S.trips[0];
   const tabs=[{id:'itinerary',label:'Itinerary'},{id:'bookings',label:'Bookings'},{id:'bucketlist',label:'Bucket List'},{id:'map',label:'Map'},{id:'expenses',label:'Expenses'},{id:'packing',label:'Packing'},{id:'emergency',label:'Emergency'}];
-  const budgetPct=Math.min(100,(T.spent/T.budget*100)).toFixed(0);
+  const budgetPct=Math.min(100,(T.expenses.reduce((s,e)=>s+e.amount,0)/T.budget*100)).toFixed(0);
   const typeIcon={flight:'✈',hotel:'🏨',car:'🚗',restaurant:'🍽',attraction:'🏛',activity:'🎯'};
   const typeColor={flight:'#185FA5',hotel:'#0F6E56',car:'#BA7517',restaurant:'#D4537E',attraction:'#534AB7',activity:'#D85A30'};
+
+  const tripSelector=()=>`
+  <div style="margin-bottom:20px">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div style="font-size:13px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.05em">My Holiday Plans</div>
+      <button onclick="openAddTripModal()" style="padding:7px 14px;background:#D85A30;color:#fff;border:none;border-radius:10px;font-size:12px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>Add Holiday Plan
+      </button>
+    </div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap">
+      ${S.trips.map(trip=>`
+      <div onclick="S.activeTripId='${trip.id}';S.travelTab='itinerary';renderPage()" style="cursor:pointer;padding:12px 18px;border-radius:14px;border:2px solid ${S.activeTripId===trip.id?trip.color:'#f0d0c0'};background:${S.activeTripId===trip.id?trip.color+'15':'#fff'};transition:all 0.15s;min-width:160px">
+        <div style="font-size:22px;margin-bottom:4px">${trip.emoji}</div>
+        <div style="font-size:14px;font-weight:700;color:${S.activeTripId===trip.id?trip.color:'#1a1a1a'}">${trip.tripName}</div>
+        <div style="font-size:12px;color:#888;margin-top:2px">${trip.destination}</div>
+        <div style="font-size:11px;color:#aaa;margin-top:2px">${trip.dates}</div>
+        <div style="margin-top:6px;display:flex;gap:6px">
+          <span style="font-size:10px;background:${trip.color}18;color:${trip.color};padding:2px 7px;border-radius:99px;font-weight:600">${trip.itinerary.length} activities</span>
+          <span style="font-size:10px;background:#f5ece6;color:#993C1D;padding:2px 7px;border-radius:99px;font-weight:600">$${trip.budget.toLocaleString()}</span>
+        </div>
+      </div>`).join('')}
+    </div>
+  </div>`;
+
+  const tabBar=()=>`<div style="display:flex;gap:2px;background:#f5ece6;border-radius:10px;padding:3px;margin-bottom:22px;flex-wrap:wrap">
+    ${tabs.map(t=>`<button onclick="S.travelTab='${t.id}';renderPage()" style="padding:6px 14px;border-radius:8px;border:none;font-size:12px;font-weight:500;cursor:pointer;background:${S.travelTab===t.id?'#fff':'transparent'};color:${S.travelTab===t.id?'#D85A30':'#888'};${S.travelTab===t.id?'box-shadow:0 1px 3px rgba(0,0,0,0.08)':''}">${t.label}</button>`).join('')}
+  </div>`;
+
+  const itineraryTab=()=>{
+    const days=[...new Set(T.itinerary.map(i=>i.day))];
+    return`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div style="font-size:14px;color:#888">${T.itinerary.filter(i=>i.done).length}/${T.itinerary.length} activities completed</div>
+      <button class="btn b-orange" onclick="addItineraryItem()" style="font-size:12px">${ic('plus')} Add Activity</button>
+    </div>
+    ${days.length===0?`<div style="text-align:center;padding:32px;color:#aaa;background:#fff;border-radius:14px;border:0.5px solid #f0d0c0">No activities yet. Tap "Add Activity" to start planning!</div>`:''}
+    ${days.map(day=>`
+      <div style="margin-bottom:20px">
+        <div style="font-size:12px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;display:flex;align-items:center;gap:8px">
+          <div style="height:1px;flex:1;background:#f0d0c0"></div>${day}<div style="height:1px;flex:1;background:#f0d0c0"></div>
+        </div>
+        ${T.itinerary.filter(i=>i.day===day).map((item,idx,arr)=>`
+        <div style="display:flex;gap:12px;margin-bottom:10px">
+          <div style="display:flex;flex-direction:column;align-items:center">
+            <div style="width:32px;height:32px;border-radius:50%;background:${typeColor[item.type]||'#D85A30'}22;color:${typeColor[item.type]||'#D85A30'};font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0">${typeIcon[item.type]||'•'}</div>
+            ${idx<arr.length-1?`<div style="width:2px;flex:1;background:#f0d0c0;margin:3px 0;min-height:16px"></div>`:''}
+          </div>
+          <div style="flex:1;background:#fff;border:0.5px solid #f0d0c0;border-radius:12px;padding:12px 14px;${item.done?'opacity:0.55':''}">
+            <div style="display:flex;justify-content:space-between;align-items:flex-start">
+              <div><div style="font-size:13px;font-weight:600;${item.done?'text-decoration:line-through;color:#aaa':''}">${item.title}</div>
+              <div style="font-size:12px;color:#888;margin-top:2px">${item.time}${item.notes?` · ${item.notes}`:''}</div></div>
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="background:${typeColor[item.type]||'#D85A30'}18;color:${typeColor[item.type]||'#D85A30'};padding:2px 8px;border-radius:99px;font-size:11px;font-weight:500;text-transform:capitalize">${item.type}</span>
+                <div style="width:18px;height:18px;border-radius:50%;${item.done?`background:#0F6E56;border:none`:'border:1.5px solid #d0c0b0'};cursor:pointer;display:flex;align-items:center;justify-content:center" onclick="toggleItinerary('${item.id}')">
+                  ${item.done?`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`:''}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>`).join('')}
+      </div>`).join('')}`;
+  };
+
+  const bookingsTab=()=>`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px">
+    ${T.bookings.map(b=>`<div style="background:#fff;border:0.5px solid #f0d0c0;border-radius:14px;overflow:hidden">
+      <div style="background:${b.color};padding:12px 16px;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:18px">${typeIcon[b.type]||'📋'}</span>
+        <span style="background:rgba(255,255,255,0.2);color:#fff;padding:2px 8px;border-radius:99px;font-size:11px;font-weight:600;text-transform:capitalize">${b.status}</span>
+      </div>
+      <div style="padding:14px 16px">
+        <div style="font-size:15px;font-weight:600;margin-bottom:4px">${b.title}</div>
+        <div style="font-size:12px;color:#888;margin-bottom:10px">${b.detail}</div>
+        <div style="background:#f5f5f5;border-radius:8px;padding:8px 10px;font-size:12px;color:#555">Ref: <span style="font-weight:600;font-family:monospace">${b.ref}</span></div>
+      </div>
+    </div>`).join('')}
+    <div style="background:#fff;border:1px dashed #d0c0b0;border-radius:14px;padding:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;gap:8px;min-height:160px;color:#888" onclick="alert('Add booking coming soon')">
+      <div style="width:36px;height:36px;border-radius:50%;background:#f5ece6;display:flex;align-items:center;justify-content:center;color:#D85A30">${ic('plus',18)}</div>
+      <div style="font-size:13px;font-weight:500">Add Booking</div>
+    </div>
+  </div>`;
+
+  const bucketTab=()=>{
+    const catColor={Adventure:'#D85A30',Food:'#BA7517',Kids:'#D4537E',Culture:'#534AB7',Nature:'#0F6E56',Other:'#888'};
+    return`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <div style="font-size:13px;color:#888">${T.bucketList.filter(b=>b.done).length} of ${T.bucketList.length} done</div>
+      <button class="btn b-orange" onclick="addBucketItem()" style="font-size:12px">${ic('heart',13)} Add Wish</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px">
+      ${T.bucketList.map(b=>`<div style="background:#fff;border:0.5px solid ${b.done?'#d0e8d0':'#f0d0c0'};border-radius:12px;padding:14px;${b.done?'opacity:0.65':''}">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+          <div style="font-size:14px;font-weight:600;${b.done?'text-decoration:line-through;color:#aaa':''}">${b.title}</div>
+          <span style="background:${catColor[b.category]||'#888'}18;color:${catColor[b.category]||'#888'};padding:2px 8px;border-radius:99px;font-size:11px;font-weight:500">${b.category}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div style="font-size:12px;color:#888">By ${b.addedBy} · ${b.liked.length} liked</div>
+          <div style="display:flex;gap:6px">
+            <button onclick="toggleBucketLike('${b.id}')" style="padding:4px 10px;border-radius:99px;border:0.5px solid #f0d0c0;background:${b.liked.includes(S.currentUser.name)?'#FCEBEB':'#fff'};color:${b.liked.includes(S.currentUser.name)?'#A32D2D':'#888'};font-size:12px;cursor:pointer">${ic('heart',11)} ${b.liked.length}</button>
+            <button onclick="toggleBucketDone('${b.id}')" style="padding:4px 10px;border-radius:99px;border:0.5px solid #f0d0c0;background:${b.done?'#EAF3DE':'#fff'};color:${b.done?'#27500A':'#888'};font-size:12px;cursor:pointer">${b.done?'Done!':'Mark done'}</button>
+          </div>
+        </div>
+      </div>`).join('')}
+    </div>`;
+  };
+
+  const mapTab=()=>`<div style="background:#fff;border:0.5px solid #f0d0c0;border-radius:14px;overflow:hidden;margin-bottom:16px">
+    <div style="background:linear-gradient(135deg,#e8f4e8 0%,#d4e8d4 40%,#c8dfc8 100%);height:240px;position:relative;display:flex;align-items:center;justify-content:center">
+      <svg viewBox="0 0 600 240" width="100%" height="100%" style="position:absolute;inset:0">
+        <rect width="600" height="240" fill="#d4e8d4"/>
+        <ellipse cx="300" cy="120" rx="240" ry="90" fill="#c8dfc8" opacity="0.6"/>
+        <circle cx="200" cy="135" r="7" fill="#185FA5"/><text x="210" y="128" font-size="10" fill="#185FA5" font-weight="600">✈ Airport</text>
+        <circle cx="300" cy="120" r="7" fill="#0F6E56"/><text x="310" y="113" font-size="10" fill="#0F6E56" font-weight="600">🏨 ${T.tripName.split(' ')[0]} Base</text>
+        ${T.itinerary.slice(0,4).map((item,i)=>`<circle cx="${220+i*60}" cy="${100+i*15}" r="5" fill="${typeColor[item.type]||'#D85A30'}"/><text x="${228+i*60}" y="${96+i*15}" font-size="9" fill="${typeColor[item.type]||'#D85A30'}">${typeIcon[item.type]||'•'} ${item.title.split(' ')[0]}</text>`).join('')}
+      </svg>
+      <div style="position:absolute;bottom:10px;right:10px;background:rgba(255,255,255,0.92);border-radius:8px;padding:6px 10px;font-size:11px;color:#555">📍 ${T.destination}</div>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px">
+    ${T.itinerary.slice(0,6).map(item=>`<div style="background:#fff;border:0.5px solid #f0d0c0;border-radius:10px;padding:10px;display:flex;align-items:center;gap:8px">
+      <div style="width:30px;height:30px;border-radius:50%;background:${typeColor[item.type]||'#D85A30'}18;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">${typeIcon[item.type]||'•'}</div>
+      <div><div style="font-size:12px;font-weight:600">${item.title.length>20?item.title.slice(0,18)+'…':item.title}</div><div style="font-size:11px;color:#888">${item.day} · ${item.time}</div></div>
+    </div>`).join('')}
+  </div>`;
+
+  const expensesTab=()=>{
+    const total=T.expenses.reduce((s,e)=>s+e.amount,0);
+    const remaining=T.budget-total;
+    return`<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:20px">
+      <div class="card" style="text-align:center"><div style="font-size:20px;font-weight:600;color:#D85A30">$${T.budget.toLocaleString()}</div><div style="font-size:12px;color:#888">Trip budget</div></div>
+      <div class="card" style="text-align:center"><div style="font-size:20px;font-weight:600;color:#BA7517">$${total.toFixed(0)}</div><div style="font-size:12px;color:#888">Spent so far</div></div>
+      <div class="card" style="text-align:center"><div style="font-size:20px;font-weight:600;color:#0F6E56">$${remaining.toFixed(0)}</div><div style="font-size:12px;color:#888">Remaining</div></div>
+    </div>
+    <div class="card" style="margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:#888;margin-bottom:6px"><span>Budget used</span><span>${budgetPct}%</span></div>
+      <div class="pbar" style="height:12px"><div class="pf" style="width:${budgetPct}%;background:${budgetPct>80?'#E24B4A':budgetPct>60?'#BA7517':'#0F6E56'}"></div></div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:12px"><button class="btn b-orange" onclick="addTravelExpense()" style="font-size:12px">${ic('plus')} Log Expense</button></div>
+    <div class="card" style="padding:0">
+      <table style="width:100%;border-collapse:collapse;font-size:13px">
+        <thead><tr><th style="text-align:left;padding:10px 14px;color:#888;font-weight:400;font-size:12px;border-bottom:0.5px solid #f0d0c0">Description</th><th style="text-align:left;padding:10px 14px;color:#888;font-weight:400;font-size:12px;border-bottom:0.5px solid #f0d0c0">Category</th><th style="text-align:left;padding:10px 14px;color:#888;font-weight:400;font-size:12px;border-bottom:0.5px solid #f0d0c0">Paid By</th><th style="text-align:right;padding:10px 14px;color:#888;font-weight:400;font-size:12px;border-bottom:0.5px solid #f0d0c0">Amount</th></tr></thead>
+        <tbody>${T.expenses.map(e=>`<tr><td style="padding:10px 14px;border-bottom:0.5px solid #f5ece6;font-weight:500">${e.desc}</td><td style="padding:10px 14px;border-bottom:0.5px solid #f5ece6"><span class="pill pill-orange">${e.category}</span></td><td style="padding:10px 14px;border-bottom:0.5px solid #f5ece6;color:#888">${e.paidBy}</td><td style="padding:10px 14px;border-bottom:0.5px solid #f5ece6;text-align:right;font-weight:600">$${e.amount.toFixed(2)}</td></tr>`).join('')}</tbody>
+      </table>
+    </div>`;
+  };
+
+  const packingTab=()=>{
+    const cats=[...new Set(T.packing.map(p=>p.category))];
+    const done=T.packing.filter(p=>p.packed).length;
+    const aiSuggestions=T.destination.includes('Bali')||T.destination.includes('Indonesia')?
+      ['Hand sanitiser & wet wipes','Portable first aid kit','Waterproof phone case','Lightweight day backpack','Kids\' activity book for long flights','Reusable water bottles']:
+      ['Warm layers for cool weather','Portable umbrella','Pocket WiFi or local SIM','Comfortable walking shoes','Kids snacks for transit','Universal power adapter'];
+    return`<div style="margin-bottom:16px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div style="font-size:13px;color:#888">${done}/${T.packing.length} items packed</div>
+        <button class="btn b-orange" onclick="addPackingItem()" style="font-size:12px">${ic('plus')} Add Item</button>
+      </div>
+      <div class="pbar" style="height:10px"><div class="pf" style="width:${T.packing.length?(done/T.packing.length*100).toFixed(0):0}%;background:#D85A30"></div></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px">
+      ${cats.map(cat=>`<div class="card">
+        <div style="font-size:12px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px">${cat}</div>
+        ${T.packing.filter(p=>p.category===cat).map(p=>`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;cursor:pointer" onclick="togglePacking('${p.id}')">
+          <div style="display:flex;align-items:center;gap:8px">
+            <div style="width:16px;height:16px;border-radius:4px;${p.packed?'background:#D85A30;border:none':'border:1.5px solid #d0c0b0'};flex-shrink:0;display:flex;align-items:center;justify-content:center">
+              ${p.packed?`<svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`:''}
+            </div>
+            <span style="font-size:13px;${p.packed?'text-decoration:line-through;color:#aaa':''}">${p.item}</span>
+          </div>
+          <span style="font-size:11px;color:#aaa">${p.who}</span>
+        </div>`).join('')}
+      </div>`).join('')}
+    </div>
+    <div style="background:#EEEDFE;border:0.5px solid #AFA9EC;border-radius:12px;padding:14px">
+      <div style="font-size:13px;font-weight:600;color:#3C3489;margin-bottom:10px;display:flex;align-items:center;gap:6px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#534AB7" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        AI-suggested for ${T.tripName}
+      </div>
+      ${aiSuggestions.map(s=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;font-size:13px;color:#3C3489"><div style="width:6px;height:6px;border-radius:50%;background:#534AB7;flex-shrink:0"></div>${s}</div>`).join('')}
+    </div>`;
+  };
+
+  const emergencyTab=()=>`<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+    <div style="grid-column:1/-1;background:#FCEBEB;border:0.5px solid #F09595;border-radius:12px;padding:14px;display:flex;align-items:center;gap:10px">
+      <div style="width:36px;height:36px;border-radius:50%;background:#E24B4A;display:flex;align-items:center;justify-content:center;flex-shrink:0">${ic('alert',16)}</div>
+      <div><div style="font-size:13px;font-weight:600;color:#A32D2D">Emergency Contacts — ${T.destination}</div><div style="font-size:12px;color:#A32D2D;margin-top:2px">Save these before you go offline</div></div>
+    </div>
+    ${Object.entries({Hospital:'🏥',Ambulance:'🚑',Police:'👮',Embassy:'🏛',Transport:'🚖',Currency:'💱',Language:'🗣'}).map(([k,icon])=>{
+      const val=k==='Ambulance'?'Call: '+T.emergency.ambulance:k==='Police'?'Call: '+T.emergency.police:T.emergency[k.toLowerCase()];
+      if(!val)return'';
+      const colors={Hospital:'#D85A30',Ambulance:'#E24B4A',Police:'#185FA5',Embassy:'#534AB7',Transport:'#0F6E56',Currency:'#BA7517',Language:'#D4537E'};
+      return`<div class="card"><div style="display:flex;align-items:flex-start;gap:10px"><div style="width:34px;height:34px;border-radius:50%;background:${colors[k]}18;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">${icon}</div><div><div style="font-size:12px;font-weight:600;color:#888;margin-bottom:3px">${k}</div><div style="font-size:13px;color:#1a1a1a">${val}</div></div></div></div>`;
+    }).join('')}
+  </div>`;
+
+  return`
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px">
+    <div><div style="font-size:20px;font-weight:600">${ic('plane',18)} Travel</div><div style="font-size:13px;color:#888;margin-top:3px">All your holiday plans in one place.</div></div>
+  </div>
+  ${tripSelector()}
+  <div style="background:#fff;border:0.5px solid ${T.color}44;border-radius:16px;padding:16px 20px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+    <div>
+      <div style="font-size:18px;font-weight:700;color:${T.color}">${T.emoji} ${T.tripName}</div>
+      <div style="font-size:13px;color:#888;margin-top:3px">${T.destination} · ${T.dates}</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <div style="background:#fff;border:0.5px solid #f0d0c0;border-radius:10px;padding:7px 13px;text-align:center"><div style="font-size:15px;font-weight:600;color:#D85A30">${T.itinerary.length}</div><div style="font-size:11px;color:#888">Activities</div></div>
+      <div style="background:#fff;border:0.5px solid #f0d0c0;border-radius:10px;padding:7px 13px;text-align:center"><div style="font-size:15px;font-weight:600;color:#0F6E56">${T.bookings.length}</div><div style="font-size:11px;color:#888">Bookings</div></div>
+      <div style="background:#fff;border:0.5px solid #f0d0c0;border-radius:10px;padding:7px 13px;text-align:center"><div style="font-size:15px;font-weight:600;color:#BA7517">$${T.budget.toLocaleString()}</div><div style="font-size:11px;color:#888">Budget</div></div>
+    </div>
+  </div>
+  ${tabBar()}
+  ${S.travelTab==='itinerary'?itineraryTab():S.travelTab==='bookings'?bookingsTab():S.travelTab==='bucketlist'?bucketTab():S.travelTab==='map'?mapTab():S.travelTab==='expenses'?expensesTab():S.travelTab==='packing'?packingTab():emergencyTab()}`;
+}
+
+function openAddTripModal(){
+  const bg=document.getElementById('modal-bg'),mb=document.getElementById('modal-body');
+  bg.style.display='flex';
+  const emojis=['🌴','🗼','🏝','🗺','🌏','🏔','🌆','🎡','🏖','🌿'];
+  mb.innerHTML=`<h3>Add Holiday Plan</h3>
+  <div class="fi"><label>Trip name</label><input type="text" id="nt-name" placeholder="e.g. Paris Family Trip"></div>
+  <div class="fi"><label>Destination</label><input type="text" id="nt-dest" placeholder="e.g. Paris, France"></div>
+  <div class="fi"><label>Dates</label><input type="text" id="nt-dates" placeholder="e.g. Aug 10–20, 2026"></div>
+  <div class="frow">
+    <div class="fi"><label>Budget ($)</label><input type="number" id="nt-budget" placeholder="5000" min="0"></div>
+    <div class="fi"><label>Emoji</label><select id="nt-emoji">${emojis.map(e=>`<option value="${e}">${e}</option>`).join('')}</select></div>
+  </div>
+  <div class="fi"><label>Colour theme</label><div style="display:flex;gap:8px;flex-wrap:wrap">
+    ${['#0F6E56','#E24B4A','#185FA5','#D4537E','#BA7517','#534AB7','#D85A30'].map((c,i)=>`<div onclick="selectTripColor('${c}')" id="tc-${i}" data-color="${c}" data-sel="${i===0?'1':'0'}" style="width:30px;height:30px;border-radius:50%;background:${c};cursor:pointer;border:3px solid ${i===0?'#1a1a1a':'transparent'}"></div>`).join('')}
+  </div></div>
+  <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="saveNewTrip()">Add Trip</button></div>`;
+}
+
+function selectTripColor(color){
+  document.querySelectorAll('[id^="tc-"]').forEach(el=>{const isThis=el.getAttribute('data-color')===color;el.style.border=isThis?'3px solid #1a1a1a':'3px solid transparent';el.setAttribute('data-sel',isThis?'1':'0');});
+}
+
+function saveNewTrip(){
+  const name=document.getElementById('nt-name').value.trim();
+  const dest=document.getElementById('nt-dest').value.trim();
+  if(!name||!dest)return;
+  const colorEl=document.querySelector('[id^="tc-"][data-sel="1"]');
+  const color=colorEl?colorEl.getAttribute('data-color'):'#0F6E56';
+  const id='t'+Date.now();
+  S.trips.push({id,tripName:name,destination:dest,dates:document.getElementById('nt-dates').value||'TBD',emoji:document.getElementById('nt-emoji').value,color,budget:parseInt(document.getElementById('nt-budget').value)||0,spent:0,itinerary:[],bookings:[],bucketList:[],packing:[],expenses:[],emergency:{hospital:'',ambulance:'',police:'',embassy:'',transport:'',currency:'',language:''}});
+  S.activeTripId=id;
+  S.travelTab='itinerary';
+  closeModal();renderPage();
+}
+
+function toggleItinerary(id){const T=S.trips.find(t=>t.id===S.activeTripId);if(!T)return;const i=T.itinerary.find(x=>x.id===id);if(i)i.done=!i.done;renderPage();}
+function toggleBucketLike(id){const T=S.trips.find(t=>t.id===S.activeTripId);if(!T)return;const b=T.bucketList.find(x=>x.id===id);if(!b)return;const u=S.currentUser.name;b.liked.includes(u)?b.liked.splice(b.liked.indexOf(u),1):b.liked.push(u);renderPage();}
+function toggleBucketDone(id){const T=S.trips.find(t=>t.id===S.activeTripId);if(!T)return;const b=T.bucketList.find(x=>x.id===id);if(b)b.done=!b.done;renderPage();}
+function togglePacking(id){const T=S.trips.find(t=>t.id===S.activeTripId);if(!T)return;const p=T.packing.find(x=>x.id===id);if(p)p.packed=!p.packed;renderPage();}
+function addItineraryItem(){
+  const bg=document.getElementById('modal-bg'),mb=document.getElementById('modal-body');bg.style.display='flex';
+  mb.innerHTML=`<h3>Add Activity</h3>
+  <div class="fi"><label>Title</label><input type="text" id="it-t" placeholder="e.g. Waterbom Bali"></div>
+  <div class="frow"><div class="fi"><label>Day</label><input type="text" id="it-d" placeholder="e.g. Jul 8"></div><div class="fi"><label>Time</label><input type="text" id="it-ti" placeholder="e.g. 10:00 AM"></div></div>
+  <div class="fi"><label>Type</label><select id="it-ty"><option>activity</option><option>attraction</option><option>restaurant</option><option>flight</option><option>hotel</option><option>car</option></select></div>
+  <div class="fi"><label>Notes</label><input type="text" id="it-n" placeholder="e.g. Bring cash"></div>
+  <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="saveItineraryItem()">Add</button></div>`;
+}
+function saveItineraryItem(){
+  const t=document.getElementById('it-t').value.trim();if(!t)return;
+  const T=S.trips.find(t=>t.id===S.activeTripId);if(!T)return;
+  T.itinerary.push({id:'i'+Date.now(),day:document.getElementById('it-d').value,time:document.getElementById('it-ti').value,title:t,type:document.getElementById('it-ty').value,notes:document.getElementById('it-n').value,assignee:'All',done:false});
+  closeModal();renderPage();
+}
+function addBucketItem(){
+  const bg=document.getElementById('modal-bg'),mb=document.getElementById('modal-body');bg.style.display='flex';
+  mb.innerHTML=`<h3>Add to Bucket List</h3>
+  <div class="fi"><label>What's the wish?</label><input type="text" id="bl-t" placeholder="e.g. Mount Batur sunrise hike"></div>
+  <div class="fi"><label>Category</label><select id="bl-c"><option>Adventure</option><option>Food</option><option>Culture</option><option>Kids</option><option>Nature</option><option>Other</option></select></div>
+  <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="saveBucketItem()">Add</button></div>`;
+}
+function saveBucketItem(){
+  const t=document.getElementById('bl-t').value.trim();if(!t)return;
+  const T=S.trips.find(tr=>tr.id===S.activeTripId);if(!T)return;
+  T.bucketList.push({id:'bl'+Date.now(),title:t,category:document.getElementById('bl-c').value,addedBy:S.currentUser.name,liked:[S.currentUser.name],done:false});
+  closeModal();renderPage();
+}
+function addTravelExpense(){
+  const bg=document.getElementById('modal-bg'),mb=document.getElementById('modal-body');bg.style.display='flex';
+  mb.innerHTML=`<h3>Log Travel Expense</h3>
+  <div class="fi"><label>Description</label><input type="text" id="te-t" placeholder="e.g. Dinner at Ku De Ta"></div>
+  <div class="frow"><div class="fi"><label>Amount ($)</label><input type="number" id="te-a" placeholder="0.00" step="0.01"></div><div class="fi"><label>Paid By</label><select id="te-p">${USERS.map(u=>`<option>${u.name}</option>`).join('')}</select></div></div>
+  <div class="fi"><label>Category</label><select id="te-c"><option>Food</option><option>Transport</option><option>Accommodation</option><option>Activities</option><option>Shopping</option><option>Other</option></select></div>
+  <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="saveTravelExpense()">Log</button></div>`;
+}
+function saveTravelExpense(){
+  const t=document.getElementById('te-t').value.trim(),a=parseFloat(document.getElementById('te-a').value);if(!t||isNaN(a))return;
+  const T=S.trips.find(tr=>tr.id===S.activeTripId);if(!T)return;
+  T.expenses.push({id:'te'+Date.now(),desc:t,amount:a,paidBy:document.getElementById('te-p').value,date:new Date().toISOString().split('T')[0],category:document.getElementById('te-c').value,split:'Family'});
+  closeModal();renderPage();
+}
+function addPackingItem(){
+  const bg=document.getElementById('modal-bg'),mb=document.getElementById('modal-body');bg.style.display='flex';
+  mb.innerHTML=`<h3>Add Packing Item</h3>
+  <div class="fi"><label>Item</label><input type="text" id="pk-t" placeholder="e.g. Sunglasses"></div>
+  <div class="frow"><div class="fi"><label>Category</label><select id="pk-c"><option>Documents</option><option>Health</option><option>Clothing</option><option>Electronics</option><option>Kids</option><option>Other</option></select></div><div class="fi"><label>For</label><select id="pk-w">${['All',...USERS.map(u=>u.name)].map(n=>`<option>${n}</option>`).join('')}</select></div></div>
+  <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="savePackingItem()">Add</button></div>`;
+}
+function savePackingItem(){
+  const t=document.getElementById('pk-t').value.trim();if(!t)return;
+  const T=S.trips.find(tr=>tr.id===S.activeTripId);if(!T)return;
+  T.packing.push({id:'pk'+Date.now(),item:t,category:document.getElementById('pk-c').value,packed:false,who:document.getElementById('pk-w').value});
+  closeModal();renderPage();
+}
 
   const tabBar=()=>`<div style="display:flex;gap:2px;background:#f5ece6;border-radius:10px;padding:3px;margin-bottom:22px;flex-wrap:wrap">
     ${tabs.map(t=>`<button onclick="S.travelTab='${t.id}';renderPage()" style="padding:6px 14px;border-radius:8px;border:none;font-size:12px;font-weight:500;cursor:pointer;background:${S.travelTab===t.id?'#fff':'transparent'};color:${S.travelTab===t.id?'#D85A30':'#888'};${S.travelTab===t.id?'box-shadow:0 1px 3px rgba(0,0,0,0.08)':''}">${t.label}</button>`).join('')}
@@ -1626,117 +2274,8 @@ function pgTravel(){
     </div>`;
   };
 
-  const emergencyTab=()=>`<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-    <div style="grid-column:1/-1;background:#FCEBEB;border:0.5px solid #F09595;border-radius:12px;padding:14px;display:flex;align-items:center;gap:10px">
-      <div style="width:36px;height:36px;border-radius:50%;background:#E24B4A;display:flex;align-items:center;justify-content:center;flex-shrink:0">${ic('alert',16)}</div>
-      <div><div style="font-size:13px;font-weight:600;color:#A32D2D">Emergency Contacts — Bali, Indonesia</div><div style="font-size:12px;color:#A32D2D;margin-top:2px">Save these before you go offline</div></div>
-    </div>
-    ${[
-      {label:'Hospital',icon:'🏥',val:S.travel.emergency.hospital,color:'#D85A30'},
-      {label:'Ambulance',icon:'🚑',val:'Call: '+S.travel.emergency.ambulance,color:'#E24B4A'},
-      {label:'Police',icon:'👮',val:'Call: '+S.travel.emergency.police,color:'#185FA5'},
-      {label:'Embassy',icon:'🏛',val:S.travel.emergency.embassy,color:'#534AB7'},
-      {label:'Transport',icon:'🚖',val:S.travel.emergency.transport,color:'#0F6E56'},
-      {label:'Currency',icon:'💱',val:S.travel.emergency.currency,color:'#BA7517'},
-      {label:'Language',icon:'🗣',val:S.travel.emergency.language,color:'#D4537E'}
-    ].map(e=>`<div class="card">
-      <div style="display:flex;align-items:flex-start;gap:10px">
-        <div style="width:34px;height:34px;border-radius:50%;background:${e.color}18;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">${e.icon}</div>
-        <div><div style="font-size:12px;font-weight:600;color:#888;margin-bottom:3px">${e.label}</div><div style="font-size:13px;color:#1a1a1a">${e.val}</div></div>
-      </div>
-    </div>`).join('')}
-    <div class="card" style="grid-column:1/-1;background:#E1F5EE;border-color:#9FE1CB">
-      <div style="font-size:13px;font-weight:600;color:#085041;margin-bottom:8px">Quick Phrase Translator — Bahasa Indonesia</div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px">
-        ${[['Hello','Halo'],['Thank you','Terima kasih'],['Help!','Tolong!'],['Where is...?','Di mana...?'],['How much?','Berapa harganya?'],['Hospital','Rumah sakit'],['Police','Polisi'],['I need a doctor','Saya perlu dokter'],['Emergency','Darurat']].map(([en,id])=>`<div style="background:#fff;border-radius:8px;padding:8px 10px;text-align:center"><div style="font-size:12px;font-weight:600;color:#085041">${en}</div><div style="font-size:12px;color:#1D9E75;margin-top:2px">${id}</div></div>`).join('')}
-      </div>
-    </div>
-  </div>`;
 
-  return`
-  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;flex-wrap:wrap;gap:12px">
-    <div>
-      <div style="font-size:20px;font-weight:600">${ic('plane',18)} ${T.tripName}</div>
-      <div style="font-size:13px;color:#888;margin-top:3px">${T.destination} · ${T.dates}</div>
-    </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <div style="background:#fff;border:0.5px solid #f0d0c0;border-radius:10px;padding:8px 14px;text-align:center">
-        <div style="font-size:16px;font-weight:600;color:#D85A30">${T.itinerary.length}</div>
-        <div style="font-size:11px;color:#888">Activities</div>
-      </div>
-      <div style="background:#fff;border:0.5px solid #f0d0c0;border-radius:10px;padding:8px 14px;text-align:center">
-        <div style="font-size:16px;font-weight:600;color:#0F6E56">${T.bookings.length}</div>
-        <div style="font-size:11px;color:#888">Bookings</div>
-      </div>
-      <div style="background:#fff;border:0.5px solid #f0d0c0;border-radius:10px;padding:8px 14px;text-align:center">
-        <div style="font-size:16px;font-weight:600;color:#BA7517">$${T.budget.toLocaleString()}</div>
-        <div style="font-size:11px;color:#888">Budget</div>
-      </div>
-    </div>
-  </div>
-  ${tabBar()}
-  ${S.travelTab==='itinerary'?itineraryTab():S.travelTab==='bookings'?bookingsTab():S.travelTab==='bucketlist'?bucketTab():S.travelTab==='map'?mapTab():S.travelTab==='expenses'?expensesTab():S.travelTab==='packing'?packingTab():emergencyTab()}`;
-}
-
-function toggleItinerary(id){const i=S.travel.itinerary.find(x=>x.id===id);if(i)i.done=!i.done;renderPage();}
-function toggleBucketLike(id){const b=S.travel.bucketList.find(x=>x.id===id);if(!b)return;const u=S.currentUser.name;b.liked.includes(u)?b.liked.splice(b.liked.indexOf(u),1):b.liked.push(u);renderPage();}
-function toggleBucketDone(id){const b=S.travel.bucketList.find(x=>x.id===id);if(b)b.done=!b.done;renderPage();}
-function togglePacking(id){const p=S.travel.packing.find(x=>x.id===id);if(p)p.packed=!p.packed;renderPage();}
-function addItineraryItem(){
-  const bg=document.getElementById('modal-bg'),mb=document.getElementById('modal-body');
-  bg.style.display='flex';
-  mb.innerHTML=`<h3>Add Activity</h3>
-  <div class="fi"><label>Title</label><input type="text" id="it-t" placeholder="e.g. Waterbom Bali"></div>
-  <div class="frow"><div class="fi"><label>Day</label><input type="text" id="it-d" placeholder="e.g. Jul 8"></div><div class="fi"><label>Time</label><input type="text" id="it-ti" placeholder="e.g. 10:00 AM"></div></div>
-  <div class="fi"><label>Type</label><select id="it-ty"><option>activity</option><option>attraction</option><option>restaurant</option><option>flight</option><option>hotel</option><option>car</option></select></div>
-  <div class="fi"><label>Notes</label><input type="text" id="it-n" placeholder="e.g. Bring cash"></div>
-  <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="saveItineraryItem()">Add</button></div>`;
-}
-function saveItineraryItem(){
-  const t=document.getElementById('it-t').value.trim();if(!t)return;
-  S.travel.itinerary.push({id:'i'+Date.now(),day:document.getElementById('it-d').value,time:document.getElementById('it-ti').value,title:t,type:document.getElementById('it-ty').value,notes:document.getElementById('it-n').value,assignee:'All',done:false});
-  closeModal();renderPage();
-}
-function addBucketItem(){
-  const bg=document.getElementById('modal-bg'),mb=document.getElementById('modal-body');
-  bg.style.display='flex';
-  mb.innerHTML=`<h3>Add to Bucket List</h3>
-  <div class="fi"><label>What's the wish?</label><input type="text" id="bl-t" placeholder="e.g. Mount Batur sunrise hike"></div>
-  <div class="fi"><label>Category</label><select id="bl-c"><option>Adventure</option><option>Food</option><option>Culture</option><option>Kids</option><option>Nature</option><option>Other</option></select></div>
-  <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="saveBucketItem()">Add</button></div>`;
-}
-function saveBucketItem(){
-  const t=document.getElementById('bl-t').value.trim();if(!t)return;
-  S.travel.bucketList.push({id:'bl'+Date.now(),title:t,category:document.getElementById('bl-c').value,addedBy:S.currentUser.name,liked:[S.currentUser.name],done:false});
-  closeModal();renderPage();
-}
-function addTravelExpense(){
-  const bg=document.getElementById('modal-bg'),mb=document.getElementById('modal-body');
-  bg.style.display='flex';
-  mb.innerHTML=`<h3>Log Travel Expense</h3>
-  <div class="fi"><label>Description</label><input type="text" id="te-t" placeholder="e.g. Dinner at Ku De Ta"></div>
-  <div class="frow"><div class="fi"><label>Amount ($)</label><input type="number" id="te-a" placeholder="0.00" step="0.01"></div><div class="fi"><label>Paid By</label><select id="te-p">${USERS.map(u=>`<option>${u.name}</option>`).join('')}</select></div></div>
-  <div class="fi"><label>Category</label><select id="te-c"><option>Food</option><option>Transport</option><option>Accommodation</option><option>Activities</option><option>Shopping</option><option>Other</option></select></div>
-  <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="saveTravelExpense()">Log</button></div>`;
-}
-function saveTravelExpense(){
-  const t=document.getElementById('te-t').value.trim(),a=parseFloat(document.getElementById('te-a').value);if(!t||isNaN(a))return;
-  S.travel.expenses.push({id:'te'+Date.now(),desc:t,amount:a,paidBy:document.getElementById('te-p').value,date:new Date().toISOString().split('T')[0],category:document.getElementById('te-c').value,split:'Family'});
-  S.travel.spent+=a;closeModal();renderPage();
-}
-function addPackingItem(){
-  const bg=document.getElementById('modal-bg'),mb=document.getElementById('modal-body');
-  bg.style.display='flex';
-  mb.innerHTML=`<h3>Add Packing Item</h3>
-  <div class="fi"><label>Item</label><input type="text" id="pk-t" placeholder="e.g. Sunglasses"></div>
-  <div class="frow"><div class="fi"><label>Category</label><select id="pk-c"><option>Documents</option><option>Health</option><option>Clothing</option><option>Electronics</option><option>Kids</option><option>Other</option></select></div><div class="fi"><label>For</label><select id="pk-w">${['All',...USERS.map(u=>u.name)].map(n=>`<option>${n}</option>`).join('')}</select></div></div>
-  <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="savePackingItem()">Add</button></div>`;
-}
-function savePackingItem(){
-  const t=document.getElementById('pk-t').value.trim();if(!t)return;
-  S.travel.packing.push({id:'pk'+Date.now(),item:t,category:document.getElementById('pk-c').value,packed:false,who:document.getElementById('pk-w').value});
-  closeModal();renderPage();
-}
+function toggleItinerary(id){const T=S.trips.find(t=>t.id===S.activeTripId);if(!T)return;const i=T.itinerary.find(x=>x.id===id);if(i)i.done=!i.done;renderPage();}
 
 applyTheme();
 renderNav();
