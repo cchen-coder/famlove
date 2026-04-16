@@ -157,14 +157,12 @@ const PARENT_PAGES=[
 ];
 
 const KID_PAGES=[
-  {id:'kid-home',label:'My Home',ic:'home'},
-  {id:'kid-chores',label:'My Chores',ic:'check'},
+  {id:'kid-myday',label:'My Day',ic:'sun'},
+  {id:'kid-chores',label:'My Tasks',ic:'check'},
   {id:'kid-rewards',label:'Rewards Shop',ic:'star'},
   {id:'kid-habits',label:'My Habits',ic:'zap'},
-  {id:'kid-calendar',label:'My Schedule',ic:'cal'},
   {id:'kid-hub',label:'Family Chat',ic:'msg'},
-  {id:'kid-outings',label:'Outings',ic:'map'},
-  {id:'kid-goals',label:'Goals',ic:'target'}
+  {id:'kid-outings',label:'Outings',ic:'map'}
 ];
 
 const ICONS={
@@ -195,7 +193,10 @@ const ICONS={
   alert:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>`,
   drag:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="9" cy="7" r="1"/><circle cx="15" cy="7" r="1"/><circle cx="9" cy="12" r="1"/><circle cx="15" cy="12" r="1"/><circle cx="9" cy="17" r="1"/><circle cx="15" cy="17" r="1"/></svg>`,
   compass:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>`,
-  heart:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>`
+  heart:`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>`,
+  sun:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`,
+  moon:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>`,
+  broom:`<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 22L12 13"/><path d="M12 13l7-7-4-4-7 7"/><path d="M9 16l-3 3"/><path d="M15 10l-4-4"/></svg>`
 };
 
 function ic(n,sz=15){
@@ -215,11 +216,11 @@ let S={
     {id:'n5',title:'Family Vacation savings on track',sub:'25% reached — $500 of $2000',color:'#D4537E',unread:false}
   ],
   tasks:[
-    {id:'t1',title:'Pay electricity bill',assignee:'Mom',isChore:false,done:false,points:0},
-    {id:'t2',title:'Clean room',assignee:'Leo',isChore:true,done:false,points:50},
-    {id:'t3',title:'Take out trash',assignee:'Leo',isChore:true,done:true,points:30},
-    {id:'t4',title:'Vacuum living room',assignee:'Mia',isChore:true,done:false,points:40},
-    {id:'t5',title:'Set dinner table',assignee:'Mia',isChore:true,done:true,points:20}
+    {id:'t1',title:'Pay electricity bill',assignee:'Mom',isChore:false,done:false,points:0,timeOfDay:'Any Time'},
+    {id:'t2',title:'Clean room',assignee:'Leo',isChore:true,done:false,points:50,timeOfDay:'Morning'},
+    {id:'t3',title:'Take out trash',assignee:'Leo',isChore:true,done:true,points:30,timeOfDay:'Evening'},
+    {id:'t4',title:'Vacuum living room',assignee:'Mia',isChore:true,done:false,points:40,timeOfDay:'Morning'},
+    {id:'t5',title:'Set dinner table',assignee:'Mia',isChore:true,done:true,points:20,timeOfDay:'Evening'}
   ],
   events:[
     {id:'e1',title:'Soccer Practice',date:'2026-04-14',time:'3:00 PM',assignee:'Leo',type:'sport'},
@@ -233,11 +234,11 @@ let S={
     {id:'ka3',child:'Leo',title:'Soccer tryouts',date:'2026-04-19',time:'9:00 AM',notes:'Bring boots'}
   ],
   habits:[
-    {id:'h1',name:'Morning walk',streak:5,color:'#D85A30',owner:'Mom',days:[1,1,1,1,1,0,0]},
-    {id:'h2',name:'Read 20 minutes',streak:3,color:'#534AB7',owner:'Leo',days:[0,1,1,1,0,0,0]},
-    {id:'h3',name:'Drink 8 glasses of water',streak:7,color:'#0F6E56',owner:'Mom',days:[1,1,1,1,1,1,1]},
-    {id:'h4',name:'Practice piano',streak:4,color:'#BA7517',owner:'Leo',days:[1,1,0,1,1,0,0]},
-    {id:'h5',name:'Brush teeth twice',streak:6,color:'#D4537E',owner:'Mia',days:[1,1,1,1,1,1,0]}
+    {id:'h1',name:'Morning walk',streak:5,color:'#D85A30',owner:'Mom',days:[1,1,1,1,1,0,0],addedBy:'parent'},
+    {id:'h2',name:'Read 20 minutes',streak:3,color:'#534AB7',owner:'Leo',days:[0,1,1,1,0,0,0],addedBy:'parent'},
+    {id:'h3',name:'Drink 8 glasses of water',streak:7,color:'#0F6E56',owner:'Mom',days:[1,1,1,1,1,1,1],addedBy:'parent'},
+    {id:'h4',name:'Practice piano',streak:4,color:'#BA7517',owner:'Leo',days:[1,1,0,1,1,0,0],addedBy:'parent'},
+    {id:'h5',name:'Brush teeth twice',streak:6,color:'#D4537E',owner:'Mia',days:[1,1,1,1,1,1,0],addedBy:'parent'}
   ],
   shopItems:[
     {id:'s1',name:'Extra screen time (30 min)',pts:100},
@@ -252,13 +253,14 @@ let S={
     {id:'m2',name:'Avocado Toast',type:'Breakfast',date:'2026-04-15',ingredients:['Sourdough Bread','Avocado','Eggs','Chilli Flakes'],steps:['Toast bread until golden.','Mash avocado with salt and lemon.','Poach eggs and place on top.'],prepTime:'15 mins',serves:2}
   ],
   groceries:[
-    {id:'g1',name:'Milk',category:'Dairy',checked:false,fromMeal:false},
-    {id:'g2',name:'Eggs',category:'Dairy',checked:false,fromMeal:false},
-    {id:'g3',name:'Pasta',category:'Pantry',checked:true,fromMeal:true},
-    {id:'g4',name:'Ground Beef',category:'Meat',checked:false,fromMeal:true},
-    {id:'g5',name:'Avocado',category:'Produce',checked:false,fromMeal:true},
-    {id:'g6',name:'Sourdough Bread',category:'Bakery',checked:false,fromMeal:true}
+    {id:'g1',name:'Milk',category:'Dairy',checked:false,fromMeal:false,scheduledDay:'Monday'},
+    {id:'g2',name:'Eggs',category:'Dairy',checked:false,fromMeal:false,scheduledDay:'Monday'},
+    {id:'g3',name:'Pasta',category:'Pantry',checked:true,fromMeal:true,scheduledDay:'Tuesday'},
+    {id:'g4',name:'Ground Beef',category:'Meat',checked:false,fromMeal:true,scheduledDay:'Tuesday'},
+    {id:'g5',name:'Avocado',category:'Produce',checked:false,fromMeal:true,scheduledDay:'Wednesday'},
+    {id:'g6',name:'Sourdough Bread',category:'Bakery',checked:false,fromMeal:true,scheduledDay:'Wednesday'}
   ],
+  grocTab:'all',
   expenses:[
     {id:'x1',date:'2026-04-15',desc:'April rent',category:'Housing',paidBy:'Mom',amount:1000},
     {id:'x2',date:'2026-04-14',desc:'Weekly groceries',category:'Groceries',paidBy:'Mom',amount:120.50},
@@ -399,7 +401,7 @@ function doSwitch(name){
   const target=USERS.find(u=>u.name===name);
   if(!target)return;
   S.currentUser=target;
-  S.page=target.role==='kid'?'kid-home':'dashboard';
+  S.page=target.role==='kid'?'kid-myday':'dashboard';
   applyTheme(); renderNav(); renderSidebarUser(); renderPage();
 }
 
@@ -505,7 +507,7 @@ function prefillFromRecipe(id){
 function saveEvent(){const t=document.getElementById('m-t').value.trim();if(!t)return;S.events.push({id:'e'+Date.now(),title:t,date:document.getElementById('m-d').value,time:document.getElementById('m-ti').value,type:document.getElementById('m-ty').value,assignee:'Mom'});closeModal();renderPage();}
 function saveMeal(){const n=document.getElementById('m-t').value.trim();if(!n)return;S.meals.push({id:'m'+Date.now(),name:n,type:document.getElementById('m-ty').value,date:document.getElementById('m-d').value,ingredients:document.getElementById('m-ing').value.split(',').map(s=>s.trim()).filter(Boolean),steps:document.getElementById('m-st').value.split('\n').map(s=>s.trim()).filter(Boolean),prepTime:document.getElementById('m-pt').value||'?',serves:parseInt(document.getElementById('m-sv').value)||4});closeModal();renderPage();}
 function saveRecipe(){const n=document.getElementById('r-name').value.trim();if(!n)return;S.recipes.push({id:'r'+Date.now(),name:n,category:document.getElementById('r-cat').value,prepTime:document.getElementById('r-prep').value,serves:parseInt(document.getElementById('r-srv').value)||4,difficulty:document.getElementById('r-diff').value,ingredients:document.getElementById('r-ing').value.split(',').map(s=>s.trim()).filter(Boolean),steps:document.getElementById('r-steps').value.split('\n').map(s=>s.trim()).filter(Boolean),notes:document.getElementById('r-notes').value,rating:parseInt(document.getElementById('r-rating').value)||5});closeModal();renderPage();}
-function saveHabit(){const n=document.getElementById('m-t').value.trim();if(!n)return;S.habits.push({id:'h'+Date.now(),name:n,streak:0,color:document.getElementById('m-c').value,owner:document.getElementById('m-own').value,days:[0,0,0,0,0,0,0]});closeModal();renderPage();}
+function saveHabit(){const n=document.getElementById('m-t').value.trim();if(!n)return;S.habits.push({id:'h'+Date.now(),name:n,streak:0,color:document.getElementById('m-c').value,owner:document.getElementById('m-own').value,days:[0,0,0,0,0,0,0],addedBy:'parent'});closeModal();renderPage();}
 function saveGoal(){const t=document.getElementById('m-t').value.trim(),a=parseFloat(document.getElementById('m-amt').value);if(!t||isNaN(a))return;S.goals.push({id:'gl'+Date.now(),title:t,category:document.getElementById('m-cat').value,current:0,target:a,color:'#D85A30'});closeModal();renderPage();}
 function saveExpense(){const a=parseFloat(document.getElementById('m-amt').value),d=document.getElementById('m-t').value.trim();if(isNaN(a)||!d)return;S.expenses.unshift({id:'x'+Date.now(),date:document.getElementById('m-d').value,desc:d,category:document.getElementById('m-cat').value,paidBy:document.getElementById('m-pb').value,amount:a});closeModal();renderPage();}
 function saveDoc(){const n=document.getElementById('m-t').value.trim();if(!n)return;S.documents.push({id:'d'+Date.now(),name:n,category:document.getElementById('m-cat').value,date:document.getElementById('m-d').value,color:'#D85A30'});closeModal();renderPage();}
@@ -515,14 +517,55 @@ function saveKidsAppt(){const t=document.getElementById('m-t').value.trim();if(!
 
 function toggleTask(id){const t=S.tasks.find(t=>t.id===id);if(t){t.done=!t.done;renderSidebarUser();renderPage();}}
 function toggleGroc(id){const g=S.groceries.find(g=>g.id===id);if(g){g.checked=!g.checked;renderPage();}}
+
+function removeGrocery(id){S.groceries=S.groceries.filter(g=>g.id!==id);renderPage();}
+
+function clearChecked(){S.groceries=S.groceries.filter(g=>!g.checked);renderPage();}
+
+function exportGroceries(){
+  const DAYS=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday','Any Day'];
+  const today=new Date().toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  let txt=`GROCERY LIST\nExported: ${today}\n${'='.repeat(40)}\n\n`;
+  const dayGroups={};
+  S.groceries.forEach(g=>{
+    const day=g.scheduledDay||'Any Day';
+    if(!dayGroups[day])dayGroups[day]=[];
+    dayGroups[day].push(g);
+  });
+  const order=['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday','Any Day'];
+  order.forEach(day=>{
+    if(!dayGroups[day]||!dayGroups[day].length) return;
+    txt+=`${day.toUpperCase()}\n${'-'.repeat(20)}\n`;
+    const byCat={};
+    dayGroups[day].forEach(g=>{if(!byCat[g.category])byCat[g.category]=[];byCat[g.category].push(g);});
+    Object.entries(byCat).forEach(([cat,items])=>{
+      txt+=`  ${cat}:\n`;
+      items.forEach(g=>{txt+=`    ${g.checked?'[x]':'[ ]'} ${g.name}${g.fromMeal?' (from meal plan)':''}\n`;});
+    });
+    txt+='\n';
+  });
+  txt+=`${'='.repeat(40)}\nTotal: ${S.groceries.length} items | ${S.groceries.filter(g=>g.checked).length} checked off\n`;
+  const blob=new Blob([txt],{type:'text/plain'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='grocery-list-'+new Date().toISOString().split('T')[0]+'.txt';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
 function toggleHabit(id,day){const h=S.habits.find(h=>h.id===id);if(h){h.days[day]=h.days[day]?0:1;h.streak=h.days.filter(Boolean).length;renderPage();}}
 function addGoalFunds(id){const el=document.getElementById('ga-'+id);if(!el)return;const a=parseFloat(el.value);if(isNaN(a)||a<=0)return;const g=S.goals.find(g=>g.id===id);if(g)g.current=Math.min(g.target,g.current+a);renderPage();}
 function voteOuting(id){const o=S.outings.find(o=>o.id===id);if(o&&!o.voted){o.votes++;o.voted=true;renderPage();}}
 function scheduleOuting(id){const o=S.outings.find(o=>o.id===id);if(o){o.scheduled=true;renderPage();}}
 function redeemItem(id){const item=S.shopItems.find(s=>s.id===id),u=S.currentUser,pts=userPoints(u.name);if(pts>=item.pts){let d=item.pts;for(let t of S.tasks.filter(t=>t.assignee===u.name&&t.isChore&&t.done)){if(d<=0)break;const take=Math.min(t.points,d);t.points-=take;d-=take;}alert(item.name+' redeemed!');renderSidebarUser();renderPage();}}
 function syncGroceries(){let added=0;S.meals.forEach(m=>{m.ingredients.forEach(ing=>{if(!S.groceries.find(g=>g.name.toLowerCase()===ing.toLowerCase())){const cats={Pasta:'Pantry','Ground Beef':'Meat','Tomato Sauce':'Pantry','Onion':'Produce','Garlic':'Produce','Sourdough Bread':'Bakery','Avocado':'Produce','Eggs':'Dairy','Chilli Flakes':'Pantry'};S.groceries.push({id:'g'+Date.now()+Math.random(),name:ing,category:cats[ing]||'Other',checked:false,fromMeal:true});added++;}});});alert(added?added+' ingredient(s) synced!':'Already up to date.');if(added)renderPage();}
-function addTask(){const v=document.getElementById('ti').value.trim();if(!v)return;S.tasks.push({id:'t'+Date.now(),title:v,assignee:document.getElementById('ta').value,category:document.getElementById('tcat').value,isChore:document.getElementById('tch').checked,points:50,done:false});renderPage();}
-function addGrocery(){const v=document.getElementById('gi').value.trim();if(!v)return;S.groceries.push({id:'g'+Date.now(),name:v,category:document.getElementById('gcat').value,checked:false,fromMeal:false});renderPage();}
+function addTask(){const v=document.getElementById('ti').value.trim();if(!v)return;S.tasks.push({id:'t'+Date.now(),title:v,assignee:document.getElementById('ta').value,category:document.getElementById('tcat').value,isChore:document.getElementById('tch').checked,points:50,done:false,timeOfDay:document.getElementById('ttod').value});renderPage();}
+function addGrocery(){
+  const v=document.getElementById('gi').value.trim();
+  if(!v)return;
+  const day=document.getElementById('gday')?.value||'Any Day';
+  S.groceries.push({id:'g'+Date.now(),name:v,category:document.getElementById('gcat').value,checked:false,fromMeal:false,scheduledDay:day});
+  renderPage();
+}
 function sendMsg(){const el=document.getElementById('hub-in');if(!el||!el.value.trim())return;const t=new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'});if(S.isAnn){S.messages.push({id:'msg'+Date.now(),type:'announcement',from:S.currentUser.name,text:el.value.trim(),time:t});}else{S.messages.push({id:'msg'+Date.now(),from:S.currentUser.name,text:el.value.trim(),time:t});}renderPage();}
 function sendKidMsg(){const el=document.getElementById('kid-msg');if(!el||!el.value.trim())return;S.messages.push({id:'msg'+Date.now(),from:S.currentUser.name,text:el.value.trim(),time:new Date().toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit'})});renderPage();}
 function markAllRead(){S.notifications.forEach(n=>n.unread=false);renderNav();renderSidebarUser();renderPage();}
@@ -532,8 +575,8 @@ function renderPage(){
   const c=document.getElementById('content-el');
   const u=S.currentUser;
   if(u.role==='kid'){
-    const pages={'kid-home':kidHome,'kid-chores':kidChores,'kid-rewards':kidRewards,'kid-habits':kidHabits,'kid-calendar':kidCalendar,'kid-hub':kidHub,'kid-outings':kidOutings,'kid-goals':kidGoals};
-    c.innerHTML=(pages[S.page]||kidHome)();
+    const pages={'kid-myday':kidMyDay,'kid-chores':kidChores,'kid-rewards':kidRewards,'kid-habits':kidHabits,'kid-hub':kidHub,'kid-outings':kidOutings};
+    c.innerHTML=(pages[S.page]||kidMyDay)();
   } else {
     const pages={dashboard:pgDash,notifications:pgNotif,calendar:pgCal,tasks:pgTasks,kids:pgKids,meals:pgMeals,groceries:pgGroceries,budget:pgBudget,reports:pgReports,habits:pgHabits,goals:pgGoals,documents:pgDocs,hub:pgHub,outings:pgOutings,travel:pgTravel};
     c.innerHTML=(pages[S.page]||pgDash)();
@@ -611,6 +654,7 @@ function pgTasks(){
     <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
       <select id="ta" style="padding:7px 10px;border:0.5px solid #d8c0b0;border-radius:9px;font-size:13px;background:#fff;outline:none">${USERS.map(u=>`<option>${u.name}</option>`).join('')}</select>
       <select id="tcat" style="padding:7px 10px;border:0.5px solid #d8c0b0;border-radius:9px;font-size:13px;background:#fff;outline:none"><option>Chores</option><option>Bills</option><option>Errands</option><option>Other</option></select>
+      <select id="ttod" style="padding:7px 10px;border:0.5px solid #d8c0b0;border-radius:9px;font-size:13px;background:#fff;outline:none"><option>Morning</option><option>Evening</option><option>Any Time</option></select>
       <label style="display:flex;align-items:center;gap:6px;font-size:13px"><input type="checkbox" id="tch"> Chore (earns points)</label>
       <button class="btn b-orange" onclick="addTask()">${ic('plus')} Add</button>
     </div>
@@ -620,10 +664,46 @@ function pgTasks(){
 }
 
 function pgKids(){
-  const tabs=['chores','appointments','rewards'];
+  const tabs=['myday','chores','appointments','rewards'];
+  const tabLabels={myday:"My Day Preview",chores:'Chores',appointments:'Appointments',rewards:'Rewards'};
+  if(!S.kidsTab) S.kidsTab='myday';
   return`<div style="font-size:20px;font-weight:600;margin-bottom:18px">Kids' Zone</div>
-  <div class="kids-tabs">${tabs.map(t=>`<div class="ktab${S.kidsTab===t?' active':''}" onclick="setKidsTab('${t}')">${t.charAt(0).toUpperCase()+t.slice(1)}</div>`).join('')}</div>
-  ${S.kidsTab==='chores'?kidsChoresParent():S.kidsTab==='appointments'?kidsApptsParent():kidsRewardsParent()}`;
+  <div class="kids-tabs">${tabs.map(t=>`<div class="ktab${S.kidsTab===t?' active':''}" onclick="setKidsTab('${t}')">${tabLabels[t]}</div>`).join('')}</div>
+  ${S.kidsTab==='myday'?kidsMyDayPreview():S.kidsTab==='chores'?kidsChoresParent():S.kidsTab==='appointments'?kidsApptsParent():kidsRewardsParent()}`;
+}
+
+function kidsMyDayPreview(){
+  const kids=USERS.filter(u=>u.role==='kid');
+  return`<div style="margin-bottom:12px;font-size:13px;color:#888">This is what each kid sees when they switch to their profile. Switch to their profile using the avatars in the bottom-left sidebar.</div>
+  <div class="grid2">${kids.map(k=>{
+    const tasks=S.tasks.filter(t=>t.assignee===k.name);
+    const done=tasks.filter(t=>t.done).length;
+    const pts=userPoints(k.name);
+    const pct=tasks.length?Math.round(done/tasks.length*100):0;
+    const morning=tasks.filter(t=>t.timeOfDay==='Morning');
+    const evening=tasks.filter(t=>t.timeOfDay==='Evening');
+    const anytime=tasks.filter(t=>!t.timeOfDay||t.timeOfDay==='Any Time');
+    return`<div style="background:${k.bg};border-radius:16px;padding:18px;border:0.5px solid ${k.color}22">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="width:40px;height:40px;border-radius:50%;background:#fff;color:${k.color};display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;border:2px solid ${k.accent}">${k.initials}</div>
+          <div><div style="font-size:15px;font-weight:700;color:${k.color}">${k.name}</div><div style="font-size:12px;color:${k.color};opacity:0.7">Age ${k.age}</div></div>
+        </div>
+        <div style="text-align:center;background:#fff;border-radius:12px;padding:8px 14px">
+          <div style="font-size:20px;font-weight:700;color:${k.accent}">${pts}</div>
+          <div style="font-size:10px;color:#888">pts</div>
+        </div>
+      </div>
+      <div style="margin-bottom:12px">
+        <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:${k.color};margin-bottom:5px"><span>Today's progress</span><span>${done}/${tasks.length}</span></div>
+        <div style="height:10px;background:rgba(255,255,255,0.5);border-radius:99px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${k.accent};border-radius:99px"></div></div>
+      </div>
+      ${morning.length?`<div style="font-size:11px;font-weight:600;color:${k.color};opacity:0.7;margin-bottom:5px">☀️ MORNING</div>${morning.slice(0,2).map(t=>`<div style="background:#fff;border-radius:10px;padding:8px 12px;margin-bottom:5px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;${t.done?'text-decoration:line-through;color:#aaa':''}">${t.title}</span>${t.done?'✅':''}</div>`).join('')}`:''}
+      ${evening.length?`<div style="font-size:11px;font-weight:600;color:${k.color};opacity:0.7;margin:8px 0 5px">🌙 EVENING</div>${evening.slice(0,2).map(t=>`<div style="background:#fff;border-radius:10px;padding:8px 12px;margin-bottom:5px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;${t.done?'text-decoration:line-through;color:#aaa':''}">${t.title}</span>${t.done?'✅':''}</div>`).join('')}`:''}
+      ${anytime.length?`<div style="font-size:11px;font-weight:600;color:${k.color};opacity:0.7;margin:8px 0 5px">🧹 TASKS</div>${anytime.slice(0,2).map(t=>`<div style="background:#fff;border-radius:10px;padding:8px 12px;margin-bottom:5px;display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;${t.done?'text-decoration:line-through;color:#aaa':''}">${t.title}</span>${t.done?'✅':''}</div>`).join('')}`:''}
+      <button onclick="doSwitch('${k.name}')" style="width:100%;margin-top:12px;padding:9px;background:${k.accent};color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer">Switch to ${k.name}'s View</button>
+    </div>`;
+  }).join('')}</div>`;
 }
 
 function kidsChoresParent(){
@@ -725,16 +805,81 @@ function addMealFromRecipe(id){
 }
 
 function pgGroceries(){
-  const cats=[...new Set(S.groceries.map(g=>g.category))];
-  const fromMeal=S.groceries.filter(g=>g.fromMeal&&!g.checked).length;
-  return`<div style="font-size:20px;font-weight:600;margin-bottom:16px">Grocery List</div>
-  ${fromMeal?`<div style="background:#E1F5EE;border:0.5px solid #5DCAA5;border-radius:10px;padding:10px 14px;margin-bottom:16px;font-size:13px;color:#085041">${fromMeal} item(s) synced from meal plans</div>`:''}
-  <div style="display:flex;gap:8px;margin-bottom:20px;flex-wrap:wrap">
-    <input type="text" id="gi" placeholder="Add an item..." style="flex:1;min-width:200px;padding:8px 12px;border:0.5px solid #d8c0b0;border-radius:9px;font-size:13px;background:#fff;outline:none;color:#1a1a1a" onkeydown="if(event.key==='Enter')addGrocery()">
-    <select id="gcat" style="padding:8px 10px;border:0.5px solid #d8c0b0;border-radius:9px;font-size:13px;background:#fff;outline:none"><option>Produce</option><option>Dairy</option><option>Pantry</option><option>Meat</option><option>Bakery</option><option>Snacks</option></select>
-    <button class="btn b-teal" onclick="addGrocery()">${ic('plus')} Add</button>
+  const DAYS=['All','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday','Any Day'];
+  const activeDay=S.grocTab||'all';
+  const filtered=activeDay==='all'?S.groceries:S.groceries.filter(g=>(g.scheduledDay||'Any Day')===activeDay||(activeDay==='Any Day'&&(!g.scheduledDay||g.scheduledDay==='Any Day')));
+  const cats=[...new Set(filtered.map(g=>g.category))];
+  const total=S.groceries.length, checked=S.groceries.filter(g=>g.checked).length;
+  const fromMealCount=S.groceries.filter(g=>g.fromMeal&&!g.checked).length;
+
+  return`
+  <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+    <div>
+      <div style="font-size:20px;font-weight:600">Grocery List</div>
+      <div style="font-size:13px;color:#888;margin-top:3px">${checked}/${total} items checked off</div>
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn b-ghost" onclick="exportGroceries()" style="font-size:12px">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Export List
+      </button>
+      <button class="btn b-teal" onclick="clearChecked()" style="font-size:12px">Clear Checked</button>
+    </div>
   </div>
-  ${cats.map(cat=>`<div class="card" style="margin-bottom:12px"><div style="font-size:13px;font-weight:500;margin-bottom:10px;display:flex;justify-content:space-between"><span>${cat}</span><span style="font-size:12px;color:#888">${S.groceries.filter(g=>g.category===cat&&g.checked).length}/${S.groceries.filter(g=>g.category===cat).length}</span></div>${S.groceries.filter(g=>g.category===cat).map(g=>`<div style="display:flex;align-items:center;gap:8px;margin-bottom:7px;cursor:pointer" onclick="toggleGroc('${g.id}')"><div style="width:16px;height:16px;border-radius:50%;${g.checked?'background:#0F6E56;border:none':'border:1.5px solid #d0c0b0'};flex-shrink:0"></div><span style="font-size:13px;${g.checked?'text-decoration:line-through;color:#aaa':''}">${g.name}</span>${g.fromMeal?`<span class="pill pill-teal" style="font-size:10px">meal</span>`:''}</div>`).join('')}</div>`).join('')}`;
+
+  ${fromMealCount?`<div style="background:#E1F5EE;border:0.5px solid #5DCAA5;border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:13px;color:#085041;display:flex;align-items:center;gap:8px">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+    ${fromMealCount} item(s) synced from meal plans
+  </div>`:''}
+
+  <div style="display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap">
+    <input type="text" id="gi" placeholder="Add an item..." style="flex:1;min-width:180px;padding:8px 12px;border:0.5px solid #d8c0b0;border-radius:9px;font-size:13px;background:#fff;outline:none;color:#1a1a1a" onkeydown="if(event.key==='Enter')addGrocery()">
+    <select id="gcat" style="padding:8px 10px;border:0.5px solid #d8c0b0;border-radius:9px;font-size:13px;background:#fff;outline:none">
+      <option>Produce</option><option>Dairy</option><option>Pantry</option><option>Meat</option><option>Bakery</option><option>Snacks</option><option>Beverages</option><option>Other</option>
+    </select>
+    <select id="gday" style="padding:8px 10px;border:0.5px solid #d8c0b0;border-radius:9px;font-size:13px;background:#fff;outline:none">
+      <option>Any Day</option><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option><option>Sunday</option>
+    </select>
+    <button class="btn b-teal" onclick="addGrocery()">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add
+    </button>
+  </div>
+
+  <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px">
+    ${DAYS.map(d=>{
+      const key=d==='All'?'all':d;
+      const count=d==='All'?S.groceries.length:S.groceries.filter(g=>(g.scheduledDay||'Any Day')===d).length;
+      const isActive=activeDay===key;
+      return`<button onclick="S.grocTab='${key}';renderPage()" style="padding:6px 14px;border-radius:99px;font-size:12px;font-weight:500;cursor:pointer;border:1.5px solid ${isActive?'#0F6E56':'#f0d0c0'};background:${isActive?'#0F6E56':'#fff'};color:${isActive?'#fff':'#666'};white-space:nowrap">
+        ${d}${count>0?` <span style="background:${isActive?'rgba(255,255,255,0.3)':'#f0e8e0'};color:${isActive?'#fff':'#888'};border-radius:99px;padding:1px 7px;font-size:11px">${count}</span>`:''}
+      </button>`;
+    }).join('')}
+  </div>
+
+  ${filtered.length===0?`<div style="text-align:center;padding:32px;color:#aaa;font-size:14px;background:#fff;border-radius:14px;border:0.5px solid #f0d0c0">No items for this day. Add one above!</div>`:''}
+
+  ${cats.map(cat=>{
+    const items=filtered.filter(g=>g.category===cat);
+    const catDone=items.filter(g=>g.checked).length;
+    return`<div style="background:#fff;border:0.5px solid #f0d0c0;border-radius:14px;margin-bottom:12px;overflow:hidden">
+      <div style="padding:10px 16px;background:#f9f5f2;border-bottom:0.5px solid #f0d0c0;display:flex;justify-content:space-between;align-items:center">
+        <span style="font-size:13px;font-weight:600">${cat}</span>
+        <span style="font-size:12px;color:#888">${catDone}/${items.length}</span>
+      </div>
+      ${items.map(g=>`
+      <div style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:0.5px solid #f5ece6;cursor:pointer" onclick="toggleGroc('${g.id}')">
+        <div style="width:18px;height:18px;border-radius:50%;${g.checked?'background:#0F6E56;border:none':'border:1.5px solid #d0c0b0'};flex-shrink:0;display:flex;align-items:center;justify-content:center">
+          ${g.checked?`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`:''}
+        </div>
+        <span style="flex:1;font-size:13px;${g.checked?'text-decoration:line-through;color:#aaa':''}">${g.name}</span>
+        <div style="display:flex;gap:5px;align-items:center">
+          ${g.fromMeal?`<span style="font-size:10px;background:#E1F5EE;color:#085041;padding:1px 7px;border-radius:99px;font-weight:500">meal</span>`:''}
+          ${g.scheduledDay&&g.scheduledDay!=='Any Day'?`<span style="font-size:10px;background:#EEEDFE;color:#3C3489;padding:1px 7px;border-radius:99px;font-weight:500">${g.scheduledDay.slice(0,3)}</span>`:''}
+        </div>
+        <button onclick="event.stopPropagation();removeGrocery('${g.id}')" style="width:20px;height:20px;border-radius:50%;background:#f5ece6;border:none;cursor:pointer;color:#993C1D;font-size:14px;line-height:1;display:flex;align-items:center;justify-content:center">×</button>
+      </div>`).join('')}
+    </div>`;
+  }).join('')}`;
 }
 
 function pgBudget(){
@@ -856,26 +1001,144 @@ function pgOutings(){
   <div class="grid2">${filtered.map(o=>`<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div><div style="font-weight:500;font-size:15px">${o.title}</div>${o.category?`<span class="pill pill-orange" style="margin-top:4px;display:inline-block">${o.category}</span>`:''}</div><span style="color:#A32D2D;font-weight:500;font-size:13px;display:flex;align-items:center;gap:4px">${ic('thumb',13)} ${o.votes}</span></div><div style="font-size:13px;color:#888;margin-bottom:8px">${o.desc}</div><div style="display:flex;flex-wrap:wrap;gap:8px;font-size:12px;color:#888;margin-bottom:10px">${o.location?`<span>${ic('pin',11)} ${o.location}</span>`:''} ${o.cost?`<span>$: ${o.cost}</span>`:''} ${o.date?`<span>📅 ${o.date}</span>`:''}</div><div style="font-size:12px;color:#aaa;margin-bottom:12px">Suggested by ${o.suggestedBy}</div>${o.scheduled?`<div style="background:#EAF3DE;color:#27500A;border-radius:9px;padding:8px;text-align:center;font-size:13px;font-weight:500">Scheduled!</div>`:`<div style="display:flex;gap:8px">${o.voted?`<button style="flex:1;padding:8px;background:#FCEBEB;color:#A32D2D;border:none;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer">Voted!</button>`:`<button class="btn b-ghost" style="flex:1;justify-content:center" onclick="voteOuting('${o.id}')">Vote</button>`}<button class="btn b-purple" style="flex:1;justify-content:center" onclick="scheduleOuting('${o.id}')">Schedule</button></div>`}</div>`).join('')}</div>`;
 }
 
-function kidHome(){
-  const u=S.currentUser,pts=userPoints(u.name);
-  const myTasks=S.tasks.filter(t=>t.assignee===u.name&&t.isChore&&!t.done);
-  const myHabits=S.habits.filter(h=>h.owner===u.name);
-  const myEvents=S.events.filter(e=>e.assignee===u.name);
-  return`<div style="background:${u.accent};border-radius:16px;padding:20px;margin-bottom:20px;color:#fff;display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:20px;font-weight:600">Hi ${u.name}!</div><div style="font-size:13px;opacity:0.85;margin-top:3px">You have ${myTasks.length} chore${myTasks.length!==1?'s':''} to do today</div></div><div style="text-align:center"><div style="font-size:32px;font-weight:600">${pts}</div><div style="font-size:12px;opacity:0.85">points</div></div></div>
-  <div class="grid3" style="margin-bottom:20px">
-    <div class="card" style="text-align:center;cursor:pointer" onclick="nav('kid-chores')"><div style="font-size:24px;font-weight:600;color:${u.accent}">${myTasks.length}</div><div style="font-size:12px;color:#888">Chores left</div></div>
-    <div class="card" style="text-align:center;cursor:pointer" onclick="nav('kid-habits')"><div style="font-size:24px;font-weight:600;color:${u.accent}">${myHabits.filter(h=>h.days[6]).length}/${myHabits.length}</div><div style="font-size:12px;color:#888">Habits today</div></div>
-    <div class="card" style="text-align:center;cursor:pointer" onclick="nav('kid-rewards')"><div style="font-size:24px;font-weight:600;color:${u.accent}">${pts}</div><div style="font-size:12px;color:#888">Points to spend</div></div>
+function kidMyDay(){
+  const u=S.currentUser;
+  const allTasks=S.tasks.filter(t=>t.assignee===u.name);
+  const todayEvents=S.events.filter(e=>e.assignee===u.name);
+  const pts=userPoints(u.name);
+  const total=allTasks.length;
+  const done=allTasks.filter(t=>t.done).length;
+  const pct=total?Math.round(done/total*100):0;
+  const morning=allTasks.filter(t=>t.timeOfDay==='Morning');
+  const evening=allTasks.filter(t=>t.timeOfDay==='Evening');
+  const anytime=allTasks.filter(t=>!t.timeOfDay||t.timeOfDay==='Any Time'||t.timeOfDay==='Chores');
+  const hour=new Date().getHours();
+  const greeting=hour<12?'Good morning':hour<17?'Good afternoon':'Good evening';
+  const greetEmoji=hour<12?'☀️':hour<17?'🌤':'🌙';
+
+  const recurBadge=(t)=>{
+    if(!t.recur||t.recur==='none') return '';
+    const labels={daily:'🔁 Daily',weekly:'🔁 Weekly',monthly:'🔁 Monthly',custom:'🔁 '+t.recurDays};
+    return `<span style="font-size:10px;background:${u.bg};color:${u.accent};padding:1px 7px;border-radius:99px;font-weight:600;margin-left:6px">${labels[t.recur]||''}</span>`;
+  };
+
+  const taskRow=(t)=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;background:#fff;border-radius:16px;padding:14px 18px;margin-bottom:10px;border:0.5px solid ${t.done?'#9FE1CB':'#f0d0c0'}">
+      <div style="display:flex;align-items:center;gap:14px;flex:1;cursor:pointer" onclick="toggleTask('${t.id}')">
+        <div style="width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;${t.done?`background:${u.accent};border:none`:`background:#fff;border:2.5px solid ${u.accent}`}">
+          ${t.done?`<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`:''}
+        </div>
+        <div>
+          <div style="font-size:15px;font-weight:500;${t.done?'text-decoration:line-through;color:#aaa':''}">${t.title}${recurBadge(t)}</div>
+          ${t.isChore?`<div style="font-size:12px;color:${u.accent};margin-top:2px;font-weight:500">${t.points} pts</div>`:''}
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        ${t.done?`<div style="font-size:20px">⭐</div>`:''}
+        ${t.addedBy===u.name?`<button onclick="deleteKidTask('${t.id}')" style="width:24px;height:24px;border-radius:50%;background:#FCEBEB;border:none;cursor:pointer;color:#A32D2D;font-size:14px;display:flex;align-items:center;justify-content:center">×</button>`:''}
+      </div>
+    </div>`;
+
+  const section=(label,icon,items,color)=>items.length?`
+    <div style="display:flex;align-items:center;gap:8px;margin:18px 0 10px">
+      <div style="width:30px;height:30px;border-radius:50%;background:${color}22;display:flex;align-items:center;justify-content:center;font-size:16px">${icon}</div>
+      <span style="font-size:13px;font-weight:600;color:#555;text-transform:uppercase;letter-spacing:.05em">${label}</span>
+      <span style="font-size:12px;color:#aaa;margin-left:4px">${items.filter(t=>t.done).length}/${items.length}</span>
+    </div>
+    ${items.map(taskRow).join('')}`:'';
+
+  return`
+  <div style="background:${u.bg};border-radius:20px;padding:20px 22px;margin-bottom:20px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div>
+        <div style="font-size:22px;font-weight:700;color:${u.color}">${greeting}, ${u.name}! ${greetEmoji}</div>
+        <div style="font-size:14px;color:${u.color};opacity:0.75;margin-top:4px">${new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}</div>
+      </div>
+      <div style="text-align:center;background:#fff;border-radius:14px;padding:10px 16px">
+        <div style="font-size:26px;font-weight:700;color:${u.accent}">${pts}</div>
+        <div style="font-size:11px;color:#888;font-weight:500">points</div>
+      </div>
+    </div>
+    <div style="margin-top:16px">
+      <div style="display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:${u.color};margin-bottom:6px">
+        <span>Today's Progress</span><span>${done}/${total} tasks</span>
+      </div>
+      <div style="height:14px;background:rgba(255,255,255,0.45);border-radius:99px;overflow:hidden">
+        <div style="height:100%;width:${pct}%;background:${u.accent};border-radius:99px;transition:width 0.5s"></div>
+      </div>
+    </div>
   </div>
-  ${myTasks.length?`<div class="sec">My chores</div>${myTasks.slice(0,3).map(t=>`<div class="card" style="display:flex;align-items:center;gap:12px;margin-bottom:8px;cursor:pointer" onclick="toggleTask('${t.id}')"><div style="width:16px;height:16px;border-radius:50%;border:1.5px solid #d0c0b0;flex-shrink:0"></div><div style="flex:1"><div style="font-size:13px;font-weight:500">${t.title}</div></div><span style="background:${u.bg};color:${u.accent};padding:2px 9px;border-radius:99px;font-size:11px;font-weight:500">${t.points} pts</span></div>`).join('')}`:''}
-  ${myEvents.length?`<div class="sec">My schedule</div>${myEvents.map(e=>`<div class="card" style="display:flex;justify-content:space-between;margin-bottom:8px"><span style="font-size:13px;font-weight:500">${e.title}</span><span style="font-size:12px;color:#888">${e.date} · ${e.time}</span></div>`).join('')}`:''}`;
+
+  <button onclick="openKidAddTask()" style="width:100%;padding:13px;background:${u.accent};color:#fff;border:none;border-radius:14px;font-size:15px;font-weight:600;cursor:pointer;margin-bottom:20px;display:flex;align-items:center;justify-content:center;gap:8px">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+    Add a task to My Day
+  </button>
+
+  ${todayEvents.length?`
+  <div style="font-size:13px;font-weight:600;color:#555;text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;display:flex;align-items:center;gap:8px">
+    <span style="font-size:16px">📅</span> Today's Events
+  </div>
+  ${todayEvents.map(e=>`
+  <div style="background:#fff;border:0.5px solid #f0d0c0;border-radius:14px;padding:12px 16px;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center">
+    <div><div style="font-size:14px;font-weight:500">${e.title}</div><div style="font-size:12px;color:#888;margin-top:2px">${e.time}</div></div>
+    <span style="background:${u.bg};color:${u.accent};padding:3px 10px;border-radius:99px;font-size:11px;font-weight:600">${e.type}</span>
+  </div>`).join('')}
+  `:''}
+
+  ${section('Morning','☀️',morning,'#BA7517')}
+  ${section('Evening','🌙',evening,'#534AB7')}
+  ${section('Chores & Tasks','🧹',anytime,'#D85A30')}
+
+  ${total===0?`<div style="text-align:center;padding:32px;color:#aaa;font-size:14px">Tap the button above to add your first task!</div>`:''}
+  ${done===total&&total>0?`<div style="background:#EAF3DE;border-radius:16px;padding:16px;text-align:center;margin-top:16px"><div style="font-size:24px;margin-bottom:4px">🎉</div><div style="font-size:15px;font-weight:600;color:#27500A">All done! Amazing work today!</div></div>`:''}`;
 }
 
 function kidChores(){
-  const u=S.currentUser,mine=S.tasks.filter(t=>t.assignee===u.name&&t.isChore),done=mine.filter(t=>t.done).length;
-  return`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px"><div><div style="font-size:20px;font-weight:600">My Chores</div><div style="font-size:13px;color:#888;margin-top:3px">${done}/${mine.length} completed</div></div><span style="font-size:18px;font-weight:600;color:${u.accent}">${userPoints(u.name)} pts</span></div>
+  const u=S.currentUser;
+  const mine=S.tasks.filter(t=>t.assignee===u.name);
+  const done=mine.filter(t=>t.done).length;
+  const recurLabel=(t)=>{
+    if(!t.recur||t.recur==='none') return '';
+    if(t.recur==='daily') return '🔁 Every day';
+    if(t.recur==='weekly') return '🔁 Every week';
+    if(t.recur==='monthly') return '🔁 Every month';
+    if(t.recur==='custom') return '🔁 '+t.recurDays;
+    return '';
+  };
+  return`
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+    <div><div style="font-size:20px;font-weight:600">My Tasks</div><div style="font-size:13px;color:#888;margin-top:3px">${done}/${mine.length} completed</div></div>
+    <div style="display:flex;align-items:center;gap:10px">
+      <span style="font-size:18px;font-weight:600;color:${u.accent}">${userPoints(u.name)} pts</span>
+      <button onclick="openKidAddTask()" style="padding:8px 14px;background:${u.accent};color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg> Add Task
+      </button>
+    </div>
+  </div>
   <div class="pbar" style="height:10px;margin-bottom:20px"><div class="pf" style="width:${mine.length?done/mine.length*100:0}%;background:${u.accent}"></div></div>
-  ${mine.map(t=>`<div class="card" style="display:flex;align-items:center;gap:12px;margin-bottom:10px;cursor:pointer${t.done?';opacity:0.6':''}" onclick="toggleTask('${t.id}')"><div style="width:20px;height:20px;border-radius:50%;${t.done?`background:${u.accent};border:none`:'border:1.5px solid #d0c0b0'};flex-shrink:0;display:flex;align-items:center;justify-content:center">${t.done?`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`:''}</div><div style="flex:1"><div style="font-size:14px;font-weight:500;${t.done?'text-decoration:line-through;color:#aaa':''}">${t.title}</div></div><span style="background:${u.bg};color:${u.accent};padding:3px 10px;border-radius:99px;font-size:12px;font-weight:500">${t.points} pts</span></div>`).join('')}`;
+  ${mine.length===0?`<div style="text-align:center;padding:32px;color:#aaa;font-size:14px;background:#fff;border-radius:14px;border:0.5px solid #f0d0c0">No tasks yet — add one above!</div>`:''}
+  ${mine.map(t=>`
+  <div style="background:#fff;border:0.5px solid ${t.done?'#9FE1CB':'#f0d0c0'};border-radius:14px;padding:14px 16px;margin-bottom:10px">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+      <div style="display:flex;align-items:center;gap:12px;flex:1;cursor:pointer" onclick="toggleTask('${t.id}')">
+        <div style="width:22px;height:22px;border-radius:50%;${t.done?`background:${u.accent};border:none`:'border:2px solid #d0c0b0'};flex-shrink:0;display:flex;align-items:center;justify-content:center">
+          ${t.done?`<svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`:''}
+        </div>
+        <div style="flex:1">
+          <div style="font-size:14px;font-weight:500;${t.done?'text-decoration:line-through;color:#aaa':''}">${t.title}</div>
+          <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:5px">
+            ${t.timeOfDay&&t.timeOfDay!=='Any Time'?`<span style="font-size:11px;background:#f5ece6;color:#993C1D;padding:2px 8px;border-radius:99px">${t.timeOfDay==='Morning'?'☀️':'🌙'} ${t.timeOfDay}</span>`:''}
+            ${t.isChore?`<span style="font-size:11px;background:${u.bg};color:${u.accent};padding:2px 8px;border-radius:99px;font-weight:600">${t.points||0} pts</span>`:''}
+            ${recurLabel(t)?`<span style="font-size:11px;background:#EEEDFE;color:#3C3489;padding:2px 8px;border-radius:99px">${recurLabel(t)}</span>`:''}
+          </div>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;flex-shrink:0">
+        ${t.addedBy===u.name?`<button onclick="openKidEditTask('${t.id}')" style="padding:5px 10px;background:#f5ece6;border:none;border-radius:8px;cursor:pointer;font-size:12px;color:#993C1D;font-weight:500">Edit</button>
+        <button onclick="deleteKidTask('${t.id}')" style="padding:5px 10px;background:#FCEBEB;border:none;border-radius:8px;cursor:pointer;font-size:12px;color:#A32D2D;font-weight:500">Delete</button>`:''}
+      </div>
+    </div>
+  </div>`).join('')}`;
 }
 
 function kidRewards(){
@@ -885,17 +1148,108 @@ function kidRewards(){
 }
 
 function kidHabits(){
-  const u=S.currentUser,mine=S.habits.filter(h=>h.owner===u.name),days=['M','T','W','T','F','S','S'];
-  return`<div style="margin-bottom:20px"><div style="font-size:20px;font-weight:600">My Habits</div><div style="font-size:13px;color:#888;margin-top:3px">Build great habits every day!</div></div>
-  ${mine.length===0?`<div class="card" style="text-align:center;padding:32px;color:#888">No habits yet — ask a parent to add some!</div>`:''}
-  ${mine.map(h=>`<div class="habit-card" style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div style="font-size:14px;font-weight:500">${h.name}</div><span style="background:${u.bg};color:${u.accent};padding:2px 9px;border-radius:99px;font-size:12px;font-weight:500">${h.streak}-day streak</span></div><div style="display:flex;gap:6px">${h.days.map((d,i)=>`<div style="display:flex;flex-direction:column;align-items:center;gap:3px"><div style="width:22px;height:22px;border-radius:50%;background:${d?h.color:'#f0e8e0'};cursor:pointer" onclick="toggleHabit('${h.id}',${i})"></div><div style="font-size:10px;color:#888">${days[i]}</div></div>`).join('')}</div></div>`).join('')}`;
+  const u=S.currentUser;
+  const mine=S.habits.filter(h=>h.owner===u.name);
+  const days=['M','T','W','T','F','S','S'];
+  const todayIdx=new Date().getDay()===0?6:new Date().getDay()-1;
+  const doneTodayCount=mine.filter(h=>h.days[todayIdx]===1).length;
+
+  return`
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+    <div>
+      <div style="font-size:20px;font-weight:600">My Habits</div>
+      <div style="font-size:13px;color:#888;margin-top:3px">${doneTodayCount}/${mine.length} done today</div>
+    </div>
+    <button onclick="openKidAddHabit()" style="padding:9px 16px;background:${u.accent};color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:6px">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+      New Habit
+    </button>
+  </div>
+
+  ${mine.length===0?`
+  <div style="text-align:center;padding:40px 20px;background:#fff;border-radius:16px;border:0.5px solid #f0d0c0">
+    <div style="font-size:36px;margin-bottom:10px">⚡</div>
+    <div style="font-size:15px;font-weight:600;color:#555;margin-bottom:6px">No habits yet!</div>
+    <div style="font-size:13px;color:#aaa">Tap "New Habit" to start building great habits.</div>
+  </div>`:''}
+
+  ${mine.map(h=>`
+  <div style="background:#fff;border:0.5px solid #f0d0c0;border-radius:16px;padding:16px;margin-bottom:12px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px">
+      <div>
+        <div style="font-size:15px;font-weight:600">${h.name}</div>
+        <div style="display:flex;gap:6px;margin-top:5px;align-items:center">
+          <span style="background:${h.color}22;color:${h.color};padding:2px 9px;border-radius:99px;font-size:11px;font-weight:600">${h.streak}-day streak</span>
+          ${h.addedBy===u.name?`<span style="background:#f5ece6;color:#993C1D;padding:2px 7px;border-radius:99px;font-size:10px">mine</span>`:''}
+        </div>
+      </div>
+      <div style="display:flex;gap:6px">
+        ${h.addedBy===u.name?`<button onclick="deleteKidHabit('${h.id}')" style="width:28px;height:28px;border-radius:50%;background:#FCEBEB;border:none;cursor:pointer;color:#A32D2D;font-size:16px;display:flex;align-items:center;justify-content:center">×</button>`:''}
+      </div>
+    </div>
+    <div style="margin-bottom:8px">
+      <div style="display:flex;justify-content:space-between;font-size:11px;color:#aaa;margin-bottom:5px"><span>This week</span><span>${h.days.filter(Boolean).length}/7 days</span></div>
+      <div style="height:8px;background:#f0e8e0;border-radius:99px;overflow:hidden">
+        <div style="height:100%;width:${(h.days.filter(Boolean).length/7*100).toFixed(0)}%;background:${h.color};border-radius:99px;transition:width 0.4s"></div>
+      </div>
+    </div>
+    <div style="display:flex;gap:5px">
+      ${h.days.map((d,i)=>`
+      <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px">
+        <div onclick="toggleHabit('${h.id}',${i})" style="width:100%;aspect-ratio:1;border-radius:8px;background:${d?h.color:'#f5ece6'};cursor:pointer;display:flex;align-items:center;justify-content:center;max-width:34px;${i===todayIdx?`box-shadow:0 0 0 2px ${h.color}`:``}">
+          ${d?`<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`:''}
+        </div>
+        <span style="font-size:10px;color:${i===todayIdx?h.color:'#aaa'};font-weight:${i===todayIdx?'700':'400'}">${days[i]}</span>
+      </div>`).join('')}
+    </div>
+  </div>`).join('')}`;
 }
 
-function kidCalendar(){
-  const u=S.currentUser,mine=S.events.filter(e=>e.assignee===u.name);
-  return`<div style="margin-bottom:20px"><div style="font-size:20px;font-weight:600">My Schedule</div></div>
-  ${mine.length===0?`<div class="card" style="text-align:center;padding:32px;color:#888">No upcoming events.</div>`:''}
-  ${mine.map(e=>`<div class="card" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div style="display:flex;align-items:center;gap:12px"><div style="width:36px;height:36px;border-radius:50%;background:${u.bg};color:${u.accent};display:flex;align-items:center;justify-content:center">${ic('cal',16)}</div><div><div style="font-size:14px;font-weight:500">${e.title}</div><div style="font-size:12px;color:#888">${e.date} · ${e.time}</div></div></div></div>`).join('')}`;
+function openKidAddHabit(){
+  const u=S.currentUser;
+  const bg=document.getElementById('modal-bg'),mb=document.getElementById('modal-body');
+  bg.style.display='flex';
+  const colors=['#D85A30','#534AB7','#0F6E56','#D4537E','#BA7517','#185FA5'];
+  mb.innerHTML=`
+  <h3 style="color:${u.accent}">Add a New Habit</h3>
+  <div class="fi"><label>What habit do you want to build?</label>
+    <input type="text" id="kh-name" placeholder="e.g. Read for 15 minutes" style="font-size:15px;padding:10px 12px">
+  </div>
+  <div class="fi"><label>Pick a colour</label>
+    <div style="display:flex;gap:8px;flex-wrap:wrap" id="kh-colors">
+      ${colors.map((c,i)=>`<div onclick="selectHabitColor('${c}')" id="khc-${i}" data-color="${c}" style="width:32px;height:32px;border-radius:50%;background:${c};cursor:pointer;border:3px solid ${i===0?'#1a1a1a':'transparent'};transition:border 0.1s" data-sel="${i===0?'1':'0'}"></div>`).join('')}
+    </div>
+  </div>
+  <div class="fi"><label>Why do you want this habit?</label>
+    <input type="text" id="kh-why" placeholder="e.g. To get smarter every day" style="padding:9px 12px">
+  </div>
+  <div class="ma">
+    <button onclick="closeModal()" style="padding:9px 18px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button>
+    <button onclick="saveKidHabit()" style="padding:9px 18px;background:${u.accent};color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer">Add Habit</button>
+  </div>`;
+}
+
+function selectHabitColor(color){
+  document.querySelectorAll('#kh-colors [data-color]').forEach(el=>{
+    const isThis=el.getAttribute('data-color')===color;
+    el.style.border=isThis?'3px solid #1a1a1a':'3px solid transparent';
+    el.setAttribute('data-sel',isThis?'1':'0');
+  });
+}
+
+function saveKidHabit(){
+  const u=S.currentUser;
+  const name=document.getElementById('kh-name').value.trim();
+  if(!name)return;
+  const colorEl=document.querySelector('#kh-colors [data-sel="1"]');
+  const color=colorEl?colorEl.getAttribute('data-color'):'#D85A30';
+  S.habits.push({id:'h'+Date.now(),name,streak:0,color,owner:u.name,days:[0,0,0,0,0,0,0],addedBy:u.name});
+  closeModal();renderPage();
+}
+
+function deleteKidHabit(id){
+  const h=S.habits.find(h=>h.id===id);
+  if(h&&h.addedBy===S.currentUser.name){S.habits.splice(S.habits.indexOf(h),1);renderPage();}
 }
 
 function kidHub(){
@@ -917,8 +1271,155 @@ function kidHub(){
 
 function kidOutings(){
   const u=S.currentUser;
-  return`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px"><div><div style="font-size:20px;font-weight:600">Family Outings</div><div style="font-size:13px;color:#888;margin-top:3px">Vote on where to go next!</div></div><button class="btn" style="background:${u.accent};color:#fff" onclick="openKidSuggestModal()">${ic('plus')} Suggest</button></div>
-  <div class="grid2">${S.outings.map(o=>`<div class="card"><div style="display:flex;justify-content:space-between;margin-bottom:8px"><div style="font-weight:500;font-size:15px">${o.title}</div><span style="color:#A32D2D;font-weight:500;font-size:13px">${ic('thumb',13)} ${o.votes}</span></div><div style="font-size:13px;color:#888;margin-bottom:8px">${o.desc}</div><div style="font-size:12px;color:#aaa;margin-bottom:10px">Suggested by ${o.suggestedBy}</div>${o.voted?`<div style="background:#FCEBEB;color:#A32D2D;border-radius:9px;padding:8px;text-align:center;font-size:13px;font-weight:500">Voted!</div>`:`<button style="width:100%;padding:8px;background:${u.accent};color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer" onclick="voteOuting('${o.id}')">Vote for this!</button>`}</div>`).join('')}</div>`;
+  const sorted=[...S.outings].sort((a,b)=>b.votes-a.votes);
+  return`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+    <div><div style="font-size:20px;font-weight:600">Family Outings</div><div style="font-size:13px;color:#888;margin-top:3px">Vote on where to go next!</div></div>
+    <button class="btn" style="background:${u.accent};color:#fff" onclick="openKidSuggestModal()">${ic('plus')} Suggest</button>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px">
+    ${sorted.map((o,i)=>`<div style="background:#fff;border:0.5px solid ${i===0&&o.votes>0?u.accent:'#f0d0c0'};border-radius:14px;padding:16px;${i===0&&o.votes>0?`border-width:2px`:''}">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px">
+        <div>
+          ${i===0&&o.votes>0?`<div style="font-size:10px;font-weight:700;color:${u.accent};text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">🔥 Most popular</div>`:''}
+          <div style="font-weight:600;font-size:15px">${o.title}</div>
+          ${o.category?`<span style="background:${u.bg};color:${u.accent};padding:2px 8px;border-radius:99px;font-size:11px;font-weight:500;display:inline-block;margin-top:4px">${o.category}</span>`:''}
+        </div>
+        <div style="display:flex;align-items:center;gap:4px;color:#A32D2D;font-weight:600;font-size:14px">${ic('thumb',13)} ${o.votes}</div>
+      </div>
+      <div style="font-size:13px;color:#888;margin-bottom:8px">${o.desc}</div>
+      ${o.location?`<div style="font-size:12px;color:#aaa;margin-bottom:4px">${ic('pin',11)} ${o.location}</div>`:''}
+      ${o.date?`<div style="font-size:12px;color:#aaa;margin-bottom:10px">📅 ${o.date}</div>`:''}
+      <div style="font-size:12px;color:#aaa;margin-bottom:12px">Suggested by ${o.suggestedBy}</div>
+      ${o.voted
+        ?`<div style="background:#FCEBEB;color:#A32D2D;border-radius:10px;padding:10px;text-align:center;font-size:13px;font-weight:600">👍 You voted!</div>`
+        :`<button style="width:100%;padding:10px;background:${u.accent};color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer" onclick="voteOuting('${o.id}')">👍 Vote for this!</button>`}
+    </div>`).join('')}
+  </div>`;
+}
+
+function deleteKidTask(id){
+  const t=S.tasks.find(t=>t.id===id);
+  if(t&&t.addedBy===S.currentUser.name){S.tasks.splice(S.tasks.indexOf(t),1);renderPage();}
+}
+
+function kidTaskModalHTML(t){
+  const u=S.currentUser;
+  const isEdit=!!t;
+  const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const recurVal=t?t.recur||'none':'none';
+  const recurDays=t?t.recurDays||[]:[]; 
+  return`
+  <h3 style="color:${u.accent}">${isEdit?'Edit Task':'Add a New Task'}</h3>
+  <div class="fi"><label>What do you want to do?</label>
+    <input type="text" id="kt-title" placeholder="e.g. Read for 20 minutes" value="${isEdit?t.title:''}" style="font-size:15px;padding:10px 12px">
+  </div>
+  <div class="fi"><label>When in the day?</label>
+    <div style="display:flex;gap:8px">
+      ${['Morning','Evening','Any Time'].map(tod=>`<label style="flex:1;cursor:pointer">
+        <input type="radio" name="kt-tod" value="${tod}" ${(!isEdit&&tod==='Any Time')||(isEdit&&(t.timeOfDay||'Any Time')===tod)?'checked':''} style="display:none">
+        <div id="kt-tod-${tod.replace(' ','-')}" onclick="selectTOD('${tod}')" style="text-align:center;padding:9px;border-radius:10px;border:1.5px solid ${(isEdit?(t.timeOfDay||'Any Time'):('Any Time'))===tod?u.accent:'#f0d0c0'};background:${(isEdit?(t.timeOfDay||'Any Time'):('Any Time'))===tod?u.bg:'#fff'};font-size:13px;font-weight:500;cursor:pointer;color:${(isEdit?(t.timeOfDay||'Any Time'):('Any Time'))===tod?u.accent:'#666'}">
+          ${tod==='Morning'?'☀️ Morning':tod==='Evening'?'🌙 Evening':'🕐 Any Time'}
+        </div>
+      </label>`).join('')}
+    </div>
+  </div>
+  <div class="fi" style="margin-bottom:8px"><label>Repeat this task?</label>
+    <select id="kt-recur" onchange="updateRecurUI()" style="width:100%;padding:9px 12px;border:0.5px solid #d8c0b0;border-radius:9px;font-size:13px;background:#fff;outline:none">
+      <option value="none" ${recurVal==='none'?'selected':''}>Does not repeat</option>
+      <option value="daily" ${recurVal==='daily'?'selected':''}>Every day</option>
+      <option value="weekly" ${recurVal==='weekly'?'selected':''}>Every week (same day)</option>
+      <option value="monthly" ${recurVal==='monthly'?'selected':''}>Every month (same date)</option>
+      <option value="custom" ${recurVal==='custom'?'selected':''}>Custom days...</option>
+    </select>
+  </div>
+  <div id="kt-custom-days" style="display:${recurVal==='custom'?'flex':'none'};gap:6px;flex-wrap:wrap;margin-bottom:12px">
+    ${days.map((d,i)=>`<label style="cursor:pointer">
+      <input type="checkbox" name="kt-day" value="${d}" ${recurDays.includes(d)?'checked':''} style="display:none">
+      <div onclick="toggleDayBtn(this,'${d}')" style="padding:6px 12px;border-radius:99px;border:1.5px solid ${recurDays.includes(d)?u.accent:'#f0d0c0'};background:${recurDays.includes(d)?u.bg:'#fff'};font-size:12px;font-weight:500;cursor:pointer;color:${recurDays.includes(d)?u.accent:'#666'}" data-day="${d}" data-sel="${recurDays.includes(d)?'1':'0'}">${d}</div>
+    </label>`).join('')}
+  </div>
+  <div class="fi"><label>Is this a chore? (earn points)</label>
+    <div style="display:flex;align-items:center;gap:12px">
+      <label style="display:flex;align-items:center;gap:6px;font-size:14px;cursor:pointer">
+        <input type="checkbox" id="kt-chore" ${isEdit&&t.isChore?'checked':''} onchange="document.getElementById('kt-pts-row').style.display=this.checked?'flex':'none'">
+        Yes, this is a chore
+      </label>
+    </div>
+  </div>
+  <div id="kt-pts-row" style="display:${isEdit&&t.isChore?'flex':'none'};align-items:center;gap:10px;margin-bottom:12px">
+    <label style="font-size:13px;color:#888;white-space:nowrap">Points to earn:</label>
+    <input type="number" id="kt-pts" value="${isEdit?t.points||20:20}" min="5" step="5" style="width:80px;padding:7px 10px;border:0.5px solid #d8c0b0;border-radius:9px;font-size:13px;background:#fff;outline:none">
+  </div>
+  <div class="ma">
+    <button onclick="closeModal()" style="padding:9px 18px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button>
+    <button onclick="saveKidTask('${isEdit?t.id:''}')" style="padding:9px 18px;background:${u.accent};color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer">${isEdit?'Save Changes':'Add Task'}</button>
+  </div>`;
+}
+
+function selectTOD(val){
+  ['Morning','Evening','Any-Time'].forEach(v=>{
+    const el=document.getElementById('kt-tod-'+v);
+    if(!el)return;
+    const u=S.currentUser;
+    const active=v===val.replace(' ','-');
+    el.style.borderColor=active?u.accent:'#f0d0c0';
+    el.style.background=active?u.bg:'#fff';
+    el.style.color=active?u.accent:'#666';
+    el.setAttribute('data-selected',active?'1':'0');
+  });
+}
+
+function updateRecurUI(){
+  const sel=document.getElementById('kt-recur');
+  const cd=document.getElementById('kt-custom-days');
+  if(sel&&cd) cd.style.display=sel.value==='custom'?'flex':'none';
+}
+
+function toggleDayBtn(el,day){
+  const u=S.currentUser;
+  const sel=el.getAttribute('data-sel')==='1';
+  el.setAttribute('data-sel',sel?'0':'1');
+  el.style.borderColor=!sel?u.accent:'#f0d0c0';
+  el.style.background=!sel?u.bg:'#fff';
+  el.style.color=!sel?u.accent:'#666';
+}
+
+function openKidAddTask(){
+  const bg=document.getElementById('modal-bg'),mb=document.getElementById('modal-body');
+  bg.style.display='flex';
+  mb.innerHTML=kidTaskModalHTML(null);
+}
+
+function openKidEditTask(id){
+  const t=S.tasks.find(t=>t.id===id);
+  if(!t)return;
+  const bg=document.getElementById('modal-bg'),mb=document.getElementById('modal-body');
+  bg.style.display='flex';
+  mb.innerHTML=kidTaskModalHTML(t);
+}
+
+function saveKidTask(editId){
+  const u=S.currentUser;
+  const title=document.getElementById('kt-title').value.trim();
+  if(!title)return;
+  const todEls=['Morning','Evening','Any-Time'];
+  let tod='Any Time';
+  todEls.forEach(v=>{const el=document.getElementById('kt-tod-'+v);if(el&&el.getAttribute('data-selected')==='1')tod=v.replace('-',' ');});
+  const recurSel=document.getElementById('kt-recur');
+  const recur=recurSel?recurSel.value:'none';
+  const dayBtns=document.querySelectorAll('[data-day][data-sel]');
+  const recurDays=[];
+  dayBtns.forEach(b=>{if(b.getAttribute('data-sel')==='1')recurDays.push(b.getAttribute('data-day'));});
+  const isChore=document.getElementById('kt-chore').checked;
+  const pts=isChore?parseInt(document.getElementById('kt-pts').value)||20:0;
+
+  if(editId){
+    const t=S.tasks.find(t=>t.id===editId);
+    if(t){t.title=title;t.timeOfDay=tod;t.recur=recur;t.recurDays=recurDays;t.isChore=isChore;t.points=pts;}
+  } else {
+    S.tasks.push({id:'t'+Date.now(),title,assignee:u.name,timeOfDay:tod,recur,recurDays,isChore,points:pts,done:false,category:'Personal',addedBy:u.name});
+  }
+  closeModal();renderPage();
 }
 
 function openKidSuggestModal(){
@@ -936,17 +1437,6 @@ function saveKidOuting(){
   S.outings.push({id:'o'+Date.now(),title:t,desc:document.getElementById('ko-d').value,suggestedBy:S.currentUser.name,votes:1,voted:true,category:'Other',date:document.getElementById('ko-date').value,cost:'',location:'',scheduled:false});
   closeModal();renderPage();
 }
-
-function kidGoals(){
-  const u=S.currentUser,mine=S.goals.filter(g=>g.owner===u.name||!g.owner);
-  return`<div style="margin-bottom:20px"><div style="font-size:20px;font-weight:600">My Goals</div><div style="font-size:13px;color:#888;margin-top:3px">Save up and reach your goals!</div></div>
-  ${mine.map(g=>{const pct=Math.min(100,g.current/g.target*100);return`<div class="card" style="margin-bottom:12px"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px"><div style="font-weight:500;font-size:14px">${g.title}</div><span style="font-size:13px;color:${g.color};font-weight:500">${pct.toFixed(0)}%</span></div><div style="font-size:12px;color:#888;margin-bottom:6px">$${g.current} of $${g.target}</div><div class="pbar" style="height:10px"><div class="pf" style="width:${pct}%;background:${g.color}"></div></div></div>`;}).join('')}`;
-}
-
-applyTheme();
-renderNav();
-renderSidebarUser();
-renderPage();
 
 function pgTravel(){
   const T=S.travel;
