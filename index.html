@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FamSync — Family Management App</title>
+<title>Famlove — Family Management App</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
@@ -85,6 +85,16 @@ nav{flex:1;padding:8px 0;overflow-y:auto}
 .notif-item:last-child{border-bottom:none}
 .notif-item.unread{background:#fff9f6}
 .ann-card{background:#FAEEDA;border-radius:10px;padding:10px 14px;text-align:center;margin-bottom:8px}
+.dp-ov{position:fixed;z-index:500;background:#fff;border:0.5px solid #f0d0c0;border-radius:14px;padding:12px;box-shadow:0 8px 30px rgba(0,0,0,0.15);width:256px}
+.dp-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.dp-nav{background:none;border:none;cursor:pointer;font-size:18px;color:#D85A30;width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center}
+.dp-nav:hover{background:#FAECE7}
+.dp-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.dp-dow{text-align:center;font-size:10px;color:#888;font-weight:600;padding:3px 0}
+.dp-cell{text-align:center;padding:5px 2px;font-size:12px;border-radius:6px;cursor:pointer;line-height:1.8}
+.dp-cell:hover{background:#FAECE7;color:#D85A30}
+.dp-cell.dp-today{color:#D85A30;font-weight:700}
+.dp-cell.dp-empty{cursor:default;pointer-events:none}
 </style>
 </head>
 <body>
@@ -95,7 +105,7 @@ nav{flex:1;padding:8px 0;overflow-y:auto}
     <div class="logo-icon" id="logo-icon-el">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
     </div>
-    FamSync
+    Famlove
   </div>
   <nav id="nav-el"></nav>
   <div class="sidebar-bottom">
@@ -116,6 +126,7 @@ nav{flex:1;padding:8px 0;overflow-y:auto}
     <span style="font-size:15px;font-weight:600;color:#712B13" id="topbar-title">Dashboard</span>
     <div style="display:flex;align-items:center;gap:10px">
       <span style="font-size:13px;color:#993C1D" id="topbar-date"></span>
+      <div id="sync-badge" title="WhatsApp agent offline" onclick="syncFromAgent()" style="width:8px;height:8px;border-radius:50%;background:#aaa;cursor:pointer;flex-shrink:0" title="WhatsApp sync status"></div>
       <div class="notif-btn" onclick="nav('notifications')" id="notif-btn">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#993C1D" stroke-width="2"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
         <div id="notif-dot" style="width:8px;height:8px;background:#E24B4A;border-radius:50%;position:absolute;top:6px;right:6px"></div>
@@ -472,7 +483,7 @@ function nav(p){
   renderNav(); renderPage();
 }
 
-function closeModal(){document.getElementById('modal-bg').style.display='none';}
+function closeModal(){document.getElementById('modal-bg').style.display='none';window._editId=null;window._editTripId=null;const dp=document.getElementById('_dp');if(dp)dp.remove();}
 
 function openModal(type,extra){
   const bg=document.getElementById('modal-bg'),mb=document.getElementById('modal-body');
@@ -537,7 +548,13 @@ function openModal(type,extra){
       <div class="fi"><label>Title</label><input type="text" id="m-t" placeholder="e.g. Dentist checkup"></div>
       <div class="frow"><div class="fi"><label>Date</label><input type="date" id="m-d" value="2026-04-20"></div><div class="fi"><label>Time</label><input type="time" id="m-ti" value="10:00"></div></div>
       <div class="fi"><label>Notes</label><input type="text" id="m-notes" placeholder="Bring insurance card..."></div>
-      <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="saveKidsAppt()">Save</button></div>`
+      <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="saveKidsAppt()">Save</button></div>`,
+    taskEdit:`<h3>Edit Task</h3>
+      <div class="fi"><label>Title</label><input type="text" id="m-t"></div>
+      <div class="fi"><label>Assign to</label><select id="m-own">${USERS.map(u=>`<option>${u.name}</option>`).join('')}</select></div>
+      <div class="frow"><div class="fi"><label>Time of day</label><select id="m-tod"><option>Morning</option><option>Afternoon</option><option>Evening</option><option>Any Time</option></select></div><div class="fi"><label>Points</label><input type="number" id="m-pts" value="0" min="0" step="5"></div></div>
+      <div class="fi"><label style="display:flex;align-items:center;gap:8px;cursor:pointer"><input type="checkbox" id="m-ich"> Chore (earns points)</label></div>
+      <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="saveTask()">Save Changes</button></div>`
   };
   mb.innerHTML=type==='recipe'?'':modals[type]||'';
   if(type==='recipe'){openRecipeModal(null);return;}
@@ -721,12 +738,12 @@ function toggleBirthdayField(val){
 function saveEvent(){
   const ty=document.getElementById('m-ty').value;
   let title=document.getElementById('m-t').value.trim();
-  if(!title&&ty==='birthday'){
-    const who=document.getElementById('m-bwho')?.value.trim()||'';
-    title=who?`🎂 ${who}'s Birthday`:'🎂 Birthday';
-  }
+  if(!title&&ty==='birthday'){const who=document.getElementById('m-bwho')?.value.trim()||'';title=who?`🎂 ${who}'s Birthday`:'🎂 Birthday';}
   if(!title)return;
-  S.events.push({id:'e'+Date.now(),title,date:document.getElementById('m-d').value,time:ty==='birthday'?'All Day':document.getElementById('m-ti').value,type:ty,assignee:'All'});
+  const date=document.getElementById('m-d').value;
+  const time=ty==='birthday'?'All Day':document.getElementById('m-ti')?.value||'';
+  if(window._editId){const e=S.events.find(x=>x.id===window._editId);if(e){e.title=title;e.date=date;e.time=time;e.type=ty;}}
+  else S.events.push({id:'e'+Date.now(),title,date,time,type:ty,assignee:'All'});
   closeModal();renderPage();
 }
 function saveMeal(){const n=document.getElementById('m-t').value.trim();if(!n)return;S.meals.push({id:'m'+Date.now(),name:n,type:document.getElementById('m-ty').value,date:document.getElementById('m-d').value,ingredients:document.getElementById('m-ing').value.split(',').map(s=>s.trim()).filter(Boolean),steps:document.getElementById('m-st').value.split('\n').map(s=>s.trim()).filter(Boolean),prepTime:document.getElementById('m-pt').value||'?',serves:parseInt(document.getElementById('m-sv').value)||4});closeModal();renderPage();}
@@ -781,13 +798,112 @@ function prefillFromRecipe(id){
   const mapped=tyMap[r.category]||'Dinner';
   for(let i=0;i<sel.options.length;i++){if(sel.options[i].value===mapped){sel.selectedIndex=i;break;}}
 }
-function saveHabit(){const n=document.getElementById('m-t').value.trim();if(!n)return;S.habits.push({id:'h'+Date.now(),name:n,streak:0,color:document.getElementById('m-c').value,owner:document.getElementById('m-own').value,days:[0,0,0,0,0,0,0],addedBy:'parent'});closeModal();renderPage();}
-function saveGoal(){const t=document.getElementById('m-t').value.trim(),a=parseFloat(document.getElementById('m-amt').value);if(!t||isNaN(a))return;S.goals.push({id:'gl'+Date.now(),title:t,category:document.getElementById('m-cat').value,current:0,target:a,color:'#D85A30'});closeModal();renderPage();}
-function saveExpense(){const a=parseFloat(document.getElementById('m-amt').value),d=document.getElementById('m-t').value.trim();if(isNaN(a)||!d)return;S.expenses.unshift({id:'x'+Date.now(),date:document.getElementById('m-d').value,desc:d,category:document.getElementById('m-cat').value,paidBy:document.getElementById('m-pb').value,amount:a});closeModal();renderPage();}
-function saveDoc(){const n=document.getElementById('m-t').value.trim();if(!n)return;S.documents.push({id:'d'+Date.now(),name:n,category:document.getElementById('m-cat').value,date:document.getElementById('m-d').value,color:'#D85A30'});closeModal();renderPage();}
-function saveOuting(){const t=document.getElementById('m-t').value.trim();if(!t)return;S.outings.push({id:'o'+Date.now(),title:t,desc:document.getElementById('m-desc').value,location:document.getElementById('m-loc').value,cost:document.getElementById('m-cost').value,date:document.getElementById('m-date').value,category:document.getElementById('m-cat').value,suggestedBy:S.currentUser.name,votes:0,voted:false,scheduled:false});closeModal();renderPage();}
+function saveHabit(){const n=document.getElementById('m-t').value.trim();if(!n)return;if(window._editId){const h=S.habits.find(x=>x.id===window._editId);if(h){h.name=n;h.owner=document.getElementById('m-own').value;h.color=document.getElementById('m-c').value;}}else{S.habits.push({id:'h'+Date.now(),name:n,streak:0,color:document.getElementById('m-c').value,owner:document.getElementById('m-own').value,days:[0,0,0,0,0,0,0],addedBy:'parent'});}closeModal();renderPage();}
+function saveGoal(){const t=document.getElementById('m-t').value.trim(),a=parseFloat(document.getElementById('m-amt').value);if(!t||isNaN(a))return;if(window._editId){const g=S.goals.find(x=>x.id===window._editId);if(g){g.title=t;g.target=a;g.category=document.getElementById('m-cat').value;}}else{S.goals.push({id:'gl'+Date.now(),title:t,category:document.getElementById('m-cat').value,current:0,target:a,color:'#D85A30'});}closeModal();renderPage();}
+function saveExpense(){const a=parseFloat(document.getElementById('m-amt').value),d=document.getElementById('m-t').value.trim();if(isNaN(a)||!d)return;if(window._editId){const x=S.expenses.find(e=>e.id===window._editId);if(x){x.amount=a;x.desc=d;x.category=document.getElementById('m-cat').value;x.date=document.getElementById('m-d').value;x.paidBy=document.getElementById('m-pb').value;}}else{S.expenses.unshift({id:'x'+Date.now(),date:document.getElementById('m-d').value,desc:d,category:document.getElementById('m-cat').value,paidBy:document.getElementById('m-pb').value,amount:a});}closeModal();renderPage();}
+function saveDoc(){const n=document.getElementById('m-t').value.trim();if(!n)return;if(window._editId){const d=S.documents.find(x=>x.id===window._editId);if(d){d.name=n;d.category=document.getElementById('m-cat').value;d.date=document.getElementById('m-d').value;}}else{S.documents.push({id:'d'+Date.now(),name:n,category:document.getElementById('m-cat').value,date:document.getElementById('m-d').value,color:'#D85A30'});}closeModal();renderPage();}
+function saveOuting(){const t=document.getElementById('m-t').value.trim();if(!t)return;if(window._editId){const o=S.outings.find(x=>x.id===window._editId);if(o){o.title=t;o.desc=document.getElementById('m-desc').value;o.location=document.getElementById('m-loc').value;o.cost=document.getElementById('m-cost').value;o.date=document.getElementById('m-date').value;o.category=document.getElementById('m-cat').value;}}else{S.outings.push({id:'o'+Date.now(),title:t,desc:document.getElementById('m-desc').value,location:document.getElementById('m-loc').value,cost:document.getElementById('m-cost').value,date:document.getElementById('m-date').value,category:document.getElementById('m-cat').value,suggestedBy:S.currentUser.name,votes:0,voted:false,scheduled:false});}closeModal();renderPage();}
 function saveChore(child){const t=document.getElementById('m-t').value.trim();if(!t)return;S.tasks.push({id:'t'+Date.now(),title:t,assignee:child,category:'Chores',isChore:true,points:parseInt(document.getElementById('m-pts').value)||30,done:false});closeModal();renderPage();}
-function saveKidsAppt(){const t=document.getElementById('m-t').value.trim();if(!t)return;const appt={id:'ka'+Date.now(),child:document.getElementById('m-child').value,title:t,date:document.getElementById('m-d').value,time:document.getElementById('m-ti').value,notes:document.getElementById('m-notes').value};S.kidsAppts.push(appt);S.events.push({id:'e'+Date.now(),title:t,date:appt.date,time:appt.time,type:'kids',assignee:appt.child});closeModal();renderPage();}
+function saveKidsAppt(){const t=document.getElementById('m-t').value.trim();if(!t)return;if(window._editId){const a=S.kidsAppts.find(x=>x.id===window._editId);if(a){a.child=document.getElementById('m-child').value;a.title=t;a.date=document.getElementById('m-d').value;a.time=document.getElementById('m-ti').value;a.notes=document.getElementById('m-notes').value;}}else{const appt={id:'ka'+Date.now(),child:document.getElementById('m-child').value,title:t,date:document.getElementById('m-d').value,time:document.getElementById('m-ti').value,notes:document.getElementById('m-notes').value};S.kidsAppts.push(appt);S.events.push({id:'e'+Date.now(),title:t,date:appt.date,time:appt.time,type:'kids',assignee:appt.child});}closeModal();renderPage();}
+
+// ── Edit/Delete helpers ───────────────────────────────────────────────────────
+function _setSelect(id,val){const s=document.getElementById(id);if(!s)return;for(let i=0;i<s.options.length;i++){if(s.options[i].value===val||s.options[i].text===val){s.selectedIndex=i;return;}}}
+function _setTitle(t){const el=document.querySelector('#modal-body h3');if(el)el.textContent=t;}
+function _setBtn(t){const el=document.querySelector('#modal-body .btn.b-orange,.btn.b-pink');if(el)el.textContent=t;}
+
+function openEditModal(type,id){
+  window._editId=id;
+  if(type==='event'){
+    const e=S.events.find(x=>x.id===id);if(!e)return;
+    openModal('event');
+    document.getElementById('m-t').value=e.title;
+    document.getElementById('m-d').value=e.date;
+    if(document.getElementById('m-ti'))document.getElementById('m-ti').value=e.time||'12:00';
+    _setSelect('m-ty',e.type);_setTitle('Edit Event');_setBtn('Save Changes');
+  }else if(type==='task'){
+    const t=S.tasks.find(x=>x.id===id);if(!t)return;
+    openModal('taskEdit');
+    document.getElementById('m-t').value=t.title;
+    _setSelect('m-own',t.assignee);_setSelect('m-tod',t.timeOfDay||'Any Time');
+    if(document.getElementById('m-pts'))document.getElementById('m-pts').value=t.points||0;
+    if(document.getElementById('m-ich'))document.getElementById('m-ich').checked=!!t.isChore;
+  }else if(type==='habit'){
+    const h=S.habits.find(x=>x.id===id);if(!h)return;
+    openModal('habit');
+    document.getElementById('m-t').value=h.name;
+    _setSelect('m-own',h.owner);_setSelect('m-c',h.color);
+    _setTitle('Edit Habit');_setBtn('Save Changes');
+  }else if(type==='goal'){
+    const g=S.goals.find(x=>x.id===id);if(!g)return;
+    openModal('goal');
+    document.getElementById('m-t').value=g.title;
+    document.getElementById('m-amt').value=g.target;
+    _setSelect('m-cat',g.category||'Savings');
+    _setTitle('Edit Goal');_setBtn('Save Changes');
+  }else if(type==='expense'){
+    const x=S.expenses.find(e=>e.id===id);if(!x)return;
+    openModal('expense');
+    document.getElementById('m-amt').value=x.amount;
+    document.getElementById('m-t').value=x.desc;
+    _setSelect('m-cat',x.category);
+    document.getElementById('m-d').value=x.date;
+    _setSelect('m-pb',x.paidBy);
+    _setTitle('Edit Expense');_setBtn('Save Changes');
+  }else if(type==='doc'){
+    const d=S.documents.find(x=>x.id===id);if(!d)return;
+    openModal('doc');
+    document.getElementById('m-t').value=d.name;
+    _setSelect('m-cat',d.category);
+    document.getElementById('m-d').value=d.date;
+    _setTitle('Edit Document');_setBtn('Save Changes');
+  }else if(type==='outing'){
+    const o=S.outings.find(x=>x.id===id);if(!o)return;
+    openModal('outing');
+    document.getElementById('m-t').value=o.title;
+    if(document.getElementById('m-desc'))document.getElementById('m-desc').value=o.desc||'';
+    if(document.getElementById('m-loc'))document.getElementById('m-loc').value=o.location||'';
+    if(document.getElementById('m-cost'))document.getElementById('m-cost').value=o.cost||'';
+    if(document.getElementById('m-date'))document.getElementById('m-date').value=o.date||'';
+    _setSelect('m-cat',o.category||'Other');
+    _setTitle('Edit Outing');
+    const btn=document.querySelector('#modal-body .btn.b-pink');if(btn)btn.textContent='Save Changes';
+  }else if(type==='kidsAppt'){
+    const a=S.kidsAppts.find(x=>x.id===id);if(!a)return;
+    openModal('kidsAppt');
+    _setSelect('m-child',a.child);
+    document.getElementById('m-t').value=a.title;
+    document.getElementById('m-d').value=a.date;
+    if(document.getElementById('m-ti'))document.getElementById('m-ti').value=a.time||'10:00';
+    if(document.getElementById('m-notes'))document.getElementById('m-notes').value=a.notes||'';
+    _setTitle('Edit Appointment');_setBtn('Save Changes');
+  }
+}
+
+function saveTask(){
+  const t=document.getElementById('m-t').value.trim();if(!t)return;
+  if(window._editId){
+    const task=S.tasks.find(x=>x.id===window._editId);
+    if(task){task.title=t;task.assignee=document.getElementById('m-own').value;task.timeOfDay=document.getElementById('m-tod').value;task.isChore=document.getElementById('m-ich').checked;task.points=parseInt(document.getElementById('m-pts').value)||0;}
+  }
+  closeModal();renderPage();
+}
+
+// Delete functions
+function deleteNotif(id){S.notifications=S.notifications.filter(n=>n.id!==id);renderPage();}
+function deleteEvent(id){S.events=S.events.filter(e=>e.id!==id);renderPage();}
+function deleteTask(id){S.tasks=S.tasks.filter(t=>t.id!==id);renderSidebarUser();renderPage();}
+function deleteChore(id){S.tasks=S.tasks.filter(t=>t.id!==id);renderPage();}
+function deleteMeal(id){S.meals=S.meals.filter(m=>m.id!==id);renderPage();}
+function deleteHabit(id){S.habits=S.habits.filter(h=>h.id!==id);renderPage();}
+function deleteGoal(id){S.goals=S.goals.filter(g=>g.id!==id);renderPage();}
+function deleteExpense(id){S.expenses=S.expenses.filter(x=>x.id!==id);renderPage();}
+function deleteDoc(id){S.documents=S.documents.filter(d=>d.id!==id);renderPage();}
+function deleteMsg(id){S.messages=S.messages.filter(m=>m.id!==id);renderPage();}
+function deleteOuting(id){S.outings=S.outings.filter(o=>o.id!==id);renderPage();}
+function deleteKidsApptById(id){S.kidsAppts=S.kidsAppts.filter(a=>a.id!==id);renderPage();}
+function deleteItineraryItem(tripId,id){const t=S.trips.find(x=>x.id===tripId);if(t)t.itinerary=t.itinerary.filter(i=>i.id!==id);renderPage();}
+function deleteBucketItem(tripId,id){const t=S.trips.find(x=>x.id===tripId);if(t)t.bucketList=t.bucketList.filter(b=>b.id!==id);renderPage();}
+function deletePackingItem(tripId,id){const t=S.trips.find(x=>x.id===tripId);if(t)t.packing=t.packing.filter(p=>p.id!==id);renderPage();}
 
 function toggleTask(id){const t=S.tasks.find(t=>t.id===id);if(t){t.done=!t.done;renderSidebarUser();renderPage();}}
 function toggleGroc(id){const g=S.groceries.find(g=>g.id===id);if(g){g.checked=!g.checked;renderPage();}}
@@ -899,26 +1015,112 @@ function pgNotif(){
     <div><div style="font-size:20px;font-weight:600">Reminders</div><div style="font-size:13px;color:#888;margin-top:3px">Stay on top of what matters today.</div></div>
     <button class="btn b-ghost" onclick="markAllRead()">Mark all read</button>
   </div>
-  ${unread.length?`<div class="sec">New (${unread.length})</div><div class="card" style="padding:0;margin-bottom:16px">${unread.map(n=>`<div class="notif-item"><div style="width:32px;height:32px;border-radius:50%;background:${n.color}22;display:flex;align-items:center;justify-content:center;flex-shrink:0">${ic('bell',14)}</div><div style="flex:1"><div style="font-size:13px;font-weight:500">${n.title}</div><div style="font-size:12px;color:#888;margin-top:2px">${n.sub}</div></div><div style="width:8px;height:8px;border-radius:50%;background:#E24B4A;flex-shrink:0;margin-top:5px"></div></div>`).join('')}</div>`:''}
-  ${read.length?`<div class="sec">Earlier</div><div class="card" style="padding:0">${read.map(n=>`<div class="notif-item"><div style="width:32px;height:32px;border-radius:50%;background:${n.color}22;display:flex;align-items:center;justify-content:center;flex-shrink:0">${ic('bell',14)}</div><div style="flex:1"><div style="font-size:13px;font-weight:500">${n.title}</div><div style="font-size:12px;color:#888;margin-top:2px">${n.sub}</div></div></div>`).join('')}</div>`:''}`;
+  ${unread.length?`<div class="sec">New (${unread.length})</div><div class="card" style="padding:0;margin-bottom:16px">${unread.map(n=>`<div class="notif-item"><div style="width:32px;height:32px;border-radius:50%;background:${n.color}22;display:flex;align-items:center;justify-content:center;flex-shrink:0">${ic('bell',14)}</div><div style="flex:1"><div style="font-size:13px;font-weight:500">${n.title}</div><div style="font-size:12px;color:#888;margin-top:2px">${n.sub}</div></div><button onclick="deleteNotif('${n.id}')" style="width:22px;height:22px;border-radius:50%;background:#FCEBEB;border:0.5px solid #f0d0c0;cursor:pointer;color:#A32D2D;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-right:6px">×</button><div style="width:8px;height:8px;border-radius:50%;background:#E24B4A;flex-shrink:0;margin-top:5px"></div></div>`).join('')}</div>`:''}
+  ${read.length?`<div class="sec">Earlier</div><div class="card" style="padding:0">${read.map(n=>`<div class="notif-item"><div style="width:32px;height:32px;border-radius:50%;background:${n.color}22;display:flex;align-items:center;justify-content:center;flex-shrink:0">${ic('bell',14)}</div><div style="flex:1"><div style="font-size:13px;font-weight:500">${n.title}</div><div style="font-size:12px;color:#888;margin-top:2px">${n.sub}</div></div><button onclick="deleteNotif('${n.id}')" style="width:22px;height:22px;border-radius:50%;background:#FCEBEB;border:0.5px solid #f0d0c0;cursor:pointer;color:#A32D2D;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">×</button></div>`).join('')}</div>`:''}`;
 }
 
 function pgCal(){
-  const days=['SUN','MON','TUE','WED','THU','FRI','SAT'];
-  const dates=['2026-04-12','2026-04-13','2026-04-14','2026-04-15','2026-04-16','2026-04-17','2026-04-18'];
-  const nums=[12,13,14,15,16,17,18];
+  if(!S.calView)S.calView='month';
+  const now=new Date();
+  if(S.calYear===undefined)S.calYear=now.getFullYear();
+  if(S.calMonth===undefined)S.calMonth=now.getMonth();
+
   const tc={sport:'background:#E1F5EE;color:#085041',appointment:'background:#FCEBEB;color:#A32D2D',kids:'background:#EEEDFE;color:#3C3489',birthday:'background:#FBEAF0;color:#72243E;font-weight:600',General:'background:#f5ece6;color:#712B13'};
+  const MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const DN=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const pad=n=>String(n).padStart(2,'0');
+  const todayStr=now.getFullYear()+'-'+pad(now.getMonth()+1)+'-'+pad(now.getDate());
+
+  const buildMonthGrid=(yr,mo,compact)=>{
+    const firstDow=new Date(yr,mo,1).getDay();
+    const dim=new Date(yr,mo+1,0).getDate();
+    const dimPrev=new Date(yr,mo,0).getDate();
+    const mm=pad(mo+1);
+    let cells='';
+    let n=0;
+    for(let i=firstDow-1;i>=0;i--,n++){
+      if(compact)cells+='<div style="text-align:center;font-size:10px;color:#ddd;height:20px;display:flex;align-items:center;justify-content:center">'+(dimPrev-i)+'</div>';
+      else cells+='<div class="cal-day" style="background:#faf5f2"><div class="cal-num" style="color:#ddd">'+(dimPrev-i)+'</div></div>';
+    }
+    for(let d=1;d<=dim;d++,n++){
+      const ds=yr+'-'+mm+'-'+pad(d);
+      const evts=S.events.filter(e=>e.date===ds);
+      const isToday=ds===todayStr;
+      const hasBday=evts.some(e=>e.type==='birthday');
+      if(compact){
+        cells+='<div style="height:20px;display:flex;align-items:center;justify-content:center;position:relative">'
+          +'<div style="width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;'+(isToday?'background:#D85A30;color:#fff;font-weight:700':evts.length?'color:#D85A30;font-weight:700':'color:#1a1a1a')+'">'+(d)+'</div>'
+          +(evts.length&&!isToday?'<div style="position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:3px;height:3px;border-radius:50%;background:'+(hasBday?'#D4537E':'#D85A30')+'"></div>':'')
+          +'</div>';
+      }else{
+        cells+='<div class="cal-day" style="'+(hasBday?'background:#fff9fe':'')+'">'
+          +'<div class="cal-num'+(isToday?' today':'')+'">'+d+'</div>'
+          +evts.slice(0,3).map(e=>'<div class="cal-ev" style="'+(tc[e.type]||tc.General)+'">'+e.title+'</div>').join('')
+          +(evts.length>3?'<div style="font-size:10px;color:#aaa;padding:1px 4px">+'+(evts.length-3)+' more</div>':'')
+          +'</div>';
+      }
+    }
+    const rem=(7-(n%7))%7;
+    for(let i=1;i<=rem;i++){
+      if(compact)cells+='<div style="text-align:center;font-size:10px;color:#ddd;height:20px;display:flex;align-items:center;justify-content:center">'+i+'</div>';
+      else cells+='<div class="cal-day" style="background:#faf5f2"><div class="cal-num" style="color:#ddd">'+i+'</div></div>';
+    }
+    if(compact){
+      const dows=['S','M','T','W','T','F','S'].map(d=>'<div style="text-align:center;font-size:9px;font-weight:600;color:#bbb;height:16px;display:flex;align-items:center;justify-content:center">'+d+'</div>').join('');
+      return '<div style="display:grid;grid-template-columns:repeat(7,1fr)">'+dows+cells+'</div>';
+    }
+    return '<div class="cal-grid">'+DN.map(d=>'<div class="cal-hd">'+d+'</div>').join('')+cells+'</div>';
+  };
+
+  const navBar=(label,prevOnclick,nextOnclick)=>
+    '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;background:#fff;border:0.5px solid #f0d0c0;border-radius:12px;padding:10px 18px">'
+    +'<button onclick="'+prevOnclick+'" style="width:30px;height:30px;border-radius:50%;background:#FAECE7;border:none;cursor:pointer;font-size:18px;color:#D85A30;display:flex;align-items:center;justify-content:center">&#8249;</button>'
+    +'<div style="font-size:15px;font-weight:600">'+label+'</div>'
+    +'<button onclick="'+nextOnclick+'" style="width:30px;height:30px;border-radius:50%;background:#FAECE7;border:none;cursor:pointer;font-size:18px;color:#D85A30;display:flex;align-items:center;justify-content:center">&#8250;</button>'
+    +'</div>';
+
+  const monthView=()=>
+    navBar(MN[S.calMonth]+' '+S.calYear,
+      'S.calMonth--;if(S.calMonth<0){S.calMonth=11;S.calYear--;}renderPage()',
+      'S.calMonth++;if(S.calMonth>11){S.calMonth=0;S.calYear++;}renderPage()')
+    +buildMonthGrid(S.calYear,S.calMonth,false);
+
+  const yearView=()=>{
+    let months='';
+    for(let mo=0;mo<12;mo++){
+      const cnt=S.events.filter(e=>e.date&&e.date.startsWith(S.calYear+'-'+pad(mo+1))).length;
+      const isCur=mo===now.getMonth()&&S.calYear===now.getFullYear();
+      months+='<div onclick="S.calView=\'month\';S.calMonth='+mo+';S.calYear='+S.calYear+';renderPage()" style="background:#fff;border:'+(isCur?'1.5px solid #D85A30':'0.5px solid #f0d0c0')+';border-radius:12px;padding:10px 12px;cursor:pointer;transition:box-shadow 0.15s" onmouseover="this.style.boxShadow=\'0 2px 12px rgba(216,90,48,0.15)\'" onmouseout="this.style.boxShadow=\'none\'">'
+        +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:7px">'
+        +'<span style="font-size:12px;font-weight:700;color:'+(isCur?'#D85A30':'#1a1a1a')+'">'+MN[mo]+'</span>'
+        +(cnt?'<span style="background:#FAECE7;color:#993C1D;font-size:10px;font-weight:600;padding:1px 6px;border-radius:99px">'+cnt+'</span>':'')
+        +'</div>'
+        +buildMonthGrid(S.calYear,mo,true)+'</div>';
+    }
+    return navBar(String(S.calYear),'S.calYear--;renderPage()','S.calYear++;renderPage()')
+      +'<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px">'+months+'</div>';
+  };
+
   const birthdays=S.events.filter(e=>e.type==='birthday');
-  return`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+  const sortedEvts=[...S.events].sort((a,b)=>a.date.localeCompare(b.date));
+
+  return`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px">
     <div><div style="font-size:20px;font-weight:600">Family Calendar</div><div style="font-size:13px;color:#888;margin-top:3px">Keep track of everyone's schedule.</div></div>
-    <button class="btn b-orange" onclick="openModal('event')">${ic('plus')} Add Event</button>
+    <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <div style="display:flex;background:#f5ece6;border-radius:10px;padding:3px;gap:2px">
+        <button onclick="S.calView='month';renderPage()" style="padding:6px 14px;border-radius:8px;border:none;font-size:12px;font-weight:500;cursor:pointer;background:${S.calView==='month'?'#fff':'transparent'};color:${S.calView==='month'?'#D85A30':'#888'};${S.calView==='month'?'box-shadow:0 1px 3px rgba(0,0,0,0.08)':''}">Month</button>
+        <button onclick="S.calView='year';renderPage()" style="padding:6px 14px;border-radius:8px;border:none;font-size:12px;font-weight:500;cursor:pointer;background:${S.calView==='year'?'#fff':'transparent'};color:${S.calView==='year'?'#D85A30':'#888'};${S.calView==='year'?'box-shadow:0 1px 3px rgba(0,0,0,0.08)':''}">Year</button>
+      </div>
+      <button onclick="S.calMonth=new Date().getMonth();S.calYear=new Date().getFullYear();S.calView='month';renderPage()" style="padding:6px 14px;border-radius:8px;border:0.5px solid #f0d0c0;background:#fff;font-size:12px;font-weight:500;cursor:pointer;color:#712B13">Today</button>
+      <button class="btn b-orange" onclick="openModal('event')">${ic('plus')} Add Event</button>
+    </div>
   </div>
-  ${birthdays.length?`<div style="background:#FBEAF0;border:0.5px solid #ED93B1;border-radius:10px;padding:10px 16px;margin-bottom:16px;display:flex;gap:16px;flex-wrap:wrap">
-    ${birthdays.map(b=>`<span style="font-size:13px;color:#72243E">🎂 <strong>${b.title.replace('🎂 ','')}</strong> — ${b.date}</span>`).join('')}
-  </div>`:''}
-  <div class="cal-grid">
-    ${days.map(d=>`<div class="cal-hd">${d}</div>`).join('')}
-    ${dates.map((ds,i)=>{const evts=S.events.filter(e=>e.date===ds);const hasBday=evts.some(e=>e.type==='birthday');return`<div class="cal-day" style="${hasBday?'background:#fff9fe':''}"><div class="cal-num${ds==='2026-04-15'?' today':''}">${nums[i]}</div>${evts.map(e=>`<div class="cal-ev" style="${tc[e.type]||tc.General}">${e.title}</div>`).join('')}</div>`;}).join('')}
+  ${birthdays.length?`<div style="background:#FBEAF0;border:0.5px solid #ED93B1;border-radius:10px;padding:10px 16px;margin-bottom:16px;display:flex;gap:16px;flex-wrap:wrap">${birthdays.map(b=>`<span style="font-size:13px;color:#72243E">🎂 <strong>${b.title.replace('🎂 ','')}</strong> — ${b.date}</span>`).join('')}</div>`:''}
+  ${S.calView==='month'?monthView():yearView()}
+  <div class="sec" style="margin-top:24px">All Events</div>
+  <div class="card" style="padding:0">
+    ${sortedEvts.length===0?`<div style="padding:16px;text-align:center;color:#aaa;font-size:13px">No events yet.</div>`:''}
+    ${sortedEvts.map(e=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 14px;border-bottom:0.5px solid #f5ece6"><div><div style="font-size:13px;font-weight:500">${e.title}</div><div style="font-size:12px;color:#888">${e.date} · ${e.time||'All Day'} · ${e.assignee||'All'}</div></div><div style="display:flex;gap:6px;flex-shrink:0"><button onclick="openEditModal('event','${e.id}')" style="width:22px;height:22px;border-radius:50%;background:#FAECE7;border:0.5px solid #f0d0c0;cursor:pointer;color:#993C1D;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0">✏</button><button onclick="deleteEvent('${e.id}')" style="width:22px;height:22px;border-radius:50%;background:#FCEBEB;border:0.5px solid #f0d0c0;cursor:pointer;color:#A32D2D;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">×</button></div></div>`).join('')}
   </div>`;
 }
 
@@ -937,8 +1139,8 @@ function pgTasks(){
       <button class="btn b-orange" onclick="addTask()">${ic('plus')} Add</button>
     </div>
   </div>
-  ${my.length?`<div class="sec">My Tasks</div>${my.map(t=>`<div class="card" style="display:flex;align-items:center;gap:12px;margin-bottom:8px;cursor:pointer;justify-content:space-between" onclick="toggleTask('${t.id}')"><div style="display:flex;align-items:center;gap:12px"><div style="width:16px;height:16px;border-radius:50%;${t.done?'background:#0F6E56;border:none':'border:1.5px solid #d0c0b0'};flex-shrink:0"></div><div><div style="font-size:13px;font-weight:500;${t.done?'text-decoration:line-through;color:#aaa':''}">${t.title}</div><div style="font-size:12px;color:#888">For: ${t.assignee}${t.isChore?` · <span style="color:#BA7517">${t.points} pts</span>`:''}</div></div></div><span class="pill ${t.done?'pill-teal':'pill-orange'}">${t.done?'Done':'Pending'}</span></div>`).join('')}`:''}
-  ${others.length?`<div class="sec">Family Tasks</div>${others.map(t=>`<div class="card" style="display:flex;align-items:center;gap:12px;margin-bottom:8px;cursor:pointer;justify-content:space-between" onclick="toggleTask('${t.id}')"><div style="display:flex;align-items:center;gap:12px"><div style="width:16px;height:16px;border-radius:50%;${t.done?'background:#0F6E56;border:none':'border:1.5px solid #d0c0b0'};flex-shrink:0"></div><div><div style="font-size:13px;font-weight:500;${t.done?'text-decoration:line-through;color:#aaa':''}">${t.title}</div><div style="font-size:12px;color:#888">For: ${t.assignee}${t.isChore?` · <span style="color:#BA7517">${t.points} pts</span>`:''}</div></div></div><span class="pill ${t.done?'pill-teal':'pill-orange'}">${t.done?'Done':'Pending'}</span></div>`).join('')}`:''}`;
+  ${my.length?`<div class="sec">My Tasks</div>${my.map(t=>`<div class="card" style="display:flex;align-items:center;gap:12px;margin-bottom:8px;cursor:pointer;justify-content:space-between" onclick="toggleTask('${t.id}')"><div style="display:flex;align-items:center;gap:12px"><div style="width:16px;height:16px;border-radius:50%;${t.done?'background:#0F6E56;border:none':'border:1.5px solid #d0c0b0'};flex-shrink:0"></div><div><div style="font-size:13px;font-weight:500;${t.done?'text-decoration:line-through;color:#aaa':''}">${t.title}</div><div style="font-size:12px;color:#888">For: ${t.assignee}${t.isChore?` · <span style="color:#BA7517">${t.points} pts</span>`:''}</div></div></div><div style="display:flex;align-items:center;gap:6px"><span class="pill ${t.done?'pill-teal':'pill-orange'}">${t.done?'Done':'Pending'}</span><button onclick="event.stopPropagation();openEditModal('task','${t.id}')" style="width:22px;height:22px;border-radius:50%;background:#FAECE7;border:0.5px solid #f0d0c0;cursor:pointer;color:#993C1D;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0">✏</button><button onclick="event.stopPropagation();deleteTask('${t.id}')" style="width:22px;height:22px;border-radius:50%;background:#FCEBEB;border:0.5px solid #f0d0c0;cursor:pointer;color:#A32D2D;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">×</button></div></div>`).join('')}`:''}
+  ${others.length?`<div class="sec">Family Tasks</div>${others.map(t=>`<div class="card" style="display:flex;align-items:center;gap:12px;margin-bottom:8px;cursor:pointer;justify-content:space-between" onclick="toggleTask('${t.id}')"><div style="display:flex;align-items:center;gap:12px"><div style="width:16px;height:16px;border-radius:50%;${t.done?'background:#0F6E56;border:none':'border:1.5px solid #d0c0b0'};flex-shrink:0"></div><div><div style="font-size:13px;font-weight:500;${t.done?'text-decoration:line-through;color:#aaa':''}">${t.title}</div><div style="font-size:12px;color:#888">For: ${t.assignee}${t.isChore?` · <span style="color:#BA7517">${t.points} pts</span>`:''}</div></div></div><div style="display:flex;align-items:center;gap:6px"><span class="pill ${t.done?'pill-teal':'pill-orange'}">${t.done?'Done':'Pending'}</span><button onclick="event.stopPropagation();openEditModal('task','${t.id}')" style="width:22px;height:22px;border-radius:50%;background:#FAECE7;border:0.5px solid #f0d0c0;cursor:pointer;color:#993C1D;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0">✏</button><button onclick="event.stopPropagation();deleteTask('${t.id}')" style="width:22px;height:22px;border-radius:50%;background:#FCEBEB;border:0.5px solid #f0d0c0;cursor:pointer;color:#A32D2D;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">×</button></div></div>`).join('')}`:''}`;
 }
 
 function pgKids(){
@@ -986,12 +1188,12 @@ function kidsMyDayPreview(){
 
 function kidsChoresParent(){
   const kids=USERS.filter(u=>u.role==='kid');
-  return`<div class="grid2">${kids.map(k=>{const tasks=S.tasks.filter(t=>t.assignee===k.name&&t.isChore);const pts=tasks.filter(t=>t.done).reduce((s,t)=>s+(t.points||0),0);return`<div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><div style="width:36px;height:36px;border-radius:50%;background:${k.bg};color:${k.color};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600">${k.initials}</div><div><div style="font-weight:500">${k.name}</div><div style="font-size:12px;color:#888">${pts} pts earned</div></div></div>${tasks.map(t=>`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;cursor:pointer" onclick="toggleTask('${t.id}')"><div style="display:flex;align-items:center;gap:8px"><div style="width:16px;height:16px;border-radius:50%;${t.done?`background:${k.accent}`:'border:1.5px solid #d0c0b0'};flex-shrink:0"></div><span style="font-size:13px;${t.done?'text-decoration:line-through;color:#aaa':''}">${t.title}</span></div><span style="background:${k.bg};color:${k.accent};padding:2px 8px;border-radius:99px;font-size:11px;font-weight:500">${t.points} pts</span></div>`).join('')}<button class="btn b-orange" style="width:100%;justify-content:center;margin-top:10px" onclick="openModal('choreAssign','${k.name}')">${ic('plus')} Assign Chore</button></div>`;}).join('')}</div>`;
+  return`<div class="grid2">${kids.map(k=>{const tasks=S.tasks.filter(t=>t.assignee===k.name&&t.isChore);const pts=tasks.filter(t=>t.done).reduce((s,t)=>s+(t.points||0),0);return`<div class="card"><div style="display:flex;align-items:center;gap:10px;margin-bottom:14px"><div style="width:36px;height:36px;border-radius:50%;background:${k.bg};color:${k.color};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600">${k.initials}</div><div><div style="font-weight:500">${k.name}</div><div style="font-size:12px;color:#888">${pts} pts earned</div></div></div>${tasks.map(t=>`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;cursor:pointer" onclick="toggleTask('${t.id}')"><div style="display:flex;align-items:center;gap:8px"><div style="width:16px;height:16px;border-radius:50%;${t.done?`background:${k.accent}`:'border:1.5px solid #d0c0b0'};flex-shrink:0"></div><span style="font-size:13px;${t.done?'text-decoration:line-through;color:#aaa':''}">${t.title}</span></div><div style="display:flex;align-items:center;gap:4px"><span style="background:${k.bg};color:${k.accent};padding:2px 8px;border-radius:99px;font-size:11px;font-weight:500">${t.points} pts</span><button onclick="event.stopPropagation();deleteChore('${t.id}')" style="width:20px;height:20px;border-radius:50%;background:#FCEBEB;border:0.5px solid #f0d0c0;cursor:pointer;color:#A32D2D;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0">×</button></div></div>`).join('')}<button class="btn b-orange" style="width:100%;justify-content:center;margin-top:10px" onclick="openModal('choreAssign','${k.name}')">${ic('plus')} Assign Chore</button></div>`;}).join('')}</div>`;
 }
 
 function kidsApptsParent(){
   return`<div style="display:flex;justify-content:flex-end;margin-bottom:12px"><button class="btn b-orange" onclick="openModal('kidsAppt')">${ic('plus')} Add Appointment</button></div>
-  <div class="grid2">${S.kidsAppts.map(a=>`<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div><div style="font-weight:500;font-size:14px">${a.title}</div><div style="font-size:12px;color:#888;margin-top:2px">${a.date} · ${a.time}</div></div><span class="pill pill-orange">${a.child}</span></div>${a.notes?`<div style="font-size:12px;color:#888;background:#fff5f0;padding:7px 10px;border-radius:8px">${a.notes}</div>`:''}</div>`).join('')}</div>`;
+  <div class="grid2">${S.kidsAppts.map(a=>`<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div><div style="font-weight:500;font-size:14px">${a.title}</div><div style="font-size:12px;color:#888;margin-top:2px">${a.date} · ${a.time}</div></div><div style="display:flex;align-items:center;gap:6px"><span class="pill pill-orange">${a.child}</span><button onclick="openEditModal('kidsAppt','${a.id}')" style="width:22px;height:22px;border-radius:50%;background:#FAECE7;border:0.5px solid #f0d0c0;cursor:pointer;color:#993C1D;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0">✏</button><button onclick="deleteKidsApptById('${a.id}')" style="width:22px;height:22px;border-radius:50%;background:#FCEBEB;border:0.5px solid #f0d0c0;cursor:pointer;color:#A32D2D;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">×</button></div></div>${a.notes?`<div style="font-size:12px;color:#888;background:#fff5f0;padding:7px 10px;border-radius:8px">${a.notes}</div>`:''}</div>`).join('')}</div>`;
 }
 
 function kidsRewardsParent(){
@@ -1020,7 +1222,7 @@ function pgMeals(){
         <div style="padding:14px 16px;border-bottom:0.5px solid #f5ece6">
           <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
             <span style="${typeColors[m.type]||'background:#f5ece6;color:#712B13'};padding:3px 10px;border-radius:99px;font-size:11px;font-weight:600">${m.type.toUpperCase()}</span>
-            ${linkedRecipe?`<button onclick="S.mealTab='recipes';renderPage()" style="padding:3px 10px;background:#FAECE7;border:none;border-radius:99px;font-size:11px;font-weight:600;cursor:pointer;color:#993C1D;display:flex;align-items:center;gap:4px"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>View Recipe</button>`:`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d0c0b0" stroke-width="1.8"><line x1="3" y1="2" x2="3" y2="22"/><path d="M7 2v6a3 3 0 01-3 3v9"/><line x1="21" y1="2" x2="21" y2="22"/><path d="M21 2v6a3 3 0 01-3 3v9"/></svg>`}
+            <div style="display:flex;align-items:center;gap:6px">${linkedRecipe?`<button onclick="S.mealTab='recipes';renderPage()" style="padding:3px 10px;background:#FAECE7;border:none;border-radius:99px;font-size:11px;font-weight:600;cursor:pointer;color:#993C1D;display:flex;align-items:center;gap:4px"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg>View Recipe</button>`:`<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#d0c0b0" stroke-width="1.8"><line x1="3" y1="2" x2="3" y2="22"/><path d="M7 2v6a3 3 0 01-3 3v9"/><line x1="21" y1="2" x2="21" y2="22"/><path d="M21 2v6a3 3 0 01-3 3v9"/></svg>`}<button onclick="deleteMeal('${m.id}')" style="width:22px;height:22px;border-radius:50%;background:#FCEBEB;border:0.5px solid #f0d0c0;cursor:pointer;color:#A32D2D;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">×</button></div>
           </div>
           <div style="font-size:16px;font-weight:600;margin-bottom:3px">${m.name}</div>
           <div style="font-size:13px;color:#888">${new Date(m.date+'T00:00:00').toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})}</div>
@@ -1241,8 +1443,8 @@ function pgBudget(){
     <div id="budget-legend" style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;font-size:12px"></div></div>
   </div>
   <div class="card"><div style="font-weight:500;font-size:14px;margin-bottom:12px">Recent Transactions</div>
-  <table class="txn-tbl"><thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Paid By</th><th style="text-align:right">Amount</th></tr></thead>
-  <tbody>${S.expenses.map(x=>`<tr><td style="color:#888">${x.date}</td><td style="font-weight:500">${x.desc}</td><td><span class="pill pill-orange">${x.category}</span></td><td>${x.paidBy}</td><td style="text-align:right;font-weight:500">$${x.amount.toFixed(2)}</td></tr>`).join('')}</tbody></table></div>`;
+  <table class="txn-tbl"><thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Paid By</th><th style="text-align:right">Amount</th><th></th></tr></thead>
+  <tbody>${S.expenses.map(x=>`<tr><td style="color:#888">${x.date}</td><td style="font-weight:500">${x.desc}</td><td><span class="pill pill-orange">${x.category}</span></td><td>${x.paidBy}</td><td style="text-align:right;font-weight:500">$${x.amount.toFixed(2)}</td><td style="padding:8px 12px;border-bottom:0.5px solid #f5ece6"><div style="display:flex;gap:4px;justify-content:flex-end"><button onclick="openEditModal('expense','${x.id}')" style="width:22px;height:22px;border-radius:50%;background:#FAECE7;border:0.5px solid #f0d0c0;cursor:pointer;color:#993C1D;font-size:11px;display:flex;align-items:center;justify-content:center">✏</button><button onclick="deleteExpense('${x.id}')" style="width:22px;height:22px;border-radius:50%;background:#FCEBEB;border:0.5px solid #f0d0c0;cursor:pointer;color:#A32D2D;font-size:12px;display:flex;align-items:center;justify-content:center">×</button></div></td></tr>`).join('')}</tbody></table></div>`;
 }
 
 function drawBudgetDonut(){
@@ -1288,7 +1490,7 @@ function pgHabits(){
     <button class="btn b-orange" onclick="openModal('habit')">${ic('plus')} New Habit</button>
   </div>
   <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px">
-    ${S.habits.map(h=>`<div class="habit-card"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div style="font-size:14px;font-weight:500">${h.name}<div style="font-size:11px;color:#888;margin-top:2px">${h.owner}</div></div><span class="pill pill-orange">${h.streak}-day streak</span></div><div style="display:flex;gap:5px;align-items:center">${h.days.map((d,i)=>`<div style="display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:20px;height:20px;border-radius:50%;background:${d?h.color:'#f0e8e0'};cursor:pointer" onclick="toggleHabit('${h.id}',${i})"></div><div style="font-size:10px;color:#888">${days[i]}</div></div>`).join('')}</div><div class="pbar" style="margin-top:10px"><div class="pf" style="width:${(h.days.filter(Boolean).length/7*100).toFixed(0)}%;background:${h.color}"></div></div></div>`).join('')}
+    ${S.habits.map(h=>`<div class="habit-card"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div style="font-size:14px;font-weight:500">${h.name}<div style="font-size:11px;color:#888;margin-top:2px">${h.owner}</div></div><div style="display:flex;align-items:center;gap:6px"><span class="pill pill-orange">${h.streak}-day streak</span><button onclick="openEditModal('habit','${h.id}')" style="width:22px;height:22px;border-radius:50%;background:#FAECE7;border:0.5px solid #f0d0c0;cursor:pointer;color:#993C1D;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0">✏</button><button onclick="deleteHabit('${h.id}')" style="width:22px;height:22px;border-radius:50%;background:#FCEBEB;border:0.5px solid #f0d0c0;cursor:pointer;color:#A32D2D;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">×</button></div></div><div style="display:flex;gap:5px;align-items:center">${h.days.map((d,i)=>`<div style="display:flex;flex-direction:column;align-items:center;gap:2px"><div style="width:20px;height:20px;border-radius:50%;background:${d?h.color:'#f0e8e0'};cursor:pointer" onclick="toggleHabit('${h.id}',${i})"></div><div style="font-size:10px;color:#888">${days[i]}</div></div>`).join('')}</div><div class="pbar" style="margin-top:10px"><div class="pf" style="width:${(h.days.filter(Boolean).length/7*100).toFixed(0)}%;background:${h.color}"></div></div></div>`).join('')}
   </div>`;
 }
 
@@ -1297,7 +1499,7 @@ function pgGoals(){
     <div><div style="font-size:20px;font-weight:600">Family Goals</div><div style="font-size:13px;color:#888;margin-top:3px">Track savings targets and shared objectives.</div></div>
     <button class="btn b-orange" onclick="openModal('goal')">${ic('plus')} Create Goal</button>
   </div>
-  <div class="grid3">${S.goals.map(g=>{const pct=Math.min(100,g.current/g.target*100),done=g.current>=g.target;return`<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px"><div><div style="font-size:15px;font-weight:500">${g.title}</div><span class="pill pill-orange" style="margin-top:4px;display:inline-block">${g.category||'Family'}</span></div><div style="width:34px;height:34px;border-radius:50%;background:${g.color}22;display:flex;align-items:center;justify-content:center;color:${g.color}">${ic('target',16)}</div></div><div style="display:flex;justify-content:space-between;font-size:12px;color:#888;margin-bottom:4px"><span>$${g.current.toLocaleString()} of $${g.target.toLocaleString()}</span><span>${pct.toFixed(1)}%</span></div><div class="pbar" style="height:10px;margin-bottom:12px"><div class="pf" style="width:${pct}%;background:${g.color}"></div></div>${done?`<div style="text-align:center;padding:8px;background:#EAF3DE;color:#27500A;border-radius:9px;font-size:13px;font-weight:500">Goal reached!</div>`:`<div style="display:flex;gap:8px"><input type="number" id="ga-${g.id}" placeholder="Add amount" style="flex:1;padding:7px 10px;border:0.5px solid #d8c0b0;border-radius:9px;font-size:13px;background:#fff;outline:none;color:#1a1a1a"><button class="btn b-orange" onclick="addGoalFunds('${g.id}')">${ic('plus')} Add</button></div>`}</div>`;}).join('')}</div>`;
+  <div class="grid3">${S.goals.map(g=>{const pct=Math.min(100,g.current/g.target*100),done=g.current>=g.target;return`<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px"><div><div style="font-size:15px;font-weight:500">${g.title}</div><span class="pill pill-orange" style="margin-top:4px;display:inline-block">${g.category||'Family'}</span></div><div style="display:flex;align-items:center;gap:6px"><div style="width:34px;height:34px;border-radius:50%;background:${g.color}22;display:flex;align-items:center;justify-content:center;color:${g.color}">${ic('target',16)}</div><button onclick="openEditModal('goal','${g.id}')" style="width:22px;height:22px;border-radius:50%;background:#FAECE7;border:0.5px solid #f0d0c0;cursor:pointer;color:#993C1D;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0">✏</button><button onclick="deleteGoal('${g.id}')" style="width:22px;height:22px;border-radius:50%;background:#FCEBEB;border:0.5px solid #f0d0c0;cursor:pointer;color:#A32D2D;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">×</button></div></div><div style="display:flex;justify-content:space-between;font-size:12px;color:#888;margin-bottom:4px"><span>$${g.current.toLocaleString()} of $${g.target.toLocaleString()}</span><span>${pct.toFixed(1)}%</span></div><div class="pbar" style="height:10px;margin-bottom:12px"><div class="pf" style="width:${pct}%;background:${g.color}"></div></div>${done?`<div style="text-align:center;padding:8px;background:#EAF3DE;color:#27500A;border-radius:9px;font-size:13px;font-weight:500">Goal reached!</div>`:`<div style="display:flex;gap:8px"><input type="number" id="ga-${g.id}" placeholder="Add amount" style="flex:1;padding:7px 10px;border:0.5px solid #d8c0b0;border-radius:9px;font-size:13px;background:#fff;outline:none;color:#1a1a1a"><button class="btn b-orange" onclick="addGoalFunds('${g.id}')">${ic('plus')} Add</button></div>`}</div>`;}).join('')}</div>`;
 }
 
 function pgDocs(){
@@ -1307,7 +1509,7 @@ function pgDocs(){
     <button class="btn b-orange" onclick="openModal('doc')">${ic('plus')} Upload</button>
   </div>
   <div style="background:#E6F1FB;border:0.5px solid #85B7EB;border-radius:10px;padding:10px 14px;margin-bottom:18px;font-size:13px;color:#0C447C;display:flex;align-items:center;gap:8px">${ic('lock',14)} All documents are securely stored and accessible only to your family.</div>
-  ${cats.map(cat=>`<div style="margin-bottom:20px"><div class="sec">${cat}</div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px">${S.documents.filter(d=>d.category===cat).map(d=>`<div class="doc-card"><div style="width:40px;height:40px;border-radius:10px;background:${d.color}22;color:${d.color};display:flex;align-items:center;justify-content:center;margin-bottom:10px">${ic('file',20)}</div><div style="font-size:13px;font-weight:500;margin-bottom:4px">${d.name}</div><div style="font-size:11px;color:#888">${d.date}</div></div>`).join('')}</div></div>`).join('')}`;
+  ${cats.map(cat=>`<div style="margin-bottom:20px"><div class="sec">${cat}</div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px">${S.documents.filter(d=>d.category===cat).map(d=>`<div class="doc-card" style="position:relative"><div style="position:absolute;top:10px;right:10px;display:flex;gap:4px"><button onclick="event.stopPropagation();openEditModal('doc','${d.id}')" style="width:22px;height:22px;border-radius:50%;background:#FAECE7;border:0.5px solid #f0d0c0;cursor:pointer;color:#993C1D;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0">✏</button><button onclick="event.stopPropagation();deleteDoc('${d.id}')" style="width:22px;height:22px;border-radius:50%;background:#FCEBEB;border:0.5px solid #f0d0c0;cursor:pointer;color:#A32D2D;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">×</button></div><div style="width:40px;height:40px;border-radius:10px;background:${d.color}22;color:${d.color};display:flex;align-items:center;justify-content:center;margin-bottom:10px">${ic('file',20)}</div><div style="font-size:13px;font-weight:500;margin-bottom:4px">${d.name}</div><div style="font-size:11px;color:#888">${d.date}</div></div>`).join('')}</div></div>`).join('')}`;
 }
 
 function pgHub(){
@@ -1317,7 +1519,7 @@ function pgHub(){
       ${S.messages.map(m=>{
         if(m.type==='announcement')return`<div class="ann-card"><div style="font-size:13px;font-weight:500;color:#633806">Announcement from ${m.from}</div><div style="font-size:13px;color:#633806">${m.text}</div><div style="font-size:11px;color:#854F0B;margin-top:3px">${m.time}</div></div>`;
         const isSelf=m.from===S.currentUser.name;
-        if(isSelf)return`<div style="display:flex;flex-direction:column;align-items:flex-end"><div class="msg-bubble" style="background:#D85A30;color:#fff">${m.text}</div><div style="font-size:11px;color:#aaa;margin-top:2px">${m.time}</div></div>`;
+        if(isSelf)return`<div style="display:flex;flex-direction:column;align-items:flex-end"><div class="msg-bubble" style="background:#D85A30;color:#fff">${m.text}</div><div style="display:flex;align-items:center;gap:8px;margin-top:2px"><div style="font-size:11px;color:#aaa">${m.time}</div><button onclick="deleteMsg('${m.id}')" style="width:18px;height:18px;border-radius:50%;background:#FCEBEB;border:0.5px solid #f0d0c0;cursor:pointer;color:#A32D2D;font-size:10px;display:flex;align-items:center;justify-content:center">×</button></div></div>`;
         return`<div><div style="font-size:12px;color:#888;margin-bottom:3px">${m.from}</div><div class="msg-bubble" style="background:#f5ece6">${m.text}</div><div style="font-size:11px;color:#aaa;margin-top:2px">${m.time}</div></div>`;
       }).join('')}
     </div>
@@ -1340,7 +1542,7 @@ function pgOutings(){
   <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px">
     ${cats.map(c=>`<div style="padding:6px 14px;border-radius:99px;font-size:12px;cursor:pointer;border:0.5px solid ${S.outingFilter===c?'#D85A30':'#f0d0c0'};background:${S.outingFilter===c?'#D85A30':'#fff'};color:${S.outingFilter===c?'#fff':'#666'}" onclick="S.outingFilter='${c}';renderPage()">${c}</div>`).join('')}
   </div>
-  <div class="grid2">${filtered.map(o=>`<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div><div style="font-weight:500;font-size:15px">${o.title}</div>${o.category?`<span class="pill pill-orange" style="margin-top:4px;display:inline-block">${o.category}</span>`:''}</div><span style="color:#A32D2D;font-weight:500;font-size:13px;display:flex;align-items:center;gap:4px">${ic('thumb',13)} ${o.votes}</span></div><div style="font-size:13px;color:#888;margin-bottom:8px">${o.desc}</div><div style="display:flex;flex-wrap:wrap;gap:8px;font-size:12px;color:#888;margin-bottom:10px">${o.location?`<span>${ic('pin',11)} ${o.location}</span>`:''} ${o.cost?`<span>$: ${o.cost}</span>`:''} ${o.date?`<span>📅 ${o.date}</span>`:''}</div><div style="font-size:12px;color:#aaa;margin-bottom:12px">Suggested by ${o.suggestedBy}</div>${o.scheduled?`<div style="background:#EAF3DE;color:#27500A;border-radius:9px;padding:8px;text-align:center;font-size:13px;font-weight:500">Scheduled!</div>`:`<div style="display:flex;gap:8px">${o.voted?`<button style="flex:1;padding:8px;background:#FCEBEB;color:#A32D2D;border:none;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer">Voted!</button>`:`<button class="btn b-ghost" style="flex:1;justify-content:center" onclick="voteOuting('${o.id}')">Vote</button>`}<button class="btn b-purple" style="flex:1;justify-content:center" onclick="scheduleOuting('${o.id}')">Schedule</button></div>`}</div>`).join('')}</div>`;
+  <div class="grid2">${filtered.map(o=>`<div class="card"><div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px"><div><div style="font-weight:500;font-size:15px">${o.title}</div>${o.category?`<span class="pill pill-orange" style="margin-top:4px;display:inline-block">${o.category}</span>`:''}</div><div style="display:flex;align-items:center;gap:6px"><span style="color:#A32D2D;font-weight:500;font-size:13px;display:flex;align-items:center;gap:4px">${ic('thumb',13)} ${o.votes}</span><button onclick="openEditModal('outing','${o.id}')" style="width:22px;height:22px;border-radius:50%;background:#FAECE7;border:0.5px solid #f0d0c0;cursor:pointer;color:#993C1D;font-size:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0">✏</button><button onclick="deleteOuting('${o.id}')" style="width:22px;height:22px;border-radius:50%;background:#FCEBEB;border:0.5px solid #f0d0c0;cursor:pointer;color:#A32D2D;font-size:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0">×</button></div></div><div style="font-size:13px;color:#888;margin-bottom:8px">${o.desc}</div><div style="display:flex;flex-wrap:wrap;gap:8px;font-size:12px;color:#888;margin-bottom:10px">${o.location?`<span>${ic('pin',11)} ${o.location}</span>`:''} ${o.cost?`<span>$: ${o.cost}</span>`:''} ${o.date?`<span>📅 ${o.date}</span>`:''}</div><div style="font-size:12px;color:#aaa;margin-bottom:12px">Suggested by ${o.suggestedBy}</div>${o.scheduled?`<div style="background:#EAF3DE;color:#27500A;border-radius:9px;padding:8px;text-align:center;font-size:13px;font-weight:500">Scheduled!</div>`:`<div style="display:flex;gap:8px">${o.voted?`<button style="flex:1;padding:8px;background:#FCEBEB;color:#A32D2D;border:none;border-radius:9px;font-size:13px;font-weight:500;cursor:pointer">Voted!</button>`:`<button class="btn b-ghost" style="flex:1;justify-content:center" onclick="voteOuting('${o.id}')">Vote</button>`}<button class="btn b-purple" style="flex:1;justify-content:center" onclick="scheduleOuting('${o.id}')">Schedule</button></div>`}</div>`).join('')}</div>`;
 }
 
 function kidMyDay(){
@@ -1841,6 +2043,8 @@ function pgTravel(){
                 <div style="width:18px;height:18px;border-radius:50%;${item.done?`background:#0F6E56;border:none`:'border:1.5px solid #d0c0b0'};cursor:pointer;display:flex;align-items:center;justify-content:center" onclick="toggleItinerary('${item.id}')">
                   ${item.done?`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`:''}
                 </div>
+                <button onclick="editItineraryItem('${S.activeTripId}','${item.id}')" style="width:18px;height:18px;border-radius:50%;background:#EEEDFE;border:0.5px solid #f0d0c0;cursor:pointer;color:#534AB7;font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">✎</button>
+                <button onclick="deleteItineraryItem('${S.activeTripId}','${item.id}')" style="width:18px;height:18px;border-radius:50%;background:#FCEBEB;border:0.5px solid #f0d0c0;cursor:pointer;color:#A32D2D;font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">×</button>
               </div>
             </div>
           </div>
@@ -1883,6 +2087,8 @@ function pgTravel(){
           <div style="display:flex;gap:6px">
             <button onclick="toggleBucketLike('${b.id}')" style="padding:4px 10px;border-radius:99px;border:0.5px solid #f0d0c0;background:${b.liked.includes(S.currentUser.name)?'#FCEBEB':'#fff'};color:${b.liked.includes(S.currentUser.name)?'#A32D2D':'#888'};font-size:12px;cursor:pointer">${ic('heart',11)} ${b.liked.length}</button>
             <button onclick="toggleBucketDone('${b.id}')" style="padding:4px 10px;border-radius:99px;border:0.5px solid #f0d0c0;background:${b.done?'#EAF3DE':'#fff'};color:${b.done?'#27500A':'#888'};font-size:12px;cursor:pointer">${b.done?'Done!':'Mark done'}</button>
+            <button onclick="editBucketItem('${S.activeTripId}','${b.id}')" style="padding:4px 10px;border-radius:99px;border:0.5px solid #f0d0c0;background:#EEEDFE;color:#534AB7;font-size:12px;cursor:pointer">✎</button>
+            <button onclick="deleteBucketItem('${S.activeTripId}','${b.id}')" style="padding:4px 10px;border-radius:99px;border:0.5px solid #f0d0c0;background:#FCEBEB;color:#A32D2D;font-size:12px;cursor:pointer">×</button>
           </div>
         </div>
       </div>`).join('')}
@@ -1952,7 +2158,7 @@ function pgTravel(){
             </div>
             <span style="font-size:13px;${p.packed?'text-decoration:line-through;color:#aaa':''}">${p.item}</span>
           </div>
-          <span style="font-size:11px;color:#aaa">${p.who}</span>
+          <div style="display:flex;align-items:center;gap:4px"><span style="font-size:11px;color:#aaa">${p.who}</span><button onclick="event.stopPropagation();editPackingItem('${S.activeTripId}','${p.id}')" style="width:18px;height:18px;border-radius:50%;background:#EEEDFE;border:0.5px solid #f0d0c0;cursor:pointer;color:#534AB7;font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">✎</button><button onclick="event.stopPropagation();deletePackingItem('${S.activeTripId}','${p.id}')" style="width:18px;height:18px;border-radius:50%;background:#FCEBEB;border:0.5px solid #f0d0c0;cursor:pointer;color:#A32D2D;font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">×</button></div>
         </div>`).join('')}
       </div>`).join('')}
     </div>
@@ -1981,6 +2187,7 @@ function pgTravel(){
   return`
   <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;flex-wrap:wrap;gap:10px">
     <div><div style="font-size:20px;font-weight:600">${ic('plane',18)} Travel</div><div style="font-size:13px;color:#888;margin-top:3px">All your holiday plans in one place.</div></div>
+    <button class="btn b-purple" onclick="getTravelSuggestions()" style="font-size:12px">✨ AI Suggestions</button>
   </div>
   ${tripSelector()}
   <div style="background:#fff;border:0.5px solid ${T.color}44;border-radius:16px;padding:16px 20px;margin-bottom:20px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
@@ -2005,7 +2212,10 @@ function openAddTripModal(){
   mb.innerHTML=`<h3>Add Holiday Plan</h3>
   <div class="fi"><label>Trip name</label><input type="text" id="nt-name" placeholder="e.g. Paris Family Trip"></div>
   <div class="fi"><label>Destination</label><input type="text" id="nt-dest" placeholder="e.g. Paris, France"></div>
-  <div class="fi"><label>Dates</label><input type="text" id="nt-dates" placeholder="e.g. Aug 10–20, 2026"></div>
+  <div class="frow">
+    <div class="fi"><label>Start Date</label><div style="position:relative"><input type="text" id="nt-start" placeholder="Pick start date" readonly style="cursor:pointer;padding-right:28px" onclick="showDP('nt-start')"><span style="position:absolute;right:9px;top:50%;transform:translateY(-50%);font-size:14px;pointer-events:none">📅</span></div></div>
+    <div class="fi"><label>End Date</label><div style="position:relative"><input type="text" id="nt-end" placeholder="Pick end date" readonly style="cursor:pointer;padding-right:28px" onclick="showDP('nt-end')"><span style="position:absolute;right:9px;top:50%;transform:translateY(-50%);font-size:14px;pointer-events:none">📅</span></div></div>
+  </div>
   <div class="frow">
     <div class="fi"><label>Budget ($)</label><input type="number" id="nt-budget" placeholder="5000" min="0"></div>
     <div class="fi"><label>Emoji</label><select id="nt-emoji">${emojis.map(e=>`<option value="${e}">${e}</option>`).join('')}</select></div>
@@ -2027,7 +2237,8 @@ function saveNewTrip(){
   const colorEl=document.querySelector('[id^="tc-"][data-sel="1"]');
   const color=colorEl?colorEl.getAttribute('data-color'):'#0F6E56';
   const id='t'+Date.now();
-  S.trips.push({id,tripName:name,destination:dest,dates:document.getElementById('nt-dates').value||'TBD',emoji:document.getElementById('nt-emoji').value,color,budget:parseInt(document.getElementById('nt-budget').value)||0,spent:0,itinerary:[],bookings:[],bucketList:[],packing:[],expenses:[],emergency:{hospital:'',ambulance:'',police:'',embassy:'',transport:'',currency:'',language:''}});
+  const _s=document.getElementById('nt-start').value,_e=document.getElementById('nt-end').value;
+  S.trips.push({id,tripName:name,destination:dest,dates:_s&&_e?_s+' – '+_e:_s||_e||'TBD',emoji:document.getElementById('nt-emoji').value,color,budget:parseInt(document.getElementById('nt-budget').value)||0,spent:0,itinerary:[],bookings:[],bucketList:[],packing:[],expenses:[],emergency:{hospital:'',ambulance:'',police:'',embassy:'',transport:'',currency:'',language:''}});
   S.activeTripId=id;
   S.travelTab='itinerary';
   closeModal();renderPage();
@@ -2041,15 +2252,22 @@ function addItineraryItem(){
   const bg=document.getElementById('modal-bg'),mb=document.getElementById('modal-body');bg.style.display='flex';
   mb.innerHTML=`<h3>Add Activity</h3>
   <div class="fi"><label>Title</label><input type="text" id="it-t" placeholder="e.g. Waterbom Bali"></div>
-  <div class="frow"><div class="fi"><label>Day</label><input type="text" id="it-d" placeholder="e.g. Jul 8"></div><div class="fi"><label>Time</label><input type="text" id="it-ti" placeholder="e.g. 10:00 AM"></div></div>
+  <div class="frow"><div class="fi"><label>Day</label><div style="position:relative"><input type="text" id="it-d" placeholder="Pick date" readonly style="cursor:pointer;padding-right:28px" onclick="showDP('it-d')"><span style="position:absolute;right:9px;top:50%;transform:translateY(-50%);font-size:14px;pointer-events:none">📅</span></div></div><div class="fi"><label>Time</label><input type="text" id="it-ti" placeholder="e.g. 10:00 AM"></div></div>
   <div class="fi"><label>Type</label><select id="it-ty"><option>activity</option><option>attraction</option><option>restaurant</option><option>flight</option><option>hotel</option><option>car</option></select></div>
   <div class="fi"><label>Notes</label><input type="text" id="it-n" placeholder="e.g. Bring cash"></div>
   <div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Cancel</button><button class="btn b-orange" onclick="saveItineraryItem()">Add</button></div>`;
 }
 function saveItineraryItem(){
   const t=document.getElementById('it-t').value.trim();if(!t)return;
-  const T=S.trips.find(t=>t.id===S.activeTripId);if(!T)return;
-  T.itinerary.push({id:'i'+Date.now(),day:document.getElementById('it-d').value,time:document.getElementById('it-ti').value,title:t,type:document.getElementById('it-ty').value,notes:document.getElementById('it-n').value,assignee:'All',done:false});
+  const tid=window._editTripId||S.activeTripId;
+  const T=S.trips.find(tr=>tr.id===tid);if(!T)return;
+  if(window._editId){
+    const item=T.itinerary.find(i=>i.id===window._editId);
+    if(item){item.title=t;item.day=document.getElementById('it-d').value;item.time=document.getElementById('it-ti').value;item.type=document.getElementById('it-ty').value;item.notes=document.getElementById('it-n').value;}
+    window._editId=null;window._editTripId=null;
+  }else{
+    T.itinerary.push({id:'i'+Date.now(),day:document.getElementById('it-d').value,time:document.getElementById('it-ti').value,title:t,type:document.getElementById('it-ty').value,notes:document.getElementById('it-n').value,assignee:'All',done:false});
+  }
   closeModal();renderPage();
 }
 function addBucketItem(){
@@ -2061,8 +2279,15 @@ function addBucketItem(){
 }
 function saveBucketItem(){
   const t=document.getElementById('bl-t').value.trim();if(!t)return;
-  const T=S.trips.find(tr=>tr.id===S.activeTripId);if(!T)return;
-  T.bucketList.push({id:'bl'+Date.now(),title:t,category:document.getElementById('bl-c').value,addedBy:S.currentUser.name,liked:[S.currentUser.name],done:false});
+  const tid=window._editTripId||S.activeTripId;
+  const T=S.trips.find(tr=>tr.id===tid);if(!T)return;
+  if(window._editId){
+    const item=T.bucketList.find(b=>b.id===window._editId);
+    if(item){item.title=t;item.category=document.getElementById('bl-c').value;}
+    window._editId=null;window._editTripId=null;
+  }else{
+    T.bucketList.push({id:'bl'+Date.now(),title:t,category:document.getElementById('bl-c').value,addedBy:S.currentUser.name,liked:[S.currentUser.name],done:false});
+  }
   closeModal();renderPage();
 }
 function addTravelExpense(){
@@ -2088,8 +2313,15 @@ function addPackingItem(){
 }
 function savePackingItem(){
   const t=document.getElementById('pk-t').value.trim();if(!t)return;
-  const T=S.trips.find(tr=>tr.id===S.activeTripId);if(!T)return;
-  T.packing.push({id:'pk'+Date.now(),item:t,category:document.getElementById('pk-c').value,packed:false,who:document.getElementById('pk-w').value});
+  const tid=window._editTripId||S.activeTripId;
+  const T=S.trips.find(tr=>tr.id===tid);if(!T)return;
+  if(window._editId){
+    const item=T.packing.find(p=>p.id===window._editId);
+    if(item){item.item=t;item.category=document.getElementById('pk-c').value;item.who=document.getElementById('pk-w').value;}
+    window._editId=null;window._editTripId=null;
+  }else{
+    T.packing.push({id:'pk'+Date.now(),item:t,category:document.getElementById('pk-c').value,packed:false,who:document.getElementById('pk-w').value});
+  }
   closeModal();renderPage();
 }
 
@@ -2125,6 +2357,8 @@ function savePackingItem(){
                 <div style="width:18px;height:18px;border-radius:50%;${item.done?`background:#0F6E56;border:none`:'border:1.5px solid #d0c0b0'};cursor:pointer;display:flex;align-items:center;justify-content:center" onclick="toggleItinerary('${item.id}')">
                   ${item.done?`<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>`:''}
                 </div>
+                <button onclick="editItineraryItem('${S.activeTripId}','${item.id}')" style="width:18px;height:18px;border-radius:50%;background:#EEEDFE;border:0.5px solid #f0d0c0;cursor:pointer;color:#534AB7;font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">✎</button>
+                <button onclick="deleteItineraryItem('${S.activeTripId}','${item.id}')" style="width:18px;height:18px;border-radius:50%;background:#FCEBEB;border:0.5px solid #f0d0c0;cursor:pointer;color:#A32D2D;font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">×</button>
               </div>
             </div>
           </div>
@@ -2169,6 +2403,8 @@ function savePackingItem(){
           <div style="display:flex;gap:6px">
             <button onclick="toggleBucketLike('${b.id}')" style="padding:4px 10px;border-radius:99px;border:0.5px solid #f0d0c0;background:${b.liked.includes(S.currentUser.name)?'#FCEBEB':'#fff'};color:${b.liked.includes(S.currentUser.name)?'#A32D2D':'#888'};font-size:12px;cursor:pointer">${ic('heart',11)} ${b.liked.length}</button>
             <button onclick="toggleBucketDone('${b.id}')" style="padding:4px 10px;border-radius:99px;border:0.5px solid #f0d0c0;background:${b.done?'#EAF3DE':'#fff'};color:${b.done?'#27500A':'#888'};font-size:12px;cursor:pointer">${b.done?'Done!':'Mark done'}</button>
+            <button onclick="editBucketItem('${S.activeTripId}','${b.id}')" style="padding:4px 10px;border-radius:99px;border:0.5px solid #f0d0c0;background:#EEEDFE;color:#534AB7;font-size:12px;cursor:pointer">✎</button>
+            <button onclick="deleteBucketItem('${S.activeTripId}','${b.id}')" style="padding:4px 10px;border-radius:99px;border:0.5px solid #f0d0c0;background:#FCEBEB;color:#A32D2D;font-size:12px;cursor:pointer">×</button>
           </div>
         </div>
       </div>`).join('')}
@@ -2259,7 +2495,7 @@ function savePackingItem(){
             </div>
             <span style="font-size:13px;${p.packed?'text-decoration:line-through;color:#aaa':''}">${p.item}</span>
           </div>
-          <span style="font-size:11px;color:#aaa">${p.who}</span>
+          <div style="display:flex;align-items:center;gap:4px"><span style="font-size:11px;color:#aaa">${p.who}</span><button onclick="event.stopPropagation();editPackingItem('${S.activeTripId}','${p.id}')" style="width:18px;height:18px;border-radius:50%;background:#EEEDFE;border:0.5px solid #f0d0c0;cursor:pointer;color:#534AB7;font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">✎</button><button onclick="event.stopPropagation();deletePackingItem('${S.activeTripId}','${p.id}')" style="width:18px;height:18px;border-radius:50%;background:#FCEBEB;border:0.5px solid #f0d0c0;cursor:pointer;color:#A32D2D;font-size:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0">×</button></div>
         </div>`).join('')}
       </div>`).join('')}
     </div>
@@ -2276,6 +2512,150 @@ function savePackingItem(){
 
 
 function toggleItinerary(id){const T=S.trips.find(t=>t.id===S.activeTripId);if(!T)return;const i=T.itinerary.find(x=>x.id===id);if(i)i.done=!i.done;renderPage();}
+
+// ── Date Picker ────────────────────────────────────────────────────────────────
+let _dp={month:0,year:0,inputId:null};
+function showDP(inputId){
+  const inp=document.getElementById(inputId);
+  const existing=document.getElementById('_dp');
+  if(existing){existing.remove();document.removeEventListener('click',_dpOut,true);if(_dp.inputId===inputId){_dp.inputId=null;return;}}
+  _dp={month:new Date().getMonth(),year:new Date().getFullYear(),inputId};
+  const v=inp?inp.value:'';
+  if(v){const parts=v.split(' ');const MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];const mi=MN.findIndex(m=>parts.some(p=>p.startsWith(m)));if(mi>=0)_dp.month=mi;const yr=parts.find(p=>/^\d{4}$/.test(p));if(yr)_dp.year=parseInt(yr);}
+  const dp=document.createElement('div');dp.id='_dp';dp.className='dp-ov';
+  document.body.appendChild(dp);
+  _dpRender();
+  if(inp){const r=inp.getBoundingClientRect();dp.style.top=(r.bottom+4)+'px';dp.style.left=Math.min(r.left,window.innerWidth-268)+'px';}
+  setTimeout(()=>document.addEventListener('click',_dpOut,true),10);
+}
+function _dpOut(e){const dp=document.getElementById('_dp');if(dp&&!dp.contains(e.target)){dp.remove();document.removeEventListener('click',_dpOut,true);}}
+function _dpNav(d){_dp.month+=d;if(_dp.month>11){_dp.month=0;_dp.year++;}if(_dp.month<0){_dp.month=11;_dp.year--;}_dpRender();}
+function _dpPick(d){
+  const MN=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const fmt=d+' '+MN[_dp.month]+' '+_dp.year;
+  const inp=document.getElementById(_dp.inputId);if(inp)inp.value=fmt;
+  const dp=document.getElementById('_dp');if(dp)dp.remove();
+  document.removeEventListener('click',_dpOut,true);
+}
+function _dpRender(){
+  const dp=document.getElementById('_dp');if(!dp)return;
+  const MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const DN=['Su','Mo','Tu','We','Th','Fr','Sa'];
+  const today=new Date();
+  const dim=new Date(_dp.year,_dp.month+1,0).getDate();
+  const sd=new Date(_dp.year,_dp.month,1).getDay();
+  let cells='';
+  for(let i=0;i<sd;i++)cells+='<div class="dp-cell dp-empty"></div>';
+  for(let d=1;d<=dim;d++){
+    const isT=d===today.getDate()&&_dp.month===today.getMonth()&&_dp.year===today.getFullYear();
+    cells+='<div class="dp-cell'+(isT?' dp-today':'')+'" onclick="event.stopPropagation();_dpPick('+d+')">'+d+'</div>';
+  }
+  dp.innerHTML='<div class="dp-hd"><button class="dp-nav" onclick="event.stopPropagation();_dpNav(-1)">&#8249;</button><span style="font-size:13px;font-weight:600">'+MN[_dp.month]+' '+_dp.year+'</span><button class="dp-nav" onclick="event.stopPropagation();_dpNav(1)">&#8250;</button></div>'+'<div class="dp-grid">'+DN.map(function(d){return'<div class="dp-dow">'+d+'</div>';}).join('')+cells+'</div>';
+}
+
+// ── Travel edit functions ──────────────────────────────────────────────────────
+function editItineraryItem(tripId,id){
+  window._editId=id;window._editTripId=tripId;
+  const T=S.trips.find(t=>t.id===tripId);if(!T)return;
+  const item=T.itinerary.find(i=>i.id===id);if(!item)return;
+  addItineraryItem();
+  setTimeout(function(){
+    document.getElementById('it-t').value=item.title;
+    document.getElementById('it-d').value=item.day;
+    document.getElementById('it-ti').value=item.time;
+    const ty=document.getElementById('it-ty');for(let i=0;i<ty.options.length;i++){if(ty.options[i].value===item.type){ty.selectedIndex=i;break;}}
+    document.getElementById('it-n').value=item.notes||'';
+    const h=document.querySelector('#modal-body h3');if(h)h.textContent='Edit Activity';
+    const b=document.querySelector('#modal-body .btn.b-orange');if(b)b.textContent='Save Changes';
+  },10);
+}
+function editBucketItem(tripId,id){
+  window._editId=id;window._editTripId=tripId;
+  const T=S.trips.find(t=>t.id===tripId);if(!T)return;
+  const item=T.bucketList.find(b=>b.id===id);if(!item)return;
+  addBucketItem();
+  setTimeout(function(){
+    document.getElementById('bl-t').value=item.title;
+    const c=document.getElementById('bl-c');for(let i=0;i<c.options.length;i++){if(c.options[i].value===item.category){c.selectedIndex=i;break;}}
+    const h=document.querySelector('#modal-body h3');if(h)h.textContent='Edit Wish';
+    const b=document.querySelector('#modal-body .btn.b-orange');if(b)b.textContent='Save Changes';
+  },10);
+}
+function editPackingItem(tripId,id){
+  window._editId=id;window._editTripId=tripId;
+  const T=S.trips.find(t=>t.id===tripId);if(!T)return;
+  const item=T.packing.find(p=>p.id===id);if(!item)return;
+  addPackingItem();
+  setTimeout(function(){
+    document.getElementById('pk-t').value=item.item;
+    const c=document.getElementById('pk-c');for(let i=0;i<c.options.length;i++){if(c.options[i].value===item.category){c.selectedIndex=i;break;}}
+    const w=document.getElementById('pk-w');for(let i=0;i<w.options.length;i++){if(w.options[i].value===item.who){w.selectedIndex=i;break;}}
+    const h=document.querySelector('#modal-body h3');if(h)h.textContent='Edit Packing Item';
+    const b=document.querySelector('#modal-body .btn.b-orange');if(b)b.textContent='Save Changes';
+  },10);
+}
+
+// ── AI Travel Suggestions ──────────────────────────────────────────────────────
+async function getTravelSuggestions(){
+  const T=S.trips.find(t=>t.id===S.activeTripId);if(!T)return;
+  const bg=document.getElementById('modal-bg'),mb=document.getElementById('modal-body');
+  bg.style.display='flex';
+  mb.innerHTML='<h3>✨ AI Travel Suggestions</h3><div style="text-align:center;padding:32px 0"><div style="font-size:40px;margin-bottom:14px">✈️</div><div style="color:#888;font-size:13px">Getting suggestions for <strong>'+T.destination+'</strong>…</div><div style="color:#aaa;font-size:12px;margin-top:6px">This may take a few seconds</div></div>';
+  try{
+    const r=await fetch('http://localhost:5051/api/travel/suggest',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({destination:T.destination,trip_name:T.tripName,dates:T.dates}),signal:AbortSignal.timeout(30000)});
+    if(!r.ok)throw new Error('server');
+    const d=await r.json();
+    const sect=function(title,items,dot){if(!items||!items.length)return'';return'<div style="margin-bottom:18px"><div class="sec">'+title+'</div>'+items.map(function(s){return'<div style="display:flex;gap:8px;margin-bottom:7px;font-size:13px"><div style="color:'+dot+';flex-shrink:0">•</div><span>'+s+'</span></div>';}).join('')+'</div>';};
+    mb.innerHTML='<h3>✨ '+T.destination+' — AI Suggestions</h3>'+sect('Things To Do',d.things_to_do,'#D85A30')+sect('Must-Try Food',d.food,'#BA7517')+sect('Packing Tips',d.packing_tips,'#0F6E56')+sect('Budget Tips (SGD)',d.budget_tips,'#534AB7')+'<div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Close</button></div>';
+  }catch(err){
+    mb.innerHTML='<h3>✨ AI Travel Suggestions</h3><div style="color:#A32D2D;font-size:13px;padding:20px;text-align:center">Could not connect to the AI agent.<br><span style="font-size:12px;color:#888">Make sure the WhatsApp agent server is running on port 5051.</span></div><div class="ma"><button onclick="closeModal()" style="padding:8px 16px;border-radius:10px;border:0.5px solid #d0c0b0;background:transparent;cursor:pointer;font-size:13px">Close</button></div>';
+  }
+}
+
+// ── WhatsApp Agent live sync ──────────────────────────────────────────────────
+const AGENT_API = 'http://localhost:5051/api/data';
+let _agentConnected = false;
+
+function _applyAgentData(d) {
+  if (d.tasks)         S.tasks         = d.tasks;
+  if (d.events)        S.events        = d.events;
+  if (d.groceries)     S.groceries     = d.groceries;
+  if (d.expenses)      S.expenses      = d.expenses;
+  if (d.habits)        S.habits        = d.habits;
+  if (d.messages)      S.messages      = d.messages;
+  if (d.goals)         S.goals         = d.goals;
+  if (d.notifications) S.notifications = d.notifications;
+}
+
+async function syncFromAgent(silent=false) {
+  try {
+    const r = await fetch(AGENT_API, {signal: AbortSignal.timeout(3000)});
+    if (!r.ok) throw new Error(r.status);
+    const d = await r.json();
+    _applyAgentData(d);
+    if (!_agentConnected) {
+      _agentConnected = true;
+      _updateSyncBadge(true);
+    }
+    if (!silent) renderPage();
+  } catch {
+    if (_agentConnected) {
+      _agentConnected = false;
+      _updateSyncBadge(false);
+    }
+  }
+}
+
+function _updateSyncBadge(connected) {
+  const el = document.getElementById('sync-badge');
+  if (!el) return;
+  el.title = connected ? 'WhatsApp agent connected — auto-syncing' : 'WhatsApp agent offline';
+  el.style.background = connected ? '#0F6E56' : '#aaa';
+}
+
+// Poll every 15 seconds for live updates from WhatsApp agent
+syncFromAgent(true).then(() => renderPage());
+setInterval(() => syncFromAgent(true).then(() => renderPage()), 15000);
 
 applyTheme();
 renderNav();
